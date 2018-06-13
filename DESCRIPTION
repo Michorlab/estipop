@@ -1,0 +1,31 @@
+Package: gmbp
+Type: Package
+Title: gmbp is an R-wrapped C++ tool to simulate populations existing in tree-like structures
+Version: 0.0.1
+Authors@R: c(
+    person("Jeremy", "Ferlic", , "jferlic@g.harvard.edu", c("aut", "cre")),
+	person("Jiantao", "Shi", , "jshi@jimmy.harvard.edu", c("aut")),
+    person("Thomas", "McDonald", , "mcdonald@jimmy.harvard.edu", c("aut")),
+    person("Franziska", "Michor", , "michor@jimmy.harvard.edu", "aut"))
+Description: gmbp is a simulation software tool written in
+    C++ to simulate stochastic processes for populations existing in tree-like structures.
+License: GPL-3
+LazyData: TRUE
+Imports:
+    Rcpp,
+    RcppGSL,
+    igraph,
+	R.utils,
+    ggplot2,
+    dplyr,
+    magrittr,
+    tidyr
+LinkingTo: Rcpp, RcppGSL
+SystemRequirements: GNU GSL
+NeedsCompilation: yes
+RoxygenNote: 6.0.1
+URL: https://github.com/ferlicjl/gmbp
+BugReports: https://github.com/ferlicjl/gmbp/issues
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
