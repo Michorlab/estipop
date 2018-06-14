@@ -42,16 +42,16 @@
 extern gsl_rng* rng;
 
 State::State(){
-	
+
 }
 
 State::State(std::vector<int> s){
 	vec = s;
-	
+
 }
 
 State::~State(){
-	
+
 }
 
 void State::print(){
@@ -65,31 +65,44 @@ void State::updateState(std::vector<int> update){
 	if(update.size() != vec.size()){
 		throw std::invalid_argument("States do not have same dimension");
 	}
-	
+
 	for(size_t i = 0; i < update.size(); i++){
 		vec[i] += update[i];
 	}
 }
 
-void State::addPopulation(Population p){
+void State::addPopulation(Population* p){
 	pops.push_back(p);
 }
 
 double State::getNextTime(){
 	double overall = 0.0;
 	for(size_t i = 0; i < pops.size(); i++){
-		overall += vec[i] * pops[i].getRate();
+		overall += vec[i] * pops[i]->getRate();
 	}
-	std::cout << overall << std::endl;
 	return(gsl_ran_exponential(rng, 1 / overall));
 }
 
 int State::choosePop(){
 	std::vector<double> rates;
 	for(size_t i  = 0; i < pops.size(); i++){
-		rates.push_back(vec[i] * pops[i].getRate());
+		rates.push_back(vec[i] * pops[i]->getRate());
 	}
-	
+
 	int choice = choose(rates);
 	return choice;
+}
+
+void State::simulate(){
+	std::cout << "In simulate()" << std::endl;
+	double time = 0.0;
+	for(int i = 0; i < 1000; i ++){
+		double toNext = getNextTime();
+		int pop = choosePop();
+		std::vector<int> update = pops[pop]->getUpdate(gsl_rng_uniform(rng));
+		updateState(update);
+		std::cout << "Time: " << time + toNext << std::endl;
+		print();
+		time += toNext;
+	}
 }

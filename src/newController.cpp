@@ -200,8 +200,8 @@ std::vector<std::vector<std::string>> funct(std::string filename){
 //' @export
 // [[Rcpp::export]]
 double test() {
-	std::vector<int> s = {1, 1, 1, 1};
-	std::vector<int> u = {1, 4, 2, -1};
+	std::vector<int> s = {1, 1};
+	//std::vector<int> u = {1, 4, 2, -1};
 	State sys(s);
 	//sys.print();
 	//sys.updateState(u);
@@ -209,13 +209,27 @@ double test() {
 
 	Population p(0.05);
 	Population q(0.05);
-	Population t(0.05);
-	Population v(0.05);
+	//Population t(0.05);
+	//Population v(0.05);
 
-	sys.addPopulation(p);
-	sys.addPopulation(q);
-	sys.addPopulation(t);
-	sys.addPopulation(v);
+	sys.addPopulation(&p);
+	sys.addPopulation(&q);
+	//sys.addPopulation(t);
+	//sys.addPopulation(v);
+	
+	p.addUpdate(0.5, {1, 0});
+	p.addUpdate(0.5, {0, 1});
+	p.addUpdate(1, {1, 1});
+	//p.printUpdates();
+	
+	//std::cout << "Q: " << std::endl;
+	
+	q.addUpdate(0.5, {1, 0});
+	q.addUpdate(0.5, {0, 1});
+	q.addUpdate(1, {1, 1});
+	//q.printUpdates();
+	
+	sys.simulate();
 
 	return sys.choosePop();
 }

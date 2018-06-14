@@ -30,7 +30,7 @@ class State {
 public:
 	// Members
 	std::vector<int> vec;
-	std::vector<Population> pops;
+	std::vector<Population*> pops;
 	
 	// Constructors
 	State();
@@ -41,9 +41,11 @@ public:
 	void print();
 	void updateState(std::vector<int> update);
 	
-	void addPopulation(Population p);
+	void addPopulation(Population* p);
 	
 	double getNextTime();
 	int choosePop();
+	
+	void simulate();
 };
 

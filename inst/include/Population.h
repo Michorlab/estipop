@@ -30,6 +30,9 @@ class Population {
 public:
 	// Members
 	double rate;
+	std::vector<double> probs;
+	std::vector<double> norm_probs;
+	std::vector<std::vector<int>> updates;
 	
 	// Constructors
 	Population();
@@ -38,5 +41,14 @@ public:
 	
 	// Methods
 	double getRate();
+	void setRate(double r);
+	
+	void addUpdate(double prob, std::vector<int> update);
+	
+	void normalizeProbs();
+	
+	std::vector<int> getUpdate(double prob);
+	
+	void printUpdates();
 };
 
