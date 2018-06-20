@@ -193,6 +193,54 @@ std::vector<std::vector<std::string>> funct(std::string filename){
 	return items;
 }
 
+//' rcpptest
+//'
+//' rcpptest
+//'
+//' @export
+// [[Rcpp::export]]
+double rcpptest(Rcpp::NumericVector x){
+	int n = x.size();
+	double total = 0;
+
+	for(int i = 0; i < n; ++i) {
+		total += x[i];
+	}
+
+	std::vector<double> result (x.begin(), x.end());
+
+	for(size_t i = 0; i < result.size(); i ++){
+		std::cout << result[i] << std::endl;
+	}
+
+	return total / n;
+}
+
+//' rcpptest2
+//'
+//' rcpptest2
+//'
+//' @export
+// [[Rcpp::export]]
+double rcpptest2(Rcpp::NumericVector x){
+	int n = x.size();
+	double total = 0;
+
+	for(int i = 0; i < n; ++i) {
+		total += x[i];
+	}
+
+	Rcpp::NumericVector l = Rcpp::runif(100);
+
+	std::vector<double> result (l.begin(), l.end());
+
+	for(size_t i = 0; i < result.size(); i ++){
+		std::cout << result[i] << std::endl;
+	}
+
+	return total / n;
+}
+
 //' test
 //'
 //' test
@@ -216,21 +264,21 @@ double test(int n) {
 	sys.addPopulation(&q);
 	//sys.addPopulation(t);
 	//sys.addPopulation(v);
-	
+
 	p.addUpdate(0.5, {1, 0});
 	p.addUpdate(0.5, {0, 1});
 	p.addUpdate(1, {1, 1});
 	p.addUpdate(1.0, {-1, 0});
 	//p.printUpdates();
-	
+
 	//std::cout << "Q: " << std::endl;
-	
+
 	q.addUpdate(0.5, {1, 0});
 	q.addUpdate(0.5, {0, 1});
 	q.addUpdate(1, {1, 1});
 	q.addUpdate(1.9, {0, -1});
 	//q.printUpdates();
-	
+
 	sys.simulate(n);
 
 	return sys.choosePop();

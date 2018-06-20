@@ -6,6 +6,28 @@
 
 using namespace Rcpp;
 
+// rcpptest
+double rcpptest(Rcpp::NumericVector x);
+RcppExport SEXP _gmbp_rcpptest(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpptest(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rcpptest2
+double rcpptest2(Rcpp::NumericVector x);
+RcppExport SEXP _gmbp_rcpptest2(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpptest2(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // test
 double test(int n);
 RcppExport SEXP _gmbp_test(SEXP nSEXP) {
@@ -19,6 +41,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_gmbp_rcpptest", (DL_FUNC) &_gmbp_rcpptest, 1},
+    {"_gmbp_rcpptest2", (DL_FUNC) &_gmbp_rcpptest2, 1},
     {"_gmbp_test", (DL_FUNC) &_gmbp_test, 1},
     {NULL, NULL, 0}
 };
