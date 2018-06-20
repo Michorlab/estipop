@@ -39,6 +39,7 @@ public:
 	
 	// Methods
 	void print();
+	void toFile(int time);
 	void updateState(std::vector<int> update);
 	
 	void addPopulation(Population* p);
@@ -47,5 +48,6 @@ public:
 	int choosePop();
 	
 	void simulate();
+	void simulate(int numTime);
 };
 

@@ -6,7 +6,7 @@
 #' test
 #'
 #' @export
-test <- function() {
-    .Call('_gmbp_test', PACKAGE = 'gmbp')
+test <- function(n) {
+    .Call('_gmbp_test', PACKAGE = 'gmbp', n)
 }
 

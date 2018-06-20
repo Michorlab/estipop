@@ -7,18 +7,19 @@
 using namespace Rcpp;
 
 // test
-double test();
-RcppExport SEXP _gmbp_test() {
+double test(int n);
+RcppExport SEXP _gmbp_test(SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(test());
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(test(n));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_gmbp_test", (DL_FUNC) &_gmbp_test, 0},
+    {"_gmbp_test", (DL_FUNC) &_gmbp_test, 1},
     {NULL, NULL, 0}
 };
 

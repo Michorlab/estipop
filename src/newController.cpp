@@ -199,7 +199,7 @@ std::vector<std::vector<std::string>> funct(std::string filename){
 //'
 //' @export
 // [[Rcpp::export]]
-double test() {
+double test(int n) {
 	std::vector<int> s = {1, 1};
 	//std::vector<int> u = {1, 4, 2, -1};
 	State sys(s);
@@ -220,6 +220,7 @@ double test() {
 	p.addUpdate(0.5, {1, 0});
 	p.addUpdate(0.5, {0, 1});
 	p.addUpdate(1, {1, 1});
+	p.addUpdate(1.0, {-1, 0});
 	//p.printUpdates();
 	
 	//std::cout << "Q: " << std::endl;
@@ -227,9 +228,10 @@ double test() {
 	q.addUpdate(0.5, {1, 0});
 	q.addUpdate(0.5, {0, 1});
 	q.addUpdate(1, {1, 1});
+	q.addUpdate(1.9, {0, -1});
 	//q.printUpdates();
 	
-	sys.simulate();
+	sys.simulate(n);
 
 	return sys.choosePop();
 }

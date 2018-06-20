@@ -61,6 +61,18 @@ void State::print(){
 	std::cout << std::endl;
 }
 
+void State::toFile(int time){
+	std::ofstream of;
+
+    of.open("system.csv", std::fstream::in | std::fstream::out | std::fstream::app);
+	of << time << "," << vec[0];
+	for(size_t i = 1; i < vec.size(); i++){
+		of << "," << vec[i];
+	}
+	
+	of << std::endl;
+}
+
 void State::updateState(std::vector<int> update){
 	if(update.size() != vec.size()){
 		throw std::invalid_argument("States do not have same dimension");
@@ -105,4 +117,77 @@ void State::simulate(){
 		print();
 		time += toNext;
 	}
+}
+
+void State::simulate(int numTime){
+
+	bool verbose = true;
+
+	// Set up vector of observation times
+    std::vector<int> obsTimes;
+    for (int k = 0; k < numTime + 1; k++)
+    {
+        obsTimes.push_back(k);
+    }
+    //std::cout << "numTime: " << numTime << std::endl;
+
+    // Set variables to keep track of our current time and which observation time comes next
+    double curTime = 0;
+    int curObsIndex = 0;
+
+	int obsMod = pow(10, round(log10(numTime)-1));
+
+    // Display some stuff - debugging
+	if(verbose){
+		std::cout << "numTime: " << numTime << std::endl;
+		std::cout << "Simulation Start Time: " << curTime << std::endl;
+		std::cout << "Simulation End Time: " << obsTimes[numTime] << std::endl;
+		std::cout << "obsTimes.size(): " << obsTimes.size() << std::endl;
+	}
+
+    // Run until our currentTime is greater than our largest Observation time
+    while(curTime <= obsTimes[numTime])
+    {
+        Rcpp::checkUserInterrupt();
+		/*
+        if(checkZero())
+        {
+            std::cout << "A population has size 0, ending simulation" << std::endl;
+            std::cout << "End time: " << curTime << std::endl;
+            break;
+        }
+		*/
+
+        // Get the next event time
+        double timeToNext = getNextTime();
+		//std::cout << "Time to next event: " << curTime + timeToNext << std::endl;
+
+
+        // If our next event time is later than observation times,
+        // Make our observations
+        while((curTime + timeToNext > obsTimes[curObsIndex]))// & (curTime + timeToNext <= obsTimes[numTime]))
+        {
+			//print();
+			toFile(obsTimes[curObsIndex]);
+
+			if(verbose &&  obsTimes[curObsIndex] % obsMod == 0)
+				std::cout << "Time " << obsTimes[curObsIndex] << " of " << numTime << std::endl;
+      curObsIndex++;
+            //std::cout << "Sucessfully made an observation" << std::endl;
+			if((unsigned)curObsIndex >= obsTimes.size()-1)
+				break;
+        }
+		if((unsigned)curObsIndex >= obsTimes.size()-1)
+				break;
+
+        // Update our state
+        int pop = choosePop();
+		std::vector<int> update = pops[pop]->getUpdate(gsl_rng_uniform(rng));
+		updateState(update);
+
+        // Increase our current time and get the next Event Time
+        curTime = curTime + timeToNext;
+    }
+	//std::cout << "curObsIndex: " << curObsIndex << std::endl;
+	std::cout << "End Simulation Time: " << obsTimes[curObsIndex] << std::endl;
 }
