@@ -18,12 +18,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // rcpptest2
-double rcpptest2(Rcpp::NumericVector x);
+double rcpptest2(Rcpp::NumericMatrix x);
 RcppExport SEXP _gmbp_rcpptest2(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(rcpptest2(x));
     return rcpp_result_gen;
 END_RCPP

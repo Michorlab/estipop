@@ -222,23 +222,21 @@ double rcpptest(Rcpp::NumericVector x){
 //'
 //' @export
 // [[Rcpp::export]]
-double rcpptest2(Rcpp::NumericVector x){
-	int n = x.size();
-	double total = 0;
+double rcpptest2(Rcpp::NumericMatrix x){
+	int nrow = x.nrow();
+	int ncol = x.ncol();
 
-	for(int i = 0; i < n; ++i) {
-		total += x[i];
+
+	for(int i = 0; i < nrow; ++i) {
+		Rcpp::NumericVector v = x.row(i);
+		std::cout << "Probability " << v[0] << ": {" << v[1];
+		for(int j = 2; j < v.length(); j++){
+			std::cout << ", " << v[j];
+		}
+		std::cout << "}" << std::endl;
 	}
 
-	Rcpp::NumericVector l = Rcpp::runif(100);
-
-	std::vector<double> result (l.begin(), l.end());
-
-	for(size_t i = 0; i < result.size(); i ++){
-		std::cout << result[i] << std::endl;
-	}
-
-	return total / n;
+	return 0;
 }
 
 //' test
