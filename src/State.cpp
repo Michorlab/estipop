@@ -51,7 +51,9 @@ State::State(std::vector<int> s){
 }
 
 State::~State(){
-
+	for(size_t i = 0; i < pops.size(); i++){
+		delete pops[i];
+	}
 }
 
 void State::print(){
@@ -61,15 +63,15 @@ void State::print(){
 	std::cout << std::endl;
 }
 
-void State::toFile(int time){
+void State::toFile(int time, std::string file){
 	std::ofstream of;
 
-    of.open("system.csv", std::fstream::in | std::fstream::out | std::fstream::app);
+    of.open(file, std::fstream::in | std::fstream::out | std::fstream::app);
 	of << time << "," << vec[0];
 	for(size_t i = 1; i < vec.size(); i++){
 		of << "," << vec[i];
 	}
-	
+
 	of << std::endl;
 }
 
@@ -80,11 +82,17 @@ void State::updateState(std::vector<int> update){
 
 	for(size_t i = 0; i < update.size(); i++){
 		vec[i] += update[i];
+		if(vec[i] < 0)
+			vec[i] = 0;
 	}
 }
 
 void State::addPopulation(Population* p){
 	pops.push_back(p);
+}
+
+Population* State::getPop(int i){
+	return pops[i];
 }
 
 double State::getNextTime(){
@@ -99,6 +107,7 @@ int State::choosePop(){
 	std::vector<double> rates;
 	for(size_t i  = 0; i < pops.size(); i++){
 		rates.push_back(vec[i] * pops[i]->getRate());
+		//std::cout << "Vec[i]: " << vec[i] << " Rate " << i << ": " << rates[i] << std::endl;
 	}
 
 	int choice = choose(rates);
@@ -119,7 +128,7 @@ void State::simulate(){
 	}
 }
 
-void State::simulate(int numTime){
+void State::simulate(int numTime, std::string file){
 
 	bool verbose = true;
 
@@ -168,7 +177,7 @@ void State::simulate(int numTime){
         while((curTime + timeToNext > obsTimes[curObsIndex]))// & (curTime + timeToNext <= obsTimes[numTime]))
         {
 			//print();
-			toFile(obsTimes[curObsIndex]);
+			toFile(obsTimes[curObsIndex], file);
 
 			if(verbose &&  obsTimes[curObsIndex] % obsMod == 0)
 				std::cout << "Time " << obsTimes[curObsIndex] << " of " << numTime << std::endl;
@@ -181,9 +190,18 @@ void State::simulate(int numTime){
 				break;
 
         // Update our state
+		//std::cout << "Updating state..." << std::endl;
         int pop = choosePop();
+		//std::cout << "Pop: " << pop << std::endl;
 		std::vector<int> update = pops[pop]->getUpdate(gsl_rng_uniform(rng));
+		/*for(size_t i = 0; i < update.size(); i++){
+			std::cout << update[i] << " ";
+		}
+		std::cout << std::endl;
+		*/
 		updateState(update);
+		//std::cout << "Finished updating state..." << std::endl;
+		
 
         // Increase our current time and get the next Event Time
         curTime = curTime + timeToNext;

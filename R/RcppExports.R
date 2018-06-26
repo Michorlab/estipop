@@ -19,6 +19,15 @@ rcpptest2 <- function(x) {
     .Call('_gmbp_rcpptest2', PACKAGE = 'gmbp', x)
 }
 
+#' gmbp
+#'
+#' gmbp
+#'
+#' @export
+gmbp <- function(time, file, initial, lifetimes, transitions) {
+    .Call('_gmbp_gmbp', PACKAGE = 'gmbp', time, file, initial, lifetimes, transitions)
+}
+
 #' test
 #'
 #' test

@@ -239,6 +239,61 @@ double rcpptest2(Rcpp::NumericMatrix x){
 	return 0;
 }
 
+//' gmbp
+//'
+//' gmbp
+//'
+//' @export
+// [[Rcpp::export]]
+double gmbp(int time, std::string file, Rcpp::NumericVector initial, Rcpp::NumericVector lifetimes, Rcpp::NumericMatrix transitions){
+	int nrow = transitions.nrow();
+	int ncol = transitions.ncol();
+
+	std::vector<int> init(initial.begin(), initial.end());
+
+	State sys(init);
+
+	std::cout << "Making populations..." << std::endl;
+	for(size_t i = 0; i < init.size(); i++){
+		std::cout << "init[" << i << "]: " << init[i] << std::endl;
+		Population* p = new Population(lifetimes[i]);
+		sys.addPopulation(p);
+	}
+
+	std::cout << "Adding transitions..." << std::endl;
+    for(int i = 0; i < nrow; i++){
+		Rcpp::NumericVector ro = transitions.row(i);
+		std::vector<double> r (ro.begin(), ro.end());
+		int population = r[0];
+		double probability = r[1];
+
+		std::vector<double>::const_iterator first = r.begin() + 2;
+		std::vector<double>::const_iterator last = r.end();
+		std::vector<int> transition(first, last);
+
+		sys.getPop(population)->addUpdate(probability, transition);
+	}
+
+	sys.print();
+
+	std::cout << "Simulating..." << std::endl;
+	sys.simulate(time, file);
+
+	/*
+	for(int i = 0; i < nrow; ++i) {
+		Rcpp::NumericVector v = x.row(i);
+		std::cout << "Probability " << v[0] << ": {" << v[1];
+		for(int j = 2; j < v.length(); j++){
+			std::cout << ", " << v[j];
+		}
+		std::cout << "}" << std::endl;
+	}
+	*/
+
+	return 0;
+}
+
+
 //' test
 //'
 //' test
@@ -277,7 +332,7 @@ double test(int n) {
 	q.addUpdate(1.9, {0, -1});
 	//q.printUpdates();
 
-	sys.simulate(n);
+	sys.simulate(n, "system.csv");
 
 	return sys.choosePop();
 }

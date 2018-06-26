@@ -39,15 +39,16 @@ public:
 	
 	// Methods
 	void print();
-	void toFile(int time);
+	void toFile(int time, std::string file);
 	void updateState(std::vector<int> update);
 	
 	void addPopulation(Population* p);
+	Population* getPop(int i);
 	
 	double getNextTime();
 	int choosePop();
 	
 	void simulate();
-	void simulate(int numTime);
+	void simulate(int numTime, std::string file);
 };
 

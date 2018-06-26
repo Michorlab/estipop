@@ -28,6 +28,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// gmbp
+double gmbp(int time, std::string file, Rcpp::NumericVector initial, Rcpp::NumericVector lifetimes, Rcpp::NumericMatrix transitions);
+RcppExport SEXP _gmbp_gmbp(SEXP timeSEXP, SEXP fileSEXP, SEXP initialSEXP, SEXP lifetimesSEXP, SEXP transitionsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type time(timeSEXP);
+    Rcpp::traits::input_parameter< std::string >::type file(fileSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type initial(initialSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lifetimes(lifetimesSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type transitions(transitionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(gmbp(time, file, initial, lifetimes, transitions));
+    return rcpp_result_gen;
+END_RCPP
+}
 // test
 double test(int n);
 RcppExport SEXP _gmbp_test(SEXP nSEXP) {
@@ -43,6 +58,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_gmbp_rcpptest", (DL_FUNC) &_gmbp_rcpptest, 1},
     {"_gmbp_rcpptest2", (DL_FUNC) &_gmbp_rcpptest2, 1},
+    {"_gmbp_gmbp", (DL_FUNC) &_gmbp_gmbp, 5},
     {"_gmbp_test", (DL_FUNC) &_gmbp_test, 1},
     {NULL, NULL, 0}
 };
