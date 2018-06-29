@@ -1,12 +1,12 @@
 /*
  * =====================================================================================
  *
- *       Filename:  Population.h
+ *       Filename:  Update.h
  *
- *    Description:  Class representing a population
+ *    Description:  Class representing a system update
  *
  *        Version:  1.0
- *        Created:  06/13/20178 14:57:27
+ *        Created:  06/26/20178 14:57:27
  *       Revision:  none
  *       Compiler:  g++
  *
@@ -24,31 +24,22 @@
 #include <vector>
 #include <map>
 
-#include "Update.h"
 
-class Population {
+
+class Update {
 public:
 	// Members
-	double rate;
-	std::vector<double> probs;
-	std::vector<double> norm_probs;
-	std::vector<Update> updates;
-	
+	bool is_random;
+	std::vector<int> fixed;
+	std::vector<int> random_indices;
+
 	// Constructors
-	Population();
-	Population(double r);
-	~Population();
-	
+	Update();
+	Update(std::vector<int> f);
+	Update(bool rand, std::vector<int> f, std::vector<int> rand_indices);
+	~Update();
+
 	// Methods
-	double getRate();
-	void setRate(double r);
-	
-	void addUpdate(double prob, Update update);
-	
-	void normalizeProbs();
-	
-	std::vector<int> getUpdate(double prob);
-	
-	void printUpdates();
+	std::vector<int> get();
 };
 

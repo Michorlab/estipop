@@ -21,6 +21,7 @@
 #include "NodeList.h"
 #include "State.h"
 #include "Population.h"
+#include "Update.h"
 
 // Includes
 #include <iostream>
@@ -271,7 +272,7 @@ double gmbp(int time, std::string file, Rcpp::NumericVector initial, Rcpp::Numer
 		std::vector<double>::const_iterator last = r.end();
 		std::vector<int> transition(first, last);
 
-		sys.getPop(population)->addUpdate(probability, transition);
+		sys.getPop(population)->addUpdate(probability, Update(transition));
 	}
 
 	sys.print();
@@ -318,18 +319,18 @@ double test(int n) {
 	//sys.addPopulation(t);
 	//sys.addPopulation(v);
 
-	p.addUpdate(0.5, {1, 0});
-	p.addUpdate(0.5, {0, 1});
-	p.addUpdate(1, {1, 1});
-	p.addUpdate(1.0, {-1, 0});
+	p.addUpdate(0.5, Update({1, 0}));
+	p.addUpdate(0.5, Update({0, 1}));
+	p.addUpdate(1, Update({1, 1}));
+	p.addUpdate(1.0, Update({-1, 0}));
 	//p.printUpdates();
 
 	//std::cout << "Q: " << std::endl;
 
-	q.addUpdate(0.5, {1, 0});
-	q.addUpdate(0.5, {0, 1});
-	q.addUpdate(1, {1, 1});
-	q.addUpdate(1.9, {0, -1});
+	q.addUpdate(0.5, Update({1, 0}));
+	q.addUpdate(0.5, Update({0, 1}));
+	q.addUpdate(1, Update({1, 1}));
+	q.addUpdate(1.0, Update({0, -1}));
 	//q.printUpdates();
 
 	sys.simulate(n, "system.csv");

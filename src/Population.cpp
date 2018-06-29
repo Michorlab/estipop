@@ -48,8 +48,8 @@ void Population::setRate(double r){
 	rate = r;
 }
 
-void Population::addUpdate(double prob, std::vector<int> update){
-	if(updates.size() != 0 && update.size() != updates[0].size()){
+void Population::addUpdate(double prob, Update update){
+	if(updates.size() != 0 && update.get().size() != updates[0].get().size()){
 		throw("Intended update vector does not have same dimension as previous update vector");
 	} else {
 		probs.push_back(prob);
@@ -69,7 +69,7 @@ std::vector<int> Population::getUpdate(double prob){
 
 	for(size_t i = 0; i < norm_probs.size(); i++){
 		if(prob < norm_probs[i])
-			return updates[i];
+			return updates[i].get();
 	}
 }
 
@@ -79,9 +79,10 @@ void Population::printUpdates(){
 	}
 
 	for(size_t i = 0; i < updates.size(); i++){
-		std::cout << "Update " << i << "; prob = " << norm_probs[i] << " {" << updates[i][0];
-		for(size_t j = 1; j < updates[i].size(); j++){
-			std::cout << ", " << updates[i][j];
+		std::vector<int> up_i = updates[i].get();
+		std::cout << "Update " << i << "; prob = " << norm_probs[i] << " {" << up_i[0];
+		for(size_t j = 1; j < up_i.size(); j++){
+			std::cout << ", " << up_i[j];
 		}
 		std::cout << "}" << std::endl;
 	}
