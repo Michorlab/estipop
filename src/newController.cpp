@@ -240,6 +240,54 @@ double rcpptest2(Rcpp::NumericMatrix x){
 	return 0;
 }
 
+//' listtest
+//'
+//' listtest
+//'
+//' @export
+// [[Rcpp::export]]
+double listtest(Rcpp::List l, int i){
+	Rcpp::NumericVector fixed = Rcpp::as<Rcpp::NumericVector>(l["fixed"]);
+	Rcpp::NumericVector random = Rcpp::as<Rcpp::NumericVector>(l["random"]);
+	
+	Rcpp::NumericVector s = Rcpp::as<Rcpp::NumericVector>(l[i]);
+	
+	std::vector<double> result (s.begin(), s.end());
+
+	for(size_t i = 0; i < result.size(); i ++){
+		std::cout << result[i] << std::endl;
+	}
+
+	return 0;
+}
+
+//' list2test
+//'
+//' list2test
+//'
+//' @export
+// [[Rcpp::export]]
+double list2test(Rcpp::List l){
+	
+	int n = l.size();
+
+	for(int i = 0; i < n; i++){
+		Rcpp::List list = Rcpp::as<Rcpp::List>(l[i]);
+		Rcpp::NumericVector s = Rcpp::as<Rcpp::NumericVector>(list[0]);
+		
+		bool a = list[1];
+		std::cout << "is_random: " << a << std::endl;
+	
+		std::vector<double> result (s.begin(), s.end());
+		for(size_t i = 0; i < result.size(); i ++){
+			std::cout << result[i] << std::endl;
+		}
+		std::cout << std::endl;
+	}
+
+	return 0;
+}
+
 //' gmbp
 //'
 //' gmbp
@@ -293,6 +341,71 @@ double gmbp(int time, std::string file, Rcpp::NumericVector initial, Rcpp::Numer
 
 	return 0;
 }
+
+
+
+//' gmbp2
+//'
+//' gmbp2
+//'
+//' @export
+// [[Rcpp::export]]
+double gmbp2(int time, std::string file, Rcpp::NumericVector initial, Rcpp::NumericVector lifetimes, Rcpp::List transitions){
+	int n = transitions.length();
+
+	// Initial population sizes
+	std::vector<int> init(initial.begin(), initial.end());
+
+	// Initialize system
+	State sys(init);
+
+	// Create populations with lifetimes
+	std::cout << "Making populations..." << std::endl;
+	for(size_t i = 0; i < init.size(); i++){
+		std::cout << "init[" << i << "]: " << init[i] << std::endl;
+		Population* p = new Population(lifetimes[i]);
+		sys.addPopulation(p);
+	}
+
+	// Add transitions
+	std::cout << "Adding transitions..." << std::endl;
+	
+	// Iterate over transitions list
+    for(int i = 0; i < n; i++){
+		
+		// Get the ith transition
+		Rcpp::List list_i = Rcpp::as<Rcpp::List>(transitions[i]);
+		
+		// Get popuation, is_random, probability
+		int population = list_i[0];
+		bool is_random = list_i[1];
+		double probability = list_i[2];
+		
+		// Get the fixed portion of the Transition
+		Rcpp::NumericVector fix = Rcpp::as<Rcpp::NumericVector>(list_i[3]);
+		std::vector<int> fixed (fix.begin(), fix.end());
+		
+		// If there is a random component, get which indices of the vector will be generated randomly
+		if(is_random){
+			Rcpp::NumericVector rand = Rcpp::as<Rcpp::NumericVector>(list_i[4]);
+			std::vector<int> rand_incides (rand.begin(), rand.end());
+			
+			// Add this transition to the correct population
+			sys.getPop(population)->addUpdate(probability, Update(is_random, fixed, rand_incides));
+		} else{
+			sys.getPop(population)->addUpdate(probability, Update(fixed));
+		}
+	}
+
+	//sys.print();
+
+	// Simulate
+	std::cout << "Simulating..." << std::endl;
+	sys.simulate(time, file);
+
+	return 0;
+}
+
 
 
 //' test

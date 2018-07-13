@@ -19,6 +19,24 @@ rcpptest2 <- function(x) {
     .Call('_gmbp_rcpptest2', PACKAGE = 'gmbp', x)
 }
 
+#' listtest
+#'
+#' listtest
+#'
+#' @export
+listtest <- function(l, i) {
+    .Call('_gmbp_listtest', PACKAGE = 'gmbp', l, i)
+}
+
+#' list2test
+#'
+#' list2test
+#'
+#' @export
+list2test <- function(l) {
+    .Call('_gmbp_list2test', PACKAGE = 'gmbp', l)
+}
+
 #' gmbp
 #'
 #' gmbp
@@ -26,6 +44,15 @@ rcpptest2 <- function(x) {
 #' @export
 gmbp <- function(time, file, initial, lifetimes, transitions) {
     .Call('_gmbp_gmbp', PACKAGE = 'gmbp', time, file, initial, lifetimes, transitions)
+}
+
+#' gmbp2
+#'
+#' gmbp2
+#'
+#' @export
+gmbp2 <- function(time, file, initial, lifetimes, transitions) {
+    .Call('_gmbp_gmbp2', PACKAGE = 'gmbp', time, file, initial, lifetimes, transitions)
 }
 
 #' test

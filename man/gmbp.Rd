@@ -7,7 +7,7 @@
 \alias{gmbp-package}
 \title{gmbp}
 \usage{
-gmbp(time, initial, transitions)
+gmbp(time, file, initial, lifetimes, transitions)
 }
 \description{
 gmbp

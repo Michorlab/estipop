@@ -32,6 +32,7 @@ public:
 	bool is_random;
 	std::vector<int> fixed;
 	std::vector<int> random_indices;
+	std::vector<std::string> dist;
 
 	// Constructors
 	Update();
