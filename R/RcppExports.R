@@ -37,15 +37,6 @@ list2test <- function(l) {
     .Call('_gmbp_list2test', PACKAGE = 'gmbp', l)
 }
 
-#' gmbp
-#'
-#' gmbp
-#'
-#' @export
-gmbp <- function(time, file, initial, lifetimes, transitions) {
-    .Call('_gmbp_gmbp', PACKAGE = 'gmbp', time, file, initial, lifetimes, transitions)
-}
-
 #' gmbp2
 #'
 #' gmbp2
@@ -53,14 +44,5 @@ gmbp <- function(time, file, initial, lifetimes, transitions) {
 #' @export
 gmbp2 <- function(time, file, initial, lifetimes, transitions) {
     .Call('_gmbp_gmbp2', PACKAGE = 'gmbp', time, file, initial, lifetimes, transitions)
-}
-
-#' test
-#'
-#' test
-#'
-#' @export
-test <- function(n) {
-    .Call('_gmbp_test', PACKAGE = 'gmbp', n)
 }
 

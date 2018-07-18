@@ -2,13 +2,11 @@
 
 export(Transition)
 export(TransitionList)
-export(gmbp)
 export(gmbp2)
 export(list2test)
 export(listtest)
 export(rcpptest)
 export(rcpptest2)
-export(test)
 import(igraph)
 importFrom(Rcpp,evalCpp)
 importFrom(magrittr,"%>%")

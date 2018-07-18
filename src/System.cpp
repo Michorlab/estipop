@@ -3,7 +3,7 @@
  *
  *       Filename:  System.cpp
  *
- *    Description:  Class representing system 
+ *    Description:  Class representing system
  *
  *        Version:  1.0
  *        Created:  06/13/2018 14:57:27
@@ -46,19 +46,16 @@ System::System(){
 }
 
 System::System(std::vector<int> s){
-	vec = s;
+	state = s;
 
 }
 
 System::~System(){
-	for(size_t i = 0; i < pops.size(); i++){
-		delete pops[i];
-	}
 }
 
 void System::print(){
-	for(size_t i = 0; i < vec.size(); i++){
-		std::cout << vec[i] << "\t";
+	for(size_t i = 0; i < state.size(); i++){
+		std::cout << state[i] << "\t";
 	}
 	std::cout << std::endl;
 }
@@ -67,70 +64,48 @@ void System::toFile(int time, std::string file){
 	std::ofstream of;
 
     of.open(file, std::fstream::in | std::fstream::out | std::fstream::app);
-	of << time << "," << vec[0];
-	for(size_t i = 1; i < vec.size(); i++){
-		of << "," << vec[i];
+	of << time << "," << state[0];
+	for(size_t i = 1; i < state.size(); i++){
+		of << "," << state[i];
 	}
 
 	of << std::endl;
 }
 
 void System::updateSystem(std::vector<int> update){
-	if(update.size() != vec.size()){
+	if(update.size() != state.size()){
 		throw std::invalid_argument("Systems do not have same dimension");
 	}
 
 	for(size_t i = 0; i < update.size(); i++){
-		vec[i] += update[i];
-		if(vec[i] < 0)
-			vec[i] = 0;
+		state[i] += update[i];
+		if(state[i] < 0)
+			state[i] = 0;
 	}
 }
 
-void System::addPopulation(Population* p){
-	pops.push_back(p);
+void System::addUpdate(double r, int f, Update u){
+	rates.push_back(r);
+	from.push_back(f);
+	updates.push_back(u);
 }
 
-Population* System::getPop(int i){
-	return pops[i];
-}
-
-double System::getNextTime(){
-	double overall = 0.0;
-	for(size_t i = 0; i < pops.size(); i++){
-		overall += vec[i] * pops[i]->getRate();
+double System::getNextTime(std::vector<double>& o_rates){
+	//double overall = 0.0;
+	for(size_t i = 0; i < rates.size(); i++){
+		//overall += rates[i] * state[i];
+		o_rates[i] = rates[i] * state[from[i]];
 	}
-	return(gsl_ran_exponential(rng, 1 / overall));
-}
-
-int System::choosePop(){
-	std::vector<double> rates;
-	for(size_t i  = 0; i < pops.size(); i++){
-		rates.push_back(vec[i] * pops[i]->getRate());
-		//std::cout << "Vec[i]: " << vec[i] << " Rate " << i << ": " << rates[i] << std::endl;
-	}
-
-	int choice = choose(rates);
-	return choice;
-}
-
-void System::simulate(){
-	std::cout << "In simulate()" << std::endl;
-	double time = 0.0;
-	for(int i = 0; i < 1000; i ++){
-		double toNext = getNextTime();
-		int pop = choosePop();
-		std::vector<int> update = pops[pop]->getUpdate(gsl_rng_uniform(rng));
-		updateSystem(update);
-		std::cout << "Time: " << time + toNext << std::endl;
-		print();
-		time += toNext;
-	}
+	return(gsl_ran_exponential(rng, 1 / std::accumulate(o_rates.begin(), o_rates.end(), 0.0)));
 }
 
 void System::simulate(int numTime, std::string file){
-
 	bool verbose = true;
+
+	std::vector<double> o_rates;
+	for(size_t i = 0; i < rates.size(); i++){
+		o_rates.push_back(0.0);
+	}
 
 	// Set up vector of observation times
     std::vector<int> obsTimes;
@@ -138,7 +113,7 @@ void System::simulate(int numTime, std::string file){
     {
         obsTimes.push_back(k);
     }
-    //std::cout << "numTime: " << numTime << std::endl;
+
 
     // Set variables to keep track of our current time and which observation time comes next
     double curTime = 0;
@@ -146,43 +121,57 @@ void System::simulate(int numTime, std::string file){
 
 	int obsMod = pow(10, round(log10(numTime)-1));
 
-    // Display some stuff - debugging
+    // Display some stuff  if verbose
 	if(verbose){
 		std::cout << "numTime: " << numTime << std::endl;
 		std::cout << "Simulation Start Time: " << curTime << std::endl;
 		std::cout << "Simulation End Time: " << obsTimes[numTime] << std::endl;
 		std::cout << "obsTimes.size(): " << obsTimes.size() << std::endl;
 	}
+	
+	//int wait = 0;
 
     // Run until our currentTime is greater than our largest Observation time
     while(curTime <= obsTimes[numTime])
     {
         Rcpp::checkUserInterrupt();
-		/*
-        if(checkZero())
-        {
-            std::cout << "A population has size 0, ending simulation" << std::endl;
-            std::cout << "End time: " << curTime << std::endl;
-            break;
-        }
-		*/
+		
+		bool zero = true;
+		for(size_t i = 0; i < state.size(); i++){
+			if(state[i] > 0)
+				zero = false;
+		}
+		
+		if(zero){
+			std::cout << "All populations have gone extinct.  Exiting simulation..." << std::endl;
+			break;
+		}
 
         // Get the next event time
-        double timeToNext = getNextTime();
-		//std::cout << "Time to next event: " << curTime + timeToNext << std::endl;
-
+        double timeToNext = getNextTime(o_rates);
+		/*for(size_t i = 0; i < o_rates.size(); i++){
+			std::cout << "o_rates[" << i << "]: " << o_rates[i] << std::endl;
+		}
+		
+		if(wait == 0){
+			Rcpp::Environment base = Rcpp::Environment("package:base");
+			Rcpp::Function readline = base["readline"];
+			Rcpp::Function as_numeric = base["as.numeric"];
+			wait = Rcpp::as<int>(as_numeric(readline("> ")));
+		}
+		std::cout << "Time to next event: " << curTime + timeToNext << std::endl;
+		*/
 
         // If our next event time is later than observation times,
         // Make our observations
         while((curTime + timeToNext > obsTimes[curObsIndex]))// & (curTime + timeToNext <= obsTimes[numTime]))
         {
-			//print();
+			// print out current state vector
 			toFile(obsTimes[curObsIndex], file);
 
 			if(verbose &&  obsTimes[curObsIndex] % obsMod == 0)
 				std::cout << "Time " << obsTimes[curObsIndex] << " of " << numTime << std::endl;
       curObsIndex++;
-            //std::cout << "Sucessfully made an observation" << std::endl;
 			if((unsigned)curObsIndex >= obsTimes.size()-1)
 				break;
         }
@@ -191,17 +180,15 @@ void System::simulate(int numTime, std::string file){
 
         // Update our System
 		//std::cout << "Updating System..." << std::endl;
-        int pop = choosePop();
-		//std::cout << "Pop: " << pop << std::endl;
-		std::vector<int> update = pops[pop]->getUpdate(gsl_rng_uniform(rng));
-		/*for(size_t i = 0; i < update.size(); i++){
-			std::cout << update[i] << " ";
-		}
-		std::cout << std::endl;
-		*/
+        int index = choose(o_rates);
+
+		//std::cout << "Choice: " << index << std::endl;
+
+		std::vector<int> update = updates[index].get();
+		update[index] = update[index] - 1;
 		updateSystem(update);
 		//std::cout << "Finished updating System..." << std::endl;
-		
+
 
         // Increase our current time and get the next Event Time
         curTime = curTime + timeToNext;

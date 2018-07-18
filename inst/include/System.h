@@ -1,12 +1,12 @@
 /*
  * =====================================================================================
  *
- *       Filename:  Population.h
+ *       Filename:  System.h
  *
- *    Description:  Class representing a population
+ *    Description:  Class representing system 
  *
  *        Version:  1.0
- *        Created:  06/13/20178 14:57:27
+ *        Created:  06/13/2018 14:57:27
  *       Revision:  none
  *       Compiler:  g++
  *
@@ -26,29 +26,28 @@
 
 #include "Update.h"
 
-class Population {
+class System {
 public:
 	// Members
-	double rate;
-	std::vector<double> probs;
-	std::vector<double> norm_probs;
+	std::vector<int> state;
+	std::vector<double> rates;
+	std::vector<int> from;
 	std::vector<Update> updates;
 	
 	// Constructors
-	Population();
-	Population(double r);
-	~Population();
+	System();
+	System(std::vector<int> s);
+	~System();
 	
 	// Methods
-	double getRate();
-	void setRate(double r);
+	void print();
+	void toFile(int time, std::string file);
+	void updateSystem(std::vector<int> update);
 	
-	void addUpdate(double prob, Update update);
+	void addUpdate(double r, int f, Update u);
 	
-	void normalizeProbs();
+	double getNextTime(std::vector<double>& o_rates);
 	
-	std::vector<int> getUpdate(double prob);
-	
-	void printUpdates();
+	void simulate(int numTime, std::string file);
 };
 

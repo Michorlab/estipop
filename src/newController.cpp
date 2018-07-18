@@ -17,10 +17,7 @@
  */
 
 // Random Distributions and Helper functions
-#include "Node.h"
-#include "NodeList.h"
-#include "State.h"
-#include "Population.h"
+#include "System.h"
 #include "Update.h"
 
 // Includes
@@ -288,6 +285,7 @@ double list2test(Rcpp::List l){
 	return 0;
 }
 
+/*
 //' gmbp
 //'
 //' gmbp
@@ -300,7 +298,7 @@ double gmbp(int time, std::string file, Rcpp::NumericVector initial, Rcpp::Numer
 
 	std::vector<int> init(initial.begin(), initial.end());
 
-	State sys(init);
+	System sys(init);
 
 	std::cout << "Making populations..." << std::endl;
 	for(size_t i = 0; i < init.size(); i++){
@@ -330,6 +328,7 @@ double gmbp(int time, std::string file, Rcpp::NumericVector initial, Rcpp::Numer
 
 	return 0;
 }
+*/
 
 
 
@@ -346,8 +345,9 @@ double gmbp2(int time, std::string file, Rcpp::NumericVector initial, Rcpp::Nume
 	std::vector<int> init(initial.begin(), initial.end());
 
 	// Initialize system
-	State sys(init);
+	System sys(init);
 
+	/*
 	// Create populations with lifetimes
 	std::cout << "Making populations..." << std::endl;
 	for(size_t i = 0; i < init.size(); i++){
@@ -355,6 +355,7 @@ double gmbp2(int time, std::string file, Rcpp::NumericVector initial, Rcpp::Nume
 		Population* p = new Population(lifetimes[i]);
 		sys.addPopulation(p);
 	}
+	*/
 
 	// Add transitions
 	std::cout << "Adding transitions..." << std::endl;
@@ -368,7 +369,7 @@ double gmbp2(int time, std::string file, Rcpp::NumericVector initial, Rcpp::Nume
 		// Get popuation, is_random, probability
 		int population = list_i[0];
 		bool is_random = list_i[1];
-		double probability = list_i[2];
+		double rate = list_i[2];
 		
 		// Get the fixed portion of the Transition
 		Rcpp::NumericVector fix = Rcpp::as<Rcpp::NumericVector>(list_i[3]);
@@ -380,9 +381,9 @@ double gmbp2(int time, std::string file, Rcpp::NumericVector initial, Rcpp::Nume
 			std::vector<int> rand_incides (rand.begin(), rand.end());
 			
 			// Add this transition to the correct population
-			sys.getPop(population)->addUpdate(probability, Update(is_random, fixed, rand_incides));
+			sys.addUpdate(rate, population, Update(is_random, fixed, rand_incides));
 		} else{
-			sys.getPop(population)->addUpdate(probability, Update(fixed));
+			sys.addUpdate(rate, population, Update(fixed));
 		}
 	}
 
@@ -397,6 +398,7 @@ double gmbp2(int time, std::string file, Rcpp::NumericVector initial, Rcpp::Nume
 
 
 
+/*
 //' test
 //'
 //' test
@@ -439,5 +441,6 @@ double test(int n) {
 
 	return sys.choosePop();
 }
+*/
 
 
