@@ -328,17 +328,6 @@ double gmbp(int time, std::string file, Rcpp::NumericVector initial, Rcpp::Numer
 	std::cout << "Simulating..." << std::endl;
 	sys.simulate(time, file);
 
-	/*
-	for(int i = 0; i < nrow; ++i) {
-		Rcpp::NumericVector v = x.row(i);
-		std::cout << "Probability " << v[0] << ": {" << v[1];
-		for(int j = 2; j < v.length(); j++){
-			std::cout << ", " << v[j];
-		}
-		std::cout << "}" << std::endl;
-	}
-	*/
-
 	return 0;
 }
 
