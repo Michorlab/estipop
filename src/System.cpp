@@ -91,9 +91,7 @@ void System::addUpdate(double r, int f, Update u){
 }
 
 double System::getNextTime(std::vector<double>& o_rates){
-	//double overall = 0.0;
 	for(size_t i = 0; i < rates.size(); i++){
-		//overall += rates[i] * state[i];
 		o_rates[i] = rates[i] * state[from[i]];
 	}
 	return(gsl_ran_exponential(rng, 1 / std::accumulate(o_rates.begin(), o_rates.end(), 0.0)));
@@ -149,18 +147,6 @@ void System::simulate(int numTime, std::string file){
 
         // Get the next event time
         double timeToNext = getNextTime(o_rates);
-		/*for(size_t i = 0; i < o_rates.size(); i++){
-			std::cout << "o_rates[" << i << "]: " << o_rates[i] << std::endl;
-		}
-		
-		if(wait == 0){
-			Rcpp::Environment base = Rcpp::Environment("package:base");
-			Rcpp::Function readline = base["readline"];
-			Rcpp::Function as_numeric = base["as.numeric"];
-			wait = Rcpp::as<int>(as_numeric(readline("> ")));
-		}
-		std::cout << "Time to next event: " << curTime + timeToNext << std::endl;
-		*/
 
         // If our next event time is later than observation times,
         // Make our observations
@@ -179,16 +165,12 @@ void System::simulate(int numTime, std::string file){
 				break;
 
         // Update our System
-		//std::cout << "Updating System..." << std::endl;
         int index = choose(o_rates);
-
-		//std::cout << "Choice: " << index << std::endl;
-
+		
+		
 		std::vector<int> update = updates[index].get();
-		update[index] = update[index] - 1;
+		update[from[index]] = update[from[index]] - 1;
 		updateSystem(update);
-		//std::cout << "Finished updating System..." << std::endl;
-
 
         // Increase our current time and get the next Event Time
         curTime = curTime + timeToNext;

@@ -246,9 +246,9 @@ double rcpptest2(Rcpp::NumericMatrix x){
 double listtest(Rcpp::List l, int i){
 	Rcpp::NumericVector fixed = Rcpp::as<Rcpp::NumericVector>(l["fixed"]);
 	Rcpp::NumericVector random = Rcpp::as<Rcpp::NumericVector>(l["random"]);
-	
+
 	Rcpp::NumericVector s = Rcpp::as<Rcpp::NumericVector>(l[i]);
-	
+
 	std::vector<double> result (s.begin(), s.end());
 
 	for(size_t i = 0; i < result.size(); i ++){
@@ -265,16 +265,16 @@ double listtest(Rcpp::List l, int i){
 //' @export
 // [[Rcpp::export]]
 double list2test(Rcpp::List l){
-	
+
 	int n = l.size();
 
 	for(int i = 0; i < n; i++){
 		Rcpp::List list = Rcpp::as<Rcpp::List>(l[i]);
 		Rcpp::NumericVector s = Rcpp::as<Rcpp::NumericVector>(list[0]);
-		
+
 		bool a = list[1];
 		std::cout << "is_random: " << a << std::endl;
-	
+
 		std::vector<double> result (s.begin(), s.end());
 		for(size_t i = 0; i < result.size(); i ++){
 			std::cout << result[i] << std::endl;
@@ -339,8 +339,10 @@ double gmbp(int time, std::string file, Rcpp::NumericVector initial, Rcpp::Numer
 //' @export
 // [[Rcpp::export]]
 double gmbp2(int time, std::string file, Rcpp::NumericVector initial, Rcpp::NumericVector lifetimes, Rcpp::List transitions){
+	std::cout << "Starting process... " << std::endl;
 	int n = transitions.length();
 
+	std::cout << "Initialization system..." << std::endl;
 	// Initial population sizes
 	std::vector<int> init(initial.begin(), initial.end());
 
@@ -359,27 +361,27 @@ double gmbp2(int time, std::string file, Rcpp::NumericVector initial, Rcpp::Nume
 
 	// Add transitions
 	std::cout << "Adding transitions..." << std::endl;
-	
+
 	// Iterate over transitions list
     for(int i = 0; i < n; i++){
-		
+
 		// Get the ith transition
 		Rcpp::List list_i = Rcpp::as<Rcpp::List>(transitions[i]);
-		
+
 		// Get popuation, is_random, probability
 		int population = list_i[0];
 		bool is_random = list_i[1];
 		double rate = list_i[2];
-		
+
 		// Get the fixed portion of the Transition
 		Rcpp::NumericVector fix = Rcpp::as<Rcpp::NumericVector>(list_i[3]);
 		std::vector<int> fixed (fix.begin(), fix.end());
-		
+
 		// If there is a random component, get which indices of the vector will be generated randomly
 		if(is_random){
 			Rcpp::NumericVector rand = Rcpp::as<Rcpp::NumericVector>(list_i[4]);
 			std::vector<int> rand_incides (rand.begin(), rand.end());
-			
+
 			// Add this transition to the correct population
 			sys.addUpdate(rate, population, Update(is_random, fixed, rand_incides));
 		} else{
@@ -392,13 +394,14 @@ double gmbp2(int time, std::string file, Rcpp::NumericVector initial, Rcpp::Nume
 	// Simulate
 	std::cout << "Simulating..." << std::endl;
 	sys.simulate(time, file);
+	std::cout << "Ending process..." << std::endl;
 
-	return 0;
+	return 0.0;
 }
 
 
 
-/*
+
 //' test
 //'
 //' test
@@ -407,40 +410,21 @@ double gmbp2(int time, std::string file, Rcpp::NumericVector initial, Rcpp::Nume
 // [[Rcpp::export]]
 double test(int n) {
 	std::vector<int> s = {1, 1};
-	//std::vector<int> u = {1, 4, 2, -1};
-	State sys(s);
-	//sys.print();
-	//sys.updateState(u);
-	//sys.print();
+	int K = 4;
+	int N = 10;
+	std::vector<double> p = {0.5, 0.5, 0.5, 0.5};
+	std::vector<unsigned int> ret(K);
 
-	Population p(0.05);
-	Population q(0.05);
-	//Population t(0.05);
-	//Population v(0.05);
+	gsl_ran_multinomial(rng, K, N, p.data(), ret.data());
 
-	sys.addPopulation(&p);
-	sys.addPopulation(&q);
-	//sys.addPopulation(t);
-	//sys.addPopulation(v);
+	for(size_t i = 0; i < ret.size(); i++){
+	  std::cout << ret.data()[i] << std::endl;
 
-	p.addUpdate(0.5, Update({1, 0}));
-	p.addUpdate(0.5, Update({0, 1}));
-	p.addUpdate(1, Update({1, 1}));
-	p.addUpdate(1.0, Update({-1, 0}));
-	//p.printUpdates();
+	}
 
-	//std::cout << "Q: " << std::endl;
-
-	q.addUpdate(0.5, Update({1, 0}));
-	q.addUpdate(0.5, Update({0, 1}));
-	q.addUpdate(1, Update({1, 1}));
-	q.addUpdate(1.0, Update({0, -1}));
-	//q.printUpdates();
-
-	sys.simulate(n, "system.csv");
-
-	return sys.choosePop();
+	//return sys.choosePop();
+	return 0;
 }
-*/
+
 
 

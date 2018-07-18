@@ -30,6 +30,7 @@ class System {
 public:
 	// Members
 	std::vector<int> state;
+	
 	std::vector<double> rates;
 	std::vector<int> from;
 	std::vector<Update> updates;

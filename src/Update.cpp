@@ -37,6 +37,8 @@
 
 extern gsl_rng* rng;
 
+//
+
 Update::Update(){}
 
 Update::Update(std::vector<int> f) : fixed(f){
@@ -55,7 +57,7 @@ std::vector<int> Update::get(){
 	}
 	
 	for(size_t i = 0; i < random_indices.size(); i++){
-		fixed[random_indices[i]] = gsl_ran_poisson(rng, 5);
+		fixed[random_indices[i]] = gsl_ran_poisson(rng, 5) + 1;
 	}
 	
 	return fixed;

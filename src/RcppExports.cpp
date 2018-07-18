@@ -66,6 +66,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// test
+double test(int n);
+RcppExport SEXP _gmbp_test(SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(test(n));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_gmbp_rcpptest", (DL_FUNC) &_gmbp_rcpptest, 1},
@@ -73,6 +84,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_gmbp_listtest", (DL_FUNC) &_gmbp_listtest, 2},
     {"_gmbp_list2test", (DL_FUNC) &_gmbp_list2test, 1},
     {"_gmbp_gmbp2", (DL_FUNC) &_gmbp_gmbp2, 5},
+    {"_gmbp_test", (DL_FUNC) &_gmbp_test, 1},
     {NULL, NULL, 0}
 };
 
