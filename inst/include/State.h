@@ -1,12 +1,12 @@
 /*
  * =====================================================================================
  *
- *       Filename:  State.h
+ *       Filename:  System.h
  *
- *    Description:  Class representing system state
+ *    Description:  Class representing system 
  *
  *        Version:  1.0
- *        Created:  06/13/20178 14:57:27
+ *        Created:  06/13/2018 14:57:27
  *       Revision:  none
  *       Compiler:  g++
  *
@@ -25,25 +25,30 @@
 #include <map>
 
 #include "Population.h"
+#include "Updates.h"
 
-class State {
+class System {
 public:
 	// Members
-	std::vector<int> vec;
-	std::vector<Population*> pops;
+	std::vector<int> state;
+	//std::vector<Population*> pops;
+	std::vector<double> rates;
+	std::vector<int> from;
+	std::vector<Update> updates;
 	
 	// Constructors
-	State();
-	State(std::vector<int> s);
-	~State();
+	System();
+	System(std::vector<int> s);
+	~System();
 	
 	// Methods
 	void print();
 	void toFile(int time, std::string file);
-	void updateState(std::vector<int> update);
+	void updateSystem(std::vector<int> update);
 	
-	void addPopulation(Population* p);
-	Population* getPop(int i);
+	void addUpdate(double prob, int from, Update u);
+	
+	void updateRates();
 	
 	double getNextTime();
 	int choosePop();

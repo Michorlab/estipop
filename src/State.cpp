@@ -1,12 +1,12 @@
 /*
  * =====================================================================================
  *
- *       Filename:  State.cpp
+ *       Filename:  System.cpp
  *
- *    Description:  Class representing system state
+ *    Description:  Class representing system 
  *
  *        Version:  1.0
- *        Created:  06/13/20178 14:57:27
+ *        Created:  06/13/2018 14:57:27
  *       Revision:  none
  *       Compiler:  g++
  *
@@ -17,7 +17,7 @@
  */
 
 
-#include "State.h"
+#include "System.h"
 #include "helpers.h"
 
 #include <iostream>
@@ -41,29 +41,29 @@
 
 extern gsl_rng* rng;
 
-State::State(){
+System::System(){
 
 }
 
-State::State(std::vector<int> s){
+System::System(std::vector<int> s){
 	vec = s;
 
 }
 
-State::~State(){
+System::~System(){
 	for(size_t i = 0; i < pops.size(); i++){
 		delete pops[i];
 	}
 }
 
-void State::print(){
+void System::print(){
 	for(size_t i = 0; i < vec.size(); i++){
 		std::cout << vec[i] << "\t";
 	}
 	std::cout << std::endl;
 }
 
-void State::toFile(int time, std::string file){
+void System::toFile(int time, std::string file){
 	std::ofstream of;
 
     of.open(file, std::fstream::in | std::fstream::out | std::fstream::app);
@@ -75,9 +75,9 @@ void State::toFile(int time, std::string file){
 	of << std::endl;
 }
 
-void State::updateState(std::vector<int> update){
+void System::updateSystem(std::vector<int> update){
 	if(update.size() != vec.size()){
-		throw std::invalid_argument("States do not have same dimension");
+		throw std::invalid_argument("Systems do not have same dimension");
 	}
 
 	for(size_t i = 0; i < update.size(); i++){
@@ -87,15 +87,15 @@ void State::updateState(std::vector<int> update){
 	}
 }
 
-void State::addPopulation(Population* p){
+void System::addPopulation(Population* p){
 	pops.push_back(p);
 }
 
-Population* State::getPop(int i){
+Population* System::getPop(int i){
 	return pops[i];
 }
 
-double State::getNextTime(){
+double System::getNextTime(){
 	double overall = 0.0;
 	for(size_t i = 0; i < pops.size(); i++){
 		overall += vec[i] * pops[i]->getRate();
@@ -103,7 +103,7 @@ double State::getNextTime(){
 	return(gsl_ran_exponential(rng, 1 / overall));
 }
 
-int State::choosePop(){
+int System::choosePop(){
 	std::vector<double> rates;
 	for(size_t i  = 0; i < pops.size(); i++){
 		rates.push_back(vec[i] * pops[i]->getRate());
@@ -114,21 +114,21 @@ int State::choosePop(){
 	return choice;
 }
 
-void State::simulate(){
+void System::simulate(){
 	std::cout << "In simulate()" << std::endl;
 	double time = 0.0;
 	for(int i = 0; i < 1000; i ++){
 		double toNext = getNextTime();
 		int pop = choosePop();
 		std::vector<int> update = pops[pop]->getUpdate(gsl_rng_uniform(rng));
-		updateState(update);
+		updateSystem(update);
 		std::cout << "Time: " << time + toNext << std::endl;
 		print();
 		time += toNext;
 	}
 }
 
-void State::simulate(int numTime, std::string file){
+void System::simulate(int numTime, std::string file){
 
 	bool verbose = true;
 
@@ -189,8 +189,8 @@ void State::simulate(int numTime, std::string file){
 		if((unsigned)curObsIndex >= obsTimes.size()-1)
 				break;
 
-        // Update our state
-		//std::cout << "Updating state..." << std::endl;
+        // Update our System
+		//std::cout << "Updating System..." << std::endl;
         int pop = choosePop();
 		//std::cout << "Pop: " << pop << std::endl;
 		std::vector<int> update = pops[pop]->getUpdate(gsl_rng_uniform(rng));
@@ -199,8 +199,8 @@ void State::simulate(int numTime, std::string file){
 		}
 		std::cout << std::endl;
 		*/
-		updateState(update);
-		//std::cout << "Finished updating state..." << std::endl;
+		updateSystem(update);
+		//std::cout << "Finished updating System..." << std::endl;
 		
 
         // Increase our current time and get the next Event Time
