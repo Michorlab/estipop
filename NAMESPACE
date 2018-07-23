@@ -2,8 +2,11 @@
 
 export(FixedTransition)
 export(RandomTransition)
+export(StopCriterion)
+export(StopList)
 export(TransitionList)
 export(gmbp2)
+export(gmbp3)
 export(list2test)
 export(listtest)
 export(rcpptest)

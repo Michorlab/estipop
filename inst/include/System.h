@@ -25,6 +25,7 @@
 //#include <map>
 
 #include "Update.h"
+#include "StopCriterion.h"
 
 class System {
 public:
@@ -35,6 +36,8 @@ public:
 	std::vector<int> from;
 	std::vector<Update> updates;
 	
+	std::vector<StopCriterion> stops;
+	
 	// Constructors
 	System();
 	System(std::vector<int> s);
@@ -42,10 +45,12 @@ public:
 	
 	// Methods
 	void print();
-	void toFile(int time, std::string file);
+	void toFile(double time, std::string file);
 	void updateSystem(std::vector<int> update);
 	
 	void addUpdate(double r, int f, Update u);
+	
+	void addStop(StopCriterion c);
 	
 	double getNextTime(std::vector<double>& o_rates);
 	

@@ -1,7 +1,7 @@
 /*
  * =====================================================================================
  *
- *       Filename:  StopCrition.cpp
+ *       Filename:  StopCriteriion.cpp
  *
  *    Description:  Class representing a stop to the system
  *

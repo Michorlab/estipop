@@ -46,6 +46,15 @@ gmbp2 <- function(time, file, initial, lifetimes, transitions) {
     .Call('_gmbp_gmbp2', PACKAGE = 'gmbp', time, file, initial, lifetimes, transitions)
 }
 
+#' gmbp3
+#'
+#' gmbp3
+#'
+#' @export
+gmbp3 <- function(time, file, initial, transitions, stops) {
+    .Call('_gmbp_gmbp3', PACKAGE = 'gmbp', time, file, initial, transitions, stops)
+}
+
 #' test
 #'
 #' test

@@ -60,7 +60,7 @@ void System::print(){
 	std::cout << std::endl;
 }
 
-void System::toFile(int time, std::string file){
+void System::toFile(double time, std::string file){
 	std::ofstream of;
 
     of.open(file, std::fstream::in | std::fstream::out | std::fstream::app);
@@ -88,6 +88,10 @@ void System::addUpdate(double r, int f, Update u){
 	rates.push_back(r);
 	from.push_back(f);
 	updates.push_back(u);
+}
+
+void System::addStop(StopCriterion c){
+	stops.push_back(c);
 }
 
 double System::getNextTime(std::vector<double>& o_rates){
@@ -126,24 +130,11 @@ void System::simulate(int numTime, std::string file){
 		std::cout << "Simulation End Time: " << obsTimes[numTime] << std::endl;
 		std::cout << "obsTimes.size(): " << obsTimes.size() << std::endl;
 	}
-	
-	//int wait = 0;
 
     // Run until our currentTime is greater than our largest Observation time
     while(curTime <= obsTimes[numTime])
     {
         Rcpp::checkUserInterrupt();
-		
-		bool zero = true;
-		for(size_t i = 0; i < state.size(); i++){
-			if(state[i] > 0)
-				zero = false;
-		}
-		
-		if(zero){
-			std::cout << "All populations have gone extinct.  Exiting simulation..." << std::endl;
-			break;
-		}
 
         // Get the next event time
         double timeToNext = getNextTime(o_rates);
@@ -166,15 +157,40 @@ void System::simulate(int numTime, std::string file){
 
         // Update our System
         int index = choose(o_rates);
-		
-		
+
+
 		std::vector<int> update = updates[index].get();
 		update[from[index]] = update[from[index]] - 1;
 		updateSystem(update);
 
         // Increase our current time and get the next Event Time
         curTime = curTime + timeToNext;
+		
+		bool stop = false;
+
+		for(size_t i = 0; i < stops.size(); i++){
+			if(stops[i].check(state))
+				stop = true;
+		}
+
+		if(stop){
+			toFile(curTime, file);
+			std::cout << "A stopping criterion has been met. Exiting simulation..." << std::endl;
+			break;
+		}
+
+		bool zero = true;
+		for(size_t i = 0; i < state.size(); i++){
+			if(state[i] > 0)
+				zero = false;
+		}
+
+		if(zero){
+			toFile(curTime, file);
+			std::cout << "All populations have gone extinct.  Exiting simulation..." << std::endl;
+			break;
+		}
+
     }
-	//std::cout << "curObsIndex: " << curObsIndex << std::endl;
 	std::cout << "End Simulation Time: " << obsTimes[curObsIndex] << std::endl;
 }

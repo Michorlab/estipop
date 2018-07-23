@@ -34,7 +34,7 @@ FixedTransition = function(population, rate, fixed){
 #' RandomTransition(population = 0, rate = 0.5, fixed = c(1, 1, 0))
 #' }
 RandomTransition = function(population, rate, oVec, oDist, oParams){
-  rlist = list(population, FALSE, rate, oVec, oDist, oParams)
+  rlist = list(population, TRUE, rate, oVec, oDist, oParams)
   names(rlist) = c("pop", "is_random", "prob", "oVec", "oDist", "oParams")
   return(rlist)
 }
@@ -55,5 +55,45 @@ TransitionList = function(...){
   ts = list(...)
   return(ts)
 }
+
+#' StopCriterion
+#'
+#' Designates a condition upon which the simulation should stop
+#'
+#' If the sum of the specified states meets the inequality specified by the particular inequality and value, the simulation stops
+#'
+#' @param indices indices of states to be included in the sum
+#' @param inequality ">", ">=
+#' @param value value to compare the sum of states to
+#'
+#' @export
+#' @examples
+#' \dontrun{
+#' StopCriterion(indices = c(0), inequality = ">=", value = 1000)
+#' }
+StopCriterion = function(indices, inequality, value){
+  rlist = list(indices, inequality, value)
+  names(rlist) = c("indices", "inequality", "value")
+  return(rlist)
+}
+
+#' StopList
+#'
+#' Makes a single StopList object out of multiple StopCriterion objects
+#'
+#' @param ... StopCriterion objects
+#'
+#' @export
+#' @examples
+#' \dontrun{
+#' StopList(StopCriterion(indices = c(0), inequality = ">=", value = 1000),
+#'          StopCriterion(indices = c(0, 1), inequality = ">=", value = 10000))
+#' }
+StopList = function(...){
+  ts = list(...)
+  return(ts)
+}
+
+
 
 
