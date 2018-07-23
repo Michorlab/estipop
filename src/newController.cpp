@@ -468,7 +468,6 @@ double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List
 
 			// Add this transition
 			sys.addUpdate(rate, population, Update(is_random, offspringVec, dist, offspringParams));
-			std::cout << "Added a random transtion" << std::endl;
 		} else{
 			// Get the fixed portion of the Transition
 			Rcpp::NumericVector fix = Rcpp::as<Rcpp::NumericVector>(list_i[3]);

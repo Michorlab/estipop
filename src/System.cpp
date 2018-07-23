@@ -102,7 +102,7 @@ double System::getNextTime(std::vector<double>& o_rates){
 }
 
 void System::simulate(int numTime, std::string file){
-	bool verbose = true;
+	bool verbose = false;
 
 	std::vector<double> o_rates;
 	for(size_t i = 0; i < rates.size(); i++){
