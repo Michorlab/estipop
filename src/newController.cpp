@@ -418,6 +418,9 @@ double gmbp2(int time, std::string file, Rcpp::NumericVector initial, Rcpp::Nume
 //' @export
 // [[Rcpp::export]]
 double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops){
+	double seedcpp = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+	gsl_rng_set(rng, seedcpp);
+	
 	std::cout << "Starting process... " << std::endl;
 	int nTrans = transitions.length();
 	int nStops = stops.length();
