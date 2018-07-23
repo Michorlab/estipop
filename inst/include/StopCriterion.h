@@ -1,9 +1,9 @@
 /*
  * =====================================================================================
  *
- *       Filename:  Update.h
+ *       Filename:  StopCriterion.h
  *
- *    Description:  Class representing a system update
+ *    Description:  Class representing a system StopCriterion
  *
  *        Version:  1.0
  *        Created:  06/26/20178 14:57:27
@@ -26,24 +26,16 @@
 
 
 
-class Update {
+class StopCriterion {
 public:
-	// Members
-	bool is_random;
-	std::vector<int> fixed;
-	std::vector<double> offspring_vec;
-	std::string offspring_dist;
-	std::vector<double> params;
+	std::vector<int> indices;
+	std::string inequality;
+	double value;
 	
+	StopCriterion();
+	StopCriterion(std::vector<int> ind, std::string ineq, double v);
+	~StopCriterion();
 	
-
-	// Constructors
-	Update();
-	Update(std::vector<int> f);
-	Update(bool rand, std::vector<double> o, std::string dist, std::vector<double> p);
-	~Update();
-
-	// Methods
-	std::vector<int> get();
+	bool check(std::vector<int> state);
 };
 

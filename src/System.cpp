@@ -22,17 +22,17 @@
 
 #include <iostream>
 #include <fstream>
-#include <iomanip>
-#include <stdlib.h>     /* srand, rand */
-#include <time.h>       /* time */
-#include <numeric>
-#include <algorithm>
-#include <assert.h>     /* assert */
-#include <map>
-#include <math.h>
-#include <random>
-#include <iterator>
-#include <cmath>
+//#include <iomanip>
+//#include <stdlib.h>     /* srand, rand */
+//#include <time.h>       /* time */
+//#include <numeric>
+//#include <algorithm>
+//#include <assert.h>     /* assert */
+//#include <map>
+//#include <math.h>
+//#include <random>
+//#include <iterator>
+//#include <cmath>
 #include <gsl/gsl_randist.h>
 
 #include <RcppGSL.h>

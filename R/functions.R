@@ -1,34 +1,41 @@
-#' Transition
+#' FixedTransition
 #'
-#' Designates a Transition, that is, a transition vector that may contain or may not contain random elements
+#' Designates a fixed transition, that is, a transition vector that does not contain random elements, such as a split event
 #'
 #' @param population index of population for which transition applies
-#' @param prob probability that this transition occurs
+#' @param rate rate at which this transition occurs
 #' @param fixed
-#' @param random
 #'
 #' @export
 #' @examples
 #' \dontrun{
-#' Transition(population = 0, prob = 0.5, fixed = c(1, 1, 0), random = c(FALSE, FALSE, TRUE))
+#' FixedTransition(population = 0, rate = 0.5, fixed = c(1, 1, 0))
 #' }
-Transition = function(population, prob, fixed, random = NULL){
-  rlist = list()
-  # If there is no random component
-  if(length(random) == 0){
-    rlist = list(population, FALSE, prob, fixed)
-    names(rlist) = c("pop", "is_random", "prob", "fixed")
-  }
+FixedTransition = function(population, rate, fixed){
+  rlist = list(population, FALSE, rate, fixed)
+  names(rlist) = c("pop", "is_random", "prob", "fixed")
+  return(rlist)
+}
 
-  # If there is a random component
-  else {
-
-    # check to make sure the fixed and random are of the same size
-    if(length(random) != length(fixed))
-      stop("fixed and random vector must be of same length")
-    rlist = list(population, TRUE, prob, fixed, which(random)-1)
-    names(rlist) = c("population", "is_random", "prob", "fixed", "rand_indices")
-  }
+#' RandomTransition
+#'
+#' Designates a fixed transition, that is, a transition vector that generates the number of offspring according to the distribution oDist with
+#' parameters oParams, and then divides these according to a multinomial distribution with probability vector oVec
+#'
+#' @param population index of population for which transition applies
+#' @param rate rate at which this transition occurs
+#' @param oVec
+#' @param oDist
+#' @param oParams
+#'
+#' @export
+#' @examples
+#' \dontrun{
+#' RandomTransition(population = 0, rate = 0.5, fixed = c(1, 1, 0))
+#' }
+RandomTransition = function(population, rate, oVec, oDist, oParams){
+  rlist = list(population, FALSE, rate, oVec, oDist, oParams)
+  names(rlist) = c("pop", "is_random", "prob", "oVec", "oDist", "oParams")
   return(rlist)
 }
 

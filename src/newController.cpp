@@ -373,18 +373,27 @@ double gmbp2(int time, std::string file, Rcpp::NumericVector initial, Rcpp::Nume
 		bool is_random = list_i[1];
 		double rate = list_i[2];
 
-		// Get the fixed portion of the Transition
-		Rcpp::NumericVector fix = Rcpp::as<Rcpp::NumericVector>(list_i[3]);
-		std::vector<int> fixed (fix.begin(), fix.end());
-
 		// If there is a random component, get which indices of the vector will be generated randomly
 		if(is_random){
-			Rcpp::NumericVector rand = Rcpp::as<Rcpp::NumericVector>(list_i[4]);
-			std::vector<int> rand_incides (rand.begin(), rand.end());
+			// Get the offspring distribution of the Transition
+			Rcpp::NumericVector oVec = Rcpp::as<Rcpp::NumericVector>(list_i[3]);
+			std::vector<double> offspringVec (oVec.begin(), oVec.end());
 
-			// Add this transition to the correct population
-			sys.addUpdate(rate, population, Update(is_random, fixed, rand_incides));
+			// Get the distribution
+			std::string dist = list_i[4];
+
+			// Get the offspring distribution of the Transition
+			Rcpp::NumericVector p = Rcpp::as<Rcpp::NumericVector>(list_i[5]);
+			std::vector<double> offspringParams (p.begin(), p.end());
+
+			// Add this transition
+			sys.addUpdate(rate, population, Update(is_random, offspringVec, dist, offspringParams));
 		} else{
+			// Get the fixed portion of the Transition
+			Rcpp::NumericVector fix = Rcpp::as<Rcpp::NumericVector>(list_i[3]);
+			std::vector<int> fixed (fix.begin(), fix.end());
+
+			// add update
 			sys.addUpdate(rate, population, Update(fixed));
 		}
 	}
