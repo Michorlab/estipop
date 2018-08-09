@@ -94,6 +94,35 @@ StopList = function(...){
   return(ts)
 }
 
+#' branch
+#'
+#' Makes a single StopList object out of multiple StopCriterion objects
+#'
+#' @param time number of time units to simulate
+#' @param initial intial state vector
+#' @param transitionList TransitionList object specifying transitions in system
+#' @param stopList StopList object specifying stopping conditions for the system
+#'
+#' @export
+#' @examples
+#' \dontrun{
+#' branch(time = 100,
+#'        initial = c(1,0),
+#'        transistionList = TransitionList(Transition(prob = 0.5, fixed = c(1, 1, 0), random = c(FALSE, FALSE, TRUE)),
+#'                                         Transition(prob = 0.5, fixed = c(0, 0, 0), random = c(TRUE, FALSE, FALSE))),
+#'        stopList = StopList(StopCriterion(indices = c(0), inequality = ">=", value = 1000),
+#'                   StopCriterion(indices = c(0, 1), inequality = ">=", value = 10000)))
+#' }
+branch = function(time, intial, transitionList, stopList){
+  f = getAbsolutePath(tempfile(pattern = paste("system_", format(Sys.time(), "%d-%m-%Y-%H%M%S"), "_", sep = ""), fileext = ".csv", tmpdir = getwd()))
+  gmbp3(time, f, initial, transitionList, stopList)
+  res = read.csv(f, header = F)
+  names(res)[1] = "time"
+  return(res)
+}
+
+
+
 
 
 
