@@ -95,6 +95,10 @@ bool StopCriterion::check(std::vector<int> state){
 		if(checkVal == value)
 			return true;
 		return false;
+	}else if (inequality == "!="){
+		if(checkVal != value)
+			return true;
+		return false;
 	}
 
 

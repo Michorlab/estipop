@@ -420,7 +420,7 @@ double gmbp2(int time, std::string file, Rcpp::NumericVector initial, Rcpp::Nume
 double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops){
 	double seedcpp = std::chrono::high_resolution_clock::now().time_since_epoch().count();
 	gsl_rng_set(rng, seedcpp);
-	
+
 	std::cout << "Starting process... " << std::endl;
 	int nTrans = transitions.length();
 	int nStops = stops.length();
@@ -480,7 +480,7 @@ double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List
 			sys.addUpdate(rate, population, Update(fixed));
 		}
 	}
-	
+
 	// Add transitions
 	std::cout << "Adding stopping criteria..." << std::endl;
 
@@ -491,11 +491,11 @@ double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List
 		Rcpp::List list_i = Rcpp::as<Rcpp::List>(stops[i]);
 
 		// Get popuation, is_random, probability
-		
+
 		// Get the offspring distribution of the Transition
 		Rcpp::NumericVector ind = Rcpp::as<Rcpp::NumericVector>(list_i[0]);
 		std::vector<int> indices (ind.begin(), ind.end());
-			
+
 		std::string ineq = list_i[1];
 		double value = list_i[2];
 
@@ -534,6 +534,136 @@ double test(int n) {
 
 	//return sys.choosePop();
 	return 0;
+}
+
+// Bojan Nikolic <bojan@bnikolic.co.uk
+// Simple Gauss-Konrod integration with GSL
+
+#include <cmath>
+#include <iostream>
+
+//#include <boost/shared_ptr.hpp>
+//#include <boost/format.hpp>
+
+#include <gsl/gsl_integration.h>
+
+struct f_params {
+  // Amplitude
+  double a;
+  // Phase
+  double phi;
+};
+
+double f(double x, void *p)
+{
+  f_params &params= *reinterpret_cast<f_params *>(p);
+  return (pow(x, params.a)+params.phi);
+}
+
+double g(double x, void *p)
+{
+  f_params &params= *reinterpret_cast<f_params *>(p);
+  if(x >= 5)
+    return 10;
+  else
+    return 5;
+  //return (pow(x, params.a)+params.phi);
+}
+
+void dointeg(void)
+{
+  f_params params;
+  params.a=34.0;
+  params.phi=0.0;
+
+  gsl_function F;
+  F.function = &f;
+  F.params = reinterpret_cast<void *>(&params);
+
+  double result, error;
+  size_t neval;
+
+  const double xlow=0;
+  const double xhigh=10;
+  const double epsabs=1e-4;
+  const double epsrel=1e-4;
+
+  int code=gsl_integration_qng (&F,
+                                xlow,
+                                xhigh,
+                                epsabs,
+                                epsrel,
+                                &result,
+                                &error,
+                                &neval);
+  if(code)
+  {
+    std::cerr<<"There was a problem with integration: code " << code
+             <<std::endl;
+  }
+  else
+  {
+    std::cout<<"Result " << result << " +/- " << error << " from " << neval << " evaluations" <<
+             std::endl;
+  }
+}
+
+void doqags(void)
+{
+  gsl_integration_workspace *workspace = gsl_integration_workspace_alloc(1000);
+
+  f_params params;
+  params.a=34.0;
+  params.phi=0.0;
+
+  gsl_function F;
+  F.function = &g;
+  F.params = reinterpret_cast<void *>(&params);
+
+  double result, error;
+  size_t neval;
+
+  const double xlow=0;
+  const double xhigh=10;
+  const double epsabs=1e-4;
+  const double epsrel=1e-4;
+
+  int code=gsl_integration_qags (&F,
+                                xlow,
+                                xhigh,
+                                epsabs,
+                                epsrel,
+                                1000,
+                                workspace,
+                                &result,
+                                &error);
+                                gsl_integration_workspace_free(workspace);
+
+                                if(code)
+                                {
+                                  std::cerr<<"There was a problem with integration: code " << code
+                                           <<std::endl;
+                                }
+                                else
+                                {
+                                  std::cout<<"Result " << result << " +/- " << error << " from " << neval << " evaluations" <<
+                                    std::endl;
+                                }
+}
+
+//' t2
+//'
+//' t2
+//'
+//' @export
+// [[Rcpp::export]]
+int t2()
+{
+  for(int i = 0; i < 1e6; i++){
+    doqags();
+    dointeg();
+  }
+  return 0;
 }
 
 

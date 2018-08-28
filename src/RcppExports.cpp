@@ -92,6 +92,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// t2
+int t2();
+RcppExport SEXP _gmbp_t2() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(t2());
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_gmbp_rcpptest", (DL_FUNC) &_gmbp_rcpptest, 1},
@@ -101,6 +111,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_gmbp_gmbp2", (DL_FUNC) &_gmbp_gmbp2, 5},
     {"_gmbp_gmbp3", (DL_FUNC) &_gmbp_gmbp3, 5},
     {"_gmbp_test", (DL_FUNC) &_gmbp_test, 1},
+    {"_gmbp_t2", (DL_FUNC) &_gmbp_t2, 0},
     {NULL, NULL, 0}
 };
 

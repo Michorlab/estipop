@@ -64,3 +64,12 @@ test <- function(n) {
     .Call('_gmbp_test', PACKAGE = 'gmbp', n)
 }
 
+#' t2
+#'
+#' t2
+#'
+#' @export
+t2 <- function() {
+    .Call('_gmbp_t2', PACKAGE = 'gmbp')
+}
+
