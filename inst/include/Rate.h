@@ -35,6 +35,8 @@ public:
 	std::vector<double> params;
 	double rate_homog;
 	
+	double tot_error;
+	
 	gsl_function funct;
 	
 	

@@ -39,9 +39,9 @@ extern gsl_rng* rng;
 
 //
 
-Rate::Rate(){}
+Rate::Rate(){tot_error = 0;}
 
-Rate::Rate(double (*f)(double, void*)){
+Rate::Rate(double (*f)(double, void*)) : Rate(){
 	funct.function = f;
 	rate_homog = maximizeFunc(funct, 0, 1000, 1000);
 }
@@ -79,6 +79,7 @@ double Rate::integrateFunct(double a, double b){
 	{
 	  std::cout<<"Result " << result << " +/- " << error << " from " << neval << " evaluations" <<
 		std::endl;
+		tot_error += error;
 		return result;
 	}
 }
