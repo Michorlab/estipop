@@ -29,6 +29,7 @@
 //#include <iterator>
 //#include <cmath>
 #include <gsl/gsl_randist.h>
+#include <gsl/gsl_math.h>
 
 #include <RcppGSL.h>
 #include <Rcpp.h>
@@ -167,6 +168,26 @@ std::vector<std::vector<long int>> splitDoubleVector(std::vector<long int> v, st
     return ret;
 }
 
+// Maximize a function
+double maximizeFunc(gsl_function rate_function, double start_time, double end_time, int bins)
+{
+  double max = GSL_FN_EVAL(&(rate_function), start_time);
+  double test_max;
+  double delta_t = (end_time - start_time) / bins;
+
+  if(delta_t > 0.1)
+  {
+    delta_t = 0.1;
+    bins = ceil((end_time - start_time) / delta_t);
+  }
+
+  for(int step = 1; step <= bins; ++step)
+  {
+    test_max = GSL_FN_EVAL(&(rate_function), start_time + delta_t * step);
+    max = fmax(max, test_max);
+  }
+  return max;
+}
 
 
 

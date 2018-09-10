@@ -22,6 +22,7 @@
 #include <ostream>
 #include <vector>
 #include <map>
+#include <gsl/gsl_math.h>
 
 // Helper methods - CellPopulationCode
 long int cellByFitness(std::vector<double> fitness);
@@ -35,6 +36,9 @@ void printVec(std::vector<double> v);
 // Helper methods - DiffTriCode
 int beginIndex(int mfac, int level);
 std::vector<std::vector<long int> > splitDoubleVector(std::vector<long int> v, std::vector<double> probs);
+
+// Rate functions
+double maximizeFunc(gsl_function rate_function, double start_time, double end_time, int bins);
 
 
 

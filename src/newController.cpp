@@ -20,6 +20,7 @@
 #include "System.h"
 #include "Update.h"
 #include "StopCriterion.h"
+#include "Rate.h"
 
 // Includes
 #include <iostream>
@@ -570,6 +571,7 @@ double g(double x, void *p)
   //return (pow(x, params.a)+params.phi);
 }
 
+
 void dointeg(void)
 {
   f_params params;
@@ -659,10 +661,15 @@ void doqags(void)
 // [[Rcpp::export]]
 int t2()
 {
-  for(int i = 0; i < 1e6; i++){
+  /*for(int i = 0; i < 1e6; i++){
     doqags();
     dointeg();
   }
+  */
+  
+  Rate r = Rate(&g);
+  std::cout << r.integrateFunct(0, 10) << std::endl;
+  std::cout << r.rate_homog << std::endl;
   return 0;
 }
 
