@@ -25,14 +25,18 @@
 //#include <map>
 
 #include "Update.h"
+#include "Rate.h"
 #include "StopCriterion.h"
 
 class System {
 public:
 	// Members
+	double tot_rate_homog;
+	
 	std::vector<int> state;
 	
 	std::vector<double> rates;
+	std::vector<Rate> rates2;
 	std::vector<int> from;
 	std::vector<Update> updates;
 	
@@ -54,6 +58,12 @@ public:
 	
 	double getNextTime(std::vector<double>& o_rates);
 	
+	double getNextTime2(double curTime);
+	
+	int getNextEvent2(double curTime, double timeToNext);
+	
 	void simulate(int numTime, std::string file);
+	
+	void simulate2(int numTime, std::string file);
 };
 

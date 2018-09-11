@@ -183,3 +183,134 @@ void System::simulate(int numTime, std::string file){
     }
 	std::cout << "End Simulation Time: " << obsTimes[curObsIndex] << std::endl;
 }
+
+double System::getNextTime2(double curTime){
+	double tot_rate;
+	double rand_next_time;
+	
+	while(true){
+		Rcpp::checkUserInterrupt();
+		
+		tot_rate = 0;
+		rand_next_time = gsl_ran_exponential(rng, 1 / tot_rate_homog);
+		
+		for(size_t i = 0; i < rates2.size(); i++){
+			tot_rate += rates2[i].eval(curTime + rand_next_time) * state[from[i]];
+		}
+		
+		double u_thin = gsl_ran_flat(rng, 0, 1);
+		double beta_ratio = tot_rate / tot_rate_homog;
+		//std::cout << beta_ratio << "\n";
+
+		if(u_thin <= beta_ratio)
+		{
+		  break;
+		}
+	}
+
+	return(rand_next_time);
+}
+
+int System::getNextEvent2(double curTime, double timeToNext){
+	std::vector<double> cumulativeHazards;
+	
+	for(size_t i = 0; i < rates2.size(); i++){
+		cumulativeHazards.push_back(rates2[1].integrateFunct(curTime, curTime + timeToNext));
+	}
+	
+	return choose(cumulativeHazards);
+}
+
+void System::simulate2(int numTime, std::string file){
+	bool verbose = false;
+
+	std::vector<double> o_rates;
+	for(size_t i = 0; i < rates.size(); i++){
+		o_rates.push_back(0.0);
+	}
+
+	// Set up vector of observation times
+    std::vector<int> obsTimes;
+    for (int k = 0; k < numTime + 1; k++)
+    {
+        obsTimes.push_back(k);
+    }
+
+
+    // Set variables to keep track of our current time and which observation time comes next
+    double curTime = 0;
+    int curObsIndex = 0;
+
+	int obsMod = pow(10, round(log10(numTime)-1));
+
+    // Display some stuff  if verbose
+	if(verbose){
+		std::cout << "numTime: " << numTime << std::endl;
+		std::cout << "Simulation Start Time: " << curTime << std::endl;
+		std::cout << "Simulation End Time: " << obsTimes[numTime] << std::endl;
+		std::cout << "obsTimes.size(): " << obsTimes.size() << std::endl;
+	}
+
+    // Run until our currentTime is greater than our largest Observation time
+    while(curTime <= obsTimes[numTime])
+    {
+        Rcpp::checkUserInterrupt();
+
+        // Get the next event time
+        double timeToNext = getNextTime2(curTime);
+
+        // If our next event time is later than observation times,
+        // Make our observations
+        while((curTime + timeToNext > obsTimes[curObsIndex]))// & (curTime + timeToNext <= obsTimes[numTime]))
+        {
+			// print out current state vector
+			toFile(obsTimes[curObsIndex], file);
+
+			if(verbose &&  obsTimes[curObsIndex] % obsMod == 0)
+				std::cout << "Time " << obsTimes[curObsIndex] << " of " << numTime << std::endl;
+      curObsIndex++;
+			if((unsigned)curObsIndex >= obsTimes.size()-1)
+				break;
+        }
+		if((unsigned)curObsIndex >= obsTimes.size()-1)
+				break;
+
+        // Update our System
+        int index = getNextEvent2(curTime, timeToNext);
+
+
+		std::vector<int> update = updates[index].get();
+		update[from[index]] = update[from[index]] - 1;
+		updateSystem(update);
+
+        // Increase our current time and get the next Event Time
+        curTime = curTime + timeToNext;
+		
+		bool stop = false;
+
+		for(size_t i = 0; i < stops.size(); i++){
+			if(stops[i].check(state))
+				stop = true;
+		}
+
+		if(stop){
+			toFile(curTime, file);
+			std::cout << "A stopping criterion has been met. Exiting simulation..." << std::endl;
+			break;
+		}
+
+		bool zero = true;
+		for(size_t i = 0; i < state.size(); i++){
+			if(state[i] > 0)
+				zero = false;
+		}
+
+		if(zero){
+			toFile(curTime, file);
+			std::cout << "All populations have gone extinct.  Exiting simulation..." << std::endl;
+			break;
+		}
+
+    }
+	std::cout << "End Simulation Time: " << obsTimes[curObsIndex] << std::endl;
+}

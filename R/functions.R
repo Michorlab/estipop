@@ -94,6 +94,27 @@ StopList = function(...){
   return(ts)
 }
 
+#' Rate
+#'
+#' Designates a time-dependent rate
+#'
+#' Specifies a time-dependent rate.  User can specify using built-in types and accompanying parameters, or use a custom C++ function of time
+#'
+#' @param type type of rate function, see README
+#' @param params list of parameters
+#'
+#' @export
+#' @examples
+#' \dontrun{
+#' Rate(type = 0, params = c(0.01))
+#' Rate(type = 1, params = c(0.1, -0.01))
+#' }
+Rate = function(type, params){
+  rlist = list(type, params)
+  names(rlist) = c("type", "params")
+  return(rlist)
+}
+
 #' branch
 #'
 #' Makes a single StopList object out of multiple StopCriterion objects

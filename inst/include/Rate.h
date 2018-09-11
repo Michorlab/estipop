@@ -47,5 +47,6 @@ public:
 	~Rate();
 	
 	double integrateFunct(double a, double b);
+	double eval(double time);
 };
 

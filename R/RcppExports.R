@@ -73,3 +73,12 @@ t2 <- function() {
     .Call('_gmbp_t2', PACKAGE = 'gmbp')
 }
 
+#' timeDepBranch
+#'
+#' timeDepBranch
+#'
+#' @export
+timeDepBranch <- function(time, file, initial, transitions, stops) {
+    .Call('_gmbp_timeDepBranch', PACKAGE = 'gmbp', time, file, initial, transitions, stops)
+}
+

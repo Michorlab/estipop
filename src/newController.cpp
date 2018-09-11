@@ -673,5 +673,104 @@ int t2()
   return 0;
 }
 
+//' timeDepBranch
+//'
+//' timeDepBranch
+//'
+//' @export
+// [[Rcpp::export]]
+double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops){
+	double seedcpp = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+	gsl_rng_set(rng, seedcpp);
 
+	std::cout << "Starting process... " << std::endl;
+	int nTrans = transitions.length();
+	int nStops = stops.length();
+
+	std::cout << "Initialization system..." << std::endl;
+	// Initial population sizes
+	std::vector<int> init(initial.begin(), initial.end());
+
+	// Initialize system
+	System sys(init);
+
+	/*
+	// Create populations with lifetimes
+	std::cout << "Making populations..." << std::endl;
+	for(size_t i = 0; i < init.size(); i++){
+		std::cout << "init[" << i << "]: " << init[i] << std::endl;
+		Population* p = new Population(lifetimes[i]);
+		sys.addPopulation(p);
+	}
+	*/
+
+	// Add transitions
+	std::cout << "Adding transitions..." << std::endl;
+
+	// Iterate over transitions list
+    for(int i = 0; i < nTrans; i++){
+
+		// Get the ith transition
+		Rcpp::List list_i = Rcpp::as<Rcpp::List>(transitions[i]);
+
+		// Get popuation, is_random, probability
+		int population = list_i[0];
+		bool is_random = list_i[1];
+		double rate = list_i[2];
+
+		// If there is a random component, get which indices of the vector will be generated randomly
+		if(is_random){
+			// Get the offspring distribution of the Transition
+			Rcpp::NumericVector oVec = Rcpp::as<Rcpp::NumericVector>(list_i[3]);
+			std::vector<double> offspringVec (oVec.begin(), oVec.end());
+
+			// Get the distribution
+			std::string dist = list_i[4];
+
+			// Get the offspring distribution of the Transition
+			Rcpp::NumericVector p = Rcpp::as<Rcpp::NumericVector>(list_i[5]);
+			std::vector<double> offspringParams (p.begin(), p.end());
+
+			// Add this transition
+			sys.addUpdate(rate, population, Update(is_random, offspringVec, dist, offspringParams));
+		} else{
+			// Get the fixed portion of the Transition
+			Rcpp::NumericVector fix = Rcpp::as<Rcpp::NumericVector>(list_i[3]);
+			std::vector<int> fixed (fix.begin(), fix.end());
+
+			// add update
+			sys.addUpdate(rate, population, Update(fixed));
+		}
+	}
+
+	// Add transitions
+	std::cout << "Adding stopping criteria..." << std::endl;
+
+	// Iterate over transitions list
+    for(int i = 0; i < nStops; i++){
+
+		// Get the ith transition
+		Rcpp::List list_i = Rcpp::as<Rcpp::List>(stops[i]);
+
+		// Get popuation, is_random, probability
+
+		// Get the offspring distribution of the Transition
+		Rcpp::NumericVector ind = Rcpp::as<Rcpp::NumericVector>(list_i[0]);
+		std::vector<int> indices (ind.begin(), ind.end());
+
+		std::string ineq = list_i[1];
+		double value = list_i[2];
+
+		sys.addStop(StopCriterion(indices, ineq, value));
+	}
+
+	//sys.print();
+
+	// Simulate
+	std::cout << "Simulating..." << std::endl;
+	sys.simulate(time, file);
+	std::cout << "Ending process..." << std::endl;
+
+	return 0.0;
+}
 

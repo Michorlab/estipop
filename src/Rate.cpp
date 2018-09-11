@@ -71,3 +71,7 @@ double Rate::integrateFunct(double a, double b){
 	}
 }
 
+double Rate::eval(double time){
+	return GSL_FN_EVAL(&funct, time);
+}
+
