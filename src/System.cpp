@@ -29,6 +29,7 @@
 #include <Rinternals.h>
 
 extern gsl_rng* rng;
+extern bool silent;
 
 System::System(){
 
@@ -113,7 +114,7 @@ void System::simulate(int numTime, std::string file){
 	int obsMod = pow(10, round(log10(numTime)-1));
 
     // Display some stuff  if verbose
-	if(verbose){
+	if(!silent){
 		std::cout << "numTime: " << numTime << std::endl;
 		std::cout << "Simulation Start Time: " << curTime << std::endl;
 		std::cout << "Simulation End Time: " << obsTimes[numTime] << std::endl;
@@ -135,7 +136,7 @@ void System::simulate(int numTime, std::string file){
 			// print out current state vector
 			toFile(obsTimes[curObsIndex], file);
 
-			if(verbose &&  obsTimes[curObsIndex] % obsMod == 0)
+			if(verbose &&  obsTimes[curObsIndex] % obsMod == 0 && !silent)
 				std::cout << "Time " << obsTimes[curObsIndex] << " of " << numTime << std::endl;
       curObsIndex++;
 			if((unsigned)curObsIndex >= obsTimes.size()-1)
@@ -164,7 +165,8 @@ void System::simulate(int numTime, std::string file){
 
 		if(stop){
 			toFile(curTime, file);
-			std::cout << "A stopping criterion has been met. Exiting simulation..." << std::endl;
+			if(!silent)
+				std::cout << "A stopping criterion has been met. Exiting simulation..." << std::endl;
 			break;
 		}
 
@@ -176,11 +178,13 @@ void System::simulate(int numTime, std::string file){
 
 		if(zero){
 			toFile(curTime, file);
-			std::cout << "All populations have gone extinct.  Exiting simulation..." << std::endl;
+			if(!silent)
+				std::cout << "All populations have gone extinct.  Exiting simulation..." << std::endl;
 			break;
 		}
 
     }
+		if(!silent)
 	std::cout << "End Simulation Time: " << obsTimes[curObsIndex] << std::endl;
 }
 

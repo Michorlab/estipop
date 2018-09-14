@@ -50,6 +50,8 @@
 gsl_rng* rng = gsl_rng_alloc(gsl_rng_mt19937);
 double seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
 
+bool silent = false;
+
 
 // Helper Methods to read in data from text files
 template
@@ -245,7 +247,7 @@ double rcpptest2(Rcpp::NumericMatrix x){
 //'
 //' @export
 // [[Rcpp::export]]
-double listtest(Rcpp::List l, int i){
+Rcpp::NumericVector listtest(Rcpp::List l, int i){
 	Rcpp::NumericVector fixed = Rcpp::as<Rcpp::NumericVector>(l["fixed"]);
 	Rcpp::NumericVector random = Rcpp::as<Rcpp::NumericVector>(l["random"]);
 
@@ -257,7 +259,10 @@ double listtest(Rcpp::List l, int i){
 		std::cout << result[i] << std::endl;
 	}
 
-	return 0;
+	if(l.containsElementNamed("test"))
+		std::cout << "List contained an element named test" << std::endl;
+
+	return fixed;
 }
 
 //' list2test
@@ -666,7 +671,7 @@ int t2()
     dointeg();
   }
   */
-  
+
   Rate r = Rate(&g);
   std::cout << r.integrateFunct(0, 10) << std::endl;
   std::cout << r.rate_homog << std::endl;
@@ -679,15 +684,18 @@ int t2()
 //'
 //' @export
 // [[Rcpp::export]]
-double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops){
+double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence){
 	double seedcpp = std::chrono::high_resolution_clock::now().time_since_epoch().count();
 	gsl_rng_set(rng, seedcpp);
+	silent = silence;
 
-	std::cout << "Starting process... " << std::endl;
+	if(!silent)
+		std::cout << "Starting process... " << std::endl;
 	int nTrans = transitions.length();
 	int nStops = stops.length();
 
-	std::cout << "Initialization system..." << std::endl;
+	if(!silent)
+		std::cout << "Initialization system..." << std::endl;
 	// Initial population sizes
 	std::vector<int> init(initial.begin(), initial.end());
 
@@ -705,7 +713,8 @@ double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rc
 	*/
 
 	// Add transitions
-	std::cout << "Adding transitions..." << std::endl;
+	if(!silent)
+		std::cout << "Adding transitions..." << std::endl;
 
 	// Iterate over transitions list
     for(int i = 0; i < nTrans; i++){
@@ -716,8 +725,16 @@ double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rc
 		// Get popuation, is_random, probability
 		int population = list_i[0];
 		bool is_random = list_i[1];
-		double rate = list_i[2];
+		Rcpp::List rateList = Rcpp::as<Rcpp::List>(list_i[2]);
+		double rate = 0.0;
+		if(rateList.containsElementNamed("type")){
+			rate = rateList[1];
+		} else {
+			rate = rateList[0];
+		}
 
+		
+		Update u;
 		// If there is a random component, get which indices of the vector will be generated randomly
 		if(is_random){
 			// Get the offspring distribution of the Transition
@@ -732,19 +749,24 @@ double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rc
 			std::vector<double> offspringParams (p.begin(), p.end());
 
 			// Add this transition
-			sys.addUpdate(rate, population, Update(is_random, offspringVec, dist, offspringParams));
+			u = Update(is_random, offspringVec, dist, offspringParams);
+			//sys.addUpdate(rate, population, Update(is_random, offspringVec, dist, offspringParams));
 		} else{
 			// Get the fixed portion of the Transition
 			Rcpp::NumericVector fix = Rcpp::as<Rcpp::NumericVector>(list_i[3]);
 			std::vector<int> fixed (fix.begin(), fix.end());
 
 			// add update
-			sys.addUpdate(rate, population, Update(fixed));
+			u = Update(fixed);
+			//sys.addUpdate(rate, population, Update(fixed));
 		}
+		
+		sys.addUpdate(rate, population, u);
 	}
 
 	// Add transitions
-	std::cout << "Adding stopping criteria..." << std::endl;
+	if(!silent)
+		std::cout << "Adding stopping criteria..." << std::endl;
 
 	// Iterate over transitions list
     for(int i = 0; i < nStops; i++){
@@ -767,9 +789,11 @@ double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rc
 	//sys.print();
 
 	// Simulate
-	std::cout << "Simulating..." << std::endl;
+	if(!silent)
+		std::cout << "Simulating..." << std::endl;
 	sys.simulate(time, file);
-	std::cout << "Ending process..." << std::endl;
+	if(!silent)
+		std::cout << "Ending process..." << std::endl;
 
 	return 0.0;
 }

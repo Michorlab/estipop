@@ -4,7 +4,7 @@
 \alias{timeDepBranch}
 \title{timeDepBranch}
 \usage{
-timeDepBranch(time, file, initial, transitions, stops)
+timeDepBranch(time, file, initial, transitions, stops, silence)
 }
 \description{
 timeDepBranch

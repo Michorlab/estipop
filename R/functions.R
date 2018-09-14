@@ -13,7 +13,7 @@
 #' }
 FixedTransition = function(population, rate, fixed){
   rlist = list(population, FALSE, rate, fixed)
-  names(rlist) = c("pop", "is_random", "prob", "fixed")
+  names(rlist) = c("pop", "is_random", "rate", "fixed")
   return(rlist)
 }
 
@@ -35,7 +35,7 @@ FixedTransition = function(population, rate, fixed){
 #' }
 RandomTransition = function(population, rate, oVec, oDist, oParams){
   rlist = list(population, TRUE, rate, oVec, oDist, oParams)
-  names(rlist) = c("pop", "is_random", "prob", "oVec", "oDist", "oParams")
+  names(rlist) = c("pop", "is_random", "rate", "oVec", "oDist", "oParams")
   return(rlist)
 }
 
@@ -137,6 +137,33 @@ Rate = function(type, params){
 branch = function(time, intial, transitionList, stopList){
   f = getAbsolutePath(tempfile(pattern = paste("system_", format(Sys.time(), "%d-%m-%Y-%H%M%S"), "_", sep = ""), fileext = ".csv", tmpdir = getwd()))
   gmbp3(time, f, initial, transitionList, stopList)
+  res = read.csv(f, header = F)
+  names(res)[1] = "time"
+  return(res)
+}
+
+#' branchTD
+#'
+#' Makes a single StopList object out of multiple StopCriterion objects
+#'
+#' @param time number of time units to simulate
+#' @param initial intial state vector
+#' @param transitionList TransitionList object specifying transitions in system
+#' @param stopList StopList object specifying stopping conditions for the system
+#'
+#' @export
+#' @examples
+#' \dontrun{
+#' branchTD(time = 100,
+#'        initial = c(1,0),
+#'        transistionList = TransitionList(Transition(prob = 0.5, fixed = c(1, 1, 0), random = c(FALSE, FALSE, TRUE)),
+#'                                         Transition(prob = 0.5, fixed = c(0, 0, 0), random = c(TRUE, FALSE, FALSE))),
+#'        stopList = StopList(StopCriterion(indices = c(0), inequality = ">=", value = 1000),
+#'                   StopCriterion(indices = c(0, 1), inequality = ">=", value = 10000)))
+#' }
+branchTD = function(time, intial, transitionList, stopList, silent = FALSE){
+  f = getAbsolutePath(tempfile(pattern = paste("system_", format(Sys.time(), "%d-%m-%Y-%H%M%S"), "_", sep = ""), fileext = ".csv", tmpdir = getwd()))
+  timeDepBranch(time, f, initial, transitionList, stopList, silent)
   res = read.csv(f, header = F)
   names(res)[1] = "time"
   return(res)
