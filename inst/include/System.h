@@ -36,7 +36,7 @@ public:
 	std::vector<int> state;
 	
 	std::vector<double> rates;
-	std::vector<Rate> rates2;
+	std::vector<Rate*> rates2;
 	std::vector<int> from;
 	std::vector<Update> updates;
 	
@@ -53,6 +53,8 @@ public:
 	void updateSystem(std::vector<int> update);
 	
 	void addUpdate(double r, int f, Update u);
+	
+	void addUpdate(Rate* r, int f, Update u);
 	
 	void addStop(StopCriterion c);
 	

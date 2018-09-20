@@ -28,9 +28,42 @@
 
 #include "Rate.h"
 
+struct constant_params{
+	double rate;
+};
+
+struct linear_params{
+	double slope;
+	double intercept;
+};
 
 class ConstantRate : public Rate {
 public:
+
+constant_params params;
+
+ConstantRate(double r);
+
+~ConstantRate();
+
+virtual double operator()(double time);
+
+virtual double operator()(double begin, double end);
+	
+};
+
+class LinearRate : public Rate {
+public:
+
+linear_params params;
+
+LinearRate(double i, double s);
+
+~LinearRate();
+
+virtual double operator()(double time);
+
+virtual double operator()(double begin, double end);
 	
 };
 

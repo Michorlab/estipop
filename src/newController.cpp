@@ -21,6 +21,7 @@
 #include "Update.h"
 #include "StopCriterion.h"
 #include "Rate.h"
+#include "ConstantRate.h"
 
 // Includes
 #include <iostream>
@@ -51,6 +52,8 @@ gsl_rng* rng = gsl_rng_alloc(gsl_rng_mt19937);
 double seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
 
 bool silent = false;
+
+gsl_integration_workspace *workspace = gsl_integration_workspace_alloc(1000);
 
 
 // Helper Methods to read in data from text files
@@ -524,20 +527,13 @@ double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List
 //'
 //' @export
 // [[Rcpp::export]]
-double test(int n) {
-	std::vector<int> s = {1, 1};
-	int K = 4;
-	int N = 10;
-	std::vector<double> p = {0.5, 0.5, 0.5, 0.5};
-	std::vector<unsigned int> ret(K);
+double test(double a) {
+	ConstantRate h(1.234234);
+	std::cout << h(1.344) << std::endl;
 
-	gsl_ran_multinomial(rng, K, N, p.data(), ret.data());
-
-	for(size_t i = 0; i < ret.size(); i++){
-	  std::cout << ret.data()[i] << std::endl;
-
-	}
-
+	LinearRate l(10, 2);
+	std::cout << l(4) << std::endl;
+	std::cout << l(0, 4) << std::endl;
 	//return sys.choosePop();
 	return 0;
 }
@@ -726,14 +722,14 @@ double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rc
 		int population = list_i[0];
 		bool is_random = list_i[1];
 		Rcpp::List rateList = Rcpp::as<Rcpp::List>(list_i[2]);
-		double rate = 0.0;
+		Rate* r;
 		if(rateList.containsElementNamed("type")){
-			rate = rateList[1];
+			r = new ConstantRate(Rcpp::as<double>(rateList[1]));
 		} else {
-			rate = rateList[0];
+			r = new ConstantRate(Rcpp::as<double>(rateList[0]));
 		}
 
-		
+
 		Update u;
 		// If there is a random component, get which indices of the vector will be generated randomly
 		if(is_random){
@@ -760,8 +756,8 @@ double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rc
 			u = Update(fixed);
 			//sys.addUpdate(rate, population, Update(fixed));
 		}
-		
-		sys.addUpdate(rate, population, u);
+
+		sys.addUpdate(r, population, u);
 	}
 
 	// Add transitions
@@ -791,7 +787,7 @@ double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rc
 	// Simulate
 	if(!silent)
 		std::cout << "Simulating..." << std::endl;
-	sys.simulate(time, file);
+	sys.simulate2(time, file);
 	if(!silent)
 		std::cout << "Ending process..." << std::endl;
 

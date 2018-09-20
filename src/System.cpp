@@ -31,16 +31,23 @@
 extern gsl_rng* rng;
 extern bool silent;
 
+void out(std::string s){
+	//std::cout << s << std::endl;
+}
+
 System::System(){
 
 }
 
 System::System(std::vector<int> s){
 	state = s;
-
+	tot_rate_homog = 0.0;
 }
 
 System::~System(){
+	for(size_t i = 0; i < rates2.size(); i++){
+		delete rates2[i];
+	}
 }
 
 void System::print(){
@@ -78,6 +85,14 @@ void System::addUpdate(double r, int f, Update u){
 	rates.push_back(r);
 	from.push_back(f);
 	updates.push_back(u);
+}
+
+void System::addUpdate(Rate* r, int f, Update u){
+	rates2.push_back(r);
+	from.push_back(f);
+	updates.push_back(u);
+
+	tot_rate_homog += r->rate_homog;
 }
 
 void System::addStop(StopCriterion c){
@@ -155,7 +170,7 @@ void System::simulate(int numTime, std::string file){
 
         // Increase our current time and get the next Event Time
         curTime = curTime + timeToNext;
-		
+
 		bool stop = false;
 
 		for(size_t i = 0; i < stops.size(); i++){
@@ -191,17 +206,30 @@ void System::simulate(int numTime, std::string file){
 double System::getNextTime2(double curTime){
 	double tot_rate;
 	double rand_next_time;
-	
+
+	tot_rate_homog = 0.0;
+
+	for(size_t i = 0; i < rates2.size(); i++){
+		tot_rate_homog += rates2[i]->rate_homog * state[from[i]];
+	}
+
+	out("In nextTime2");
+
 	while(true){
 		Rcpp::checkUserInterrupt();
-		
+
 		tot_rate = 0;
+
+		out("tot_rate_homog: " + std::to_string(tot_rate_homog));
 		rand_next_time = gsl_ran_exponential(rng, 1 / tot_rate_homog);
-		
+
+
+		out("starting loop");
 		for(size_t i = 0; i < rates2.size(); i++){
-			tot_rate += rates2[i].eval(curTime + rand_next_time) * state[from[i]];
+			tot_rate += (*rates2[i])(curTime + rand_next_time) * state[from[i]];
 		}
-		
+		out("ending loop");
+
 		double u_thin = gsl_ran_flat(rng, 0, 1);
 		double beta_ratio = tot_rate / tot_rate_homog;
 		//std::cout << beta_ratio << "\n";
@@ -212,16 +240,22 @@ double System::getNextTime2(double curTime){
 		}
 	}
 
+	out("Returning from nextTime2 with: " + std::to_string(rand_next_time));
+
 	return(rand_next_time);
 }
 
 int System::getNextEvent2(double curTime, double timeToNext){
 	std::vector<double> cumulativeHazards;
-	
+
+	out("in nextEvent2");
+
+
 	for(size_t i = 0; i < rates2.size(); i++){
-		cumulativeHazards.push_back(rates2[1].integrateFunct(curTime, curTime + timeToNext));
+		cumulativeHazards.push_back((*rates2[i])(curTime, curTime + timeToNext) * state[from[i]]);
 	}
-	
+
+	out("returning from nextEvetn2");
 	return choose(cumulativeHazards);
 }
 
@@ -263,6 +297,8 @@ void System::simulate2(int numTime, std::string file){
         // Get the next event time
         double timeToNext = getNextTime2(curTime);
 
+		out("Got my next time: " + std::to_string(timeToNext));
+
         // If our next event time is later than observation times,
         // Make our observations
         while((curTime + timeToNext > obsTimes[curObsIndex]))// & (curTime + timeToNext <= obsTimes[numTime]))
@@ -280,6 +316,7 @@ void System::simulate2(int numTime, std::string file){
 				break;
 
         // Update our System
+		out("headed from sim2 to getEvent2");
         int index = getNextEvent2(curTime, timeToNext);
 
 
@@ -289,7 +326,7 @@ void System::simulate2(int numTime, std::string file){
 
         // Increase our current time and get the next Event Time
         curTime = curTime + timeToNext;
-		
+
 		bool stop = false;
 
 		for(size_t i = 0; i < stops.size(); i++){

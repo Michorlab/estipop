@@ -161,11 +161,14 @@ branch = function(time, intial, transitionList, stopList){
 #'        stopList = StopList(StopCriterion(indices = c(0), inequality = ">=", value = 1000),
 #'                   StopCriterion(indices = c(0, 1), inequality = ">=", value = 10000)))
 #' }
-branchTD = function(time, intial, transitionList, stopList, silent = FALSE){
+branchTD = function(time, intial, transitionList, stopList, silent = FALSE, keep = FALSE){
   f = getAbsolutePath(tempfile(pattern = paste("system_", format(Sys.time(), "%d-%m-%Y-%H%M%S"), "_", sep = ""), fileext = ".csv", tmpdir = getwd()))
   timeDepBranch(time, f, initial, transitionList, stopList, silent)
   res = read.csv(f, header = F)
   names(res)[1] = "time"
+
+  if(!keep)
+    file.remove(f)
   return(res)
 }
 

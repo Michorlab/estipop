@@ -4,7 +4,7 @@
 \alias{test}
 \title{test}
 \usage{
-test(n)
+test(a)
 }
 \description{
 test

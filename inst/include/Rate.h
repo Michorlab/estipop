@@ -48,5 +48,8 @@ public:
 	
 	double integrateFunct(double a, double b);
 	double eval(double time);
+	
+	virtual double operator()(double time);
+	virtual double operator()(double begin, double end);
 };
 

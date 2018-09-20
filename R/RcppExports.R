@@ -60,8 +60,8 @@ gmbp3 <- function(time, file, initial, transitions, stops) {
 #' test
 #'
 #' @export
-test <- function(n) {
-    .Call('_gmbp_test', PACKAGE = 'gmbp', n)
+test <- function(a) {
+    .Call('_gmbp_test', PACKAGE = 'gmbp', a)
 }
 
 #' t2

@@ -82,13 +82,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // test
-double test(int n);
-RcppExport SEXP _gmbp_test(SEXP nSEXP) {
+double test(double a);
+RcppExport SEXP _gmbp_test(SEXP aSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    rcpp_result_gen = Rcpp::wrap(test(n));
+    Rcpp::traits::input_parameter< double >::type a(aSEXP);
+    rcpp_result_gen = Rcpp::wrap(test(a));
     return rcpp_result_gen;
 END_RCPP
 }

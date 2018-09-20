@@ -4,7 +4,8 @@
 \alias{branchTD}
 \title{branchTD}
 \usage{
-branchTD(time, intial, transitionList, stopList, silent = FALSE)
+branchTD(time, intial, transitionList, stopList, silent = FALSE,
+  keep = FALSE)
 }
 \arguments{
 \item{time}{number of time units to simulate}
