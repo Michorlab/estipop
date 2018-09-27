@@ -93,12 +93,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // t2
-int t2();
-RcppExport SEXP _gmbp_t2() {
+std::vector<double> t2(SEXP custom_distribution_file);
+RcppExport SEXP _gmbp_t2(SEXP custom_distribution_fileSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(t2());
+    Rcpp::traits::input_parameter< SEXP >::type custom_distribution_file(custom_distribution_fileSEXP);
+    rcpp_result_gen = Rcpp::wrap(t2(custom_distribution_file));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -127,7 +128,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_gmbp_gmbp2", (DL_FUNC) &_gmbp_gmbp2, 5},
     {"_gmbp_gmbp3", (DL_FUNC) &_gmbp_gmbp3, 5},
     {"_gmbp_test", (DL_FUNC) &_gmbp_test, 1},
-    {"_gmbp_t2", (DL_FUNC) &_gmbp_t2, 0},
+    {"_gmbp_t2", (DL_FUNC) &_gmbp_t2, 1},
     {"_gmbp_timeDepBranch", (DL_FUNC) &_gmbp_timeDepBranch, 6},
     {NULL, NULL, 0}
 };

@@ -1,22 +1,32 @@
 /*
- * =====================================================================================
- *
- *       Filename:  newController.cpp
- *
- *    Description:  Contains simulating and input file parsing functions
- *
- *        Version:  1.0
- *        Created:  10/1/2017 14:57:27
- *       Revision:  none
- *       Compiler:  g++
- *
- *         Author:  Jeremy Ferlic (s), jferlic@g.harvard.edu
- *   Organization:  Harvard University
- *
- * =====================================================================================
- */
+* =====================================================================================
+*
+*       Filename:  newController.cpp
+*
+*    Description:  Contains simulating and input file parsing functions
+*
+*        Version:  1.0
+*        Created:  10/1/2017 14:57:27
+*       Revision:  none
+*       Compiler:  g++
+*
+*         Author:  Jeremy Ferlic (s), jferlic@g.harvard.edu
+*   Organization:  Harvard University
+*
+* =====================================================================================
+*/
 
-// Random Distributions and Helper functions
+// For plugin system
+#ifndef USE_PRECOMPILED_HEADERS
+#ifdef _WIN32
+#include <direct.h>
+#include <windows.h>
+#else
+#include <dlfcn.h>
+#endif
+#endif
+
+// Classes
 #include "System.h"
 #include "Update.h"
 #include "StopCriterion.h"
@@ -53,128 +63,128 @@ double seed = std::chrono::high_resolution_clock::now().time_since_epoch().count
 
 bool silent = false;
 
-gsl_integration_workspace *workspace = gsl_integration_workspace_alloc(1000);
+gsl_integration_workspace *workspace;
 
 
 // Helper Methods to read in data from text files
 template
 < typename T
-  , template<typename ELEM, typename ALLOC=std::allocator<ELEM> > class Container
-  >
+, template<typename ELEM, typename ALLOC=std::allocator<ELEM> > class Container
+>
 std::ostream& operator<< (std::ostream& o, const Container<T>& container)
 {
-    typename Container<T>::const_iterator beg = container.begin();
+	typename Container<T>::const_iterator beg = container.begin();
 
-    o << "["; // 1
+	o << "["; // 1
 
-    while(beg != container.end())
-    {
-        o << " " << *beg++; // 2
-    }
+	while(beg != container.end())
+	{
+		o << " " << *beg++; // 2
+	}
 
-    o << " ]"; // 3
+	o << " ]"; // 3
 
-    return o;
+	return o;
 }
 
 // trim from left
 static inline std::string &ltrim(std::string &s)
 {
-    s.erase(s.begin(), std::find_if(s.begin(), s.end(),
-                                    std::not1(std::ptr_fun<int, int>(std::isspace))));
-    return s;
+	s.erase(s.begin(), std::find_if(s.begin(), s.end(),
+			std::not1(std::ptr_fun<int, int>(std::isspace))));
+	return s;
 }
 
 // trim from end
 static inline std::string &rtrim(std::string &s)
 {
-    s.erase(std::find_if(s.rbegin(), s.rend(),
-                         std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
-    return s;
+	s.erase(std::find_if(s.rbegin(), s.rend(),
+			std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
+	return s;
 }
 
 // trim from both ends
 static inline std::string &trim(std::string &s)
 {
-    return ltrim(rtrim(s));
+	return ltrim(rtrim(s));
 }
 
 
 // Read in a vector matrix
 std::vector<std::vector<double> > fileToVectorMatrix(std::string name)
 {
-    std::vector<std::vector<double> > result;
-    std::ifstream input (name);
-    std::string lineData;
+	std::vector<std::vector<double> > result;
+	std::ifstream input (name);
+	std::string lineData;
 
-    while(getline(input, lineData))
-    {
-        double d;
-        std::vector<double> row;
-        std::stringstream lineStream(lineData);
+	while(getline(input, lineData))
+	{
+		double d;
+		std::vector<double> row;
+		std::stringstream lineStream(lineData);
 
-        while (lineStream >> d)
-            row.push_back(d);
+		while (lineStream >> d)
+		row.push_back(d);
 
-        result.push_back(row);
-    }
+		result.push_back(row);
+	}
 
-    return result;
+	return result;
 }
 
 template <typename T>
 std::vector<T> flatten(const std::vector<std::vector<T> >& v)
 {
-    std::size_t total_size = 0;
-    for (const auto& sub : v)
-        total_size += sub.size(); // I wish there was a transform_accumulate
-    std::vector<T> result;
-    result.reserve(total_size);
-    for (const auto& sub : v)
-        result.insert(result.end(), sub.begin(), sub.end());
-    return result;
+	std::size_t total_size = 0;
+	for (const auto& sub : v)
+	total_size += sub.size(); // I wish there was a transform_accumulate
+	std::vector<T> result;
+	result.reserve(total_size);
+	for (const auto& sub : v)
+	result.insert(result.end(), sub.begin(), sub.end());
+	return result;
 }
 
 // Read in a vector
 std::vector<double> fileToVector(std::string name)
 {
-    std::vector<std::vector<double> > result;
-    std::ifstream input (name);
-    std::string lineData;
+	std::vector<std::vector<double> > result;
+	std::ifstream input (name);
+	std::string lineData;
 
-    while(getline(input, lineData))
-    {
-        double d;
-        std::vector<double> row;
-        std::stringstream lineStream(lineData);
+	while(getline(input, lineData))
+	{
+		double d;
+		std::vector<double> row;
+		std::stringstream lineStream(lineData);
 
-        while (lineStream >> d)
-            row.push_back(d);
+		while (lineStream >> d)
+		row.push_back(d);
 
-        result.push_back(row);
-    }
+		result.push_back(row);
+	}
 
-    return flatten(result);
+	return flatten(result);
 }
 
 // Read in a text file, output a vector of strings, one string per line, trimmed
 std::vector<std::string> inputStringVector(std::string in)
 {
-    std::string s;
-    std::vector<std::string> a;
-    std::ifstream infile(in);
-    if(infile.is_open())
-    {
-        while(getline(infile, s))
-        {
-            // allow comments
-            std::string::iterator end_pos = std::remove(s.begin(), s.end(), ' ');
-            s.erase(end_pos, s.end());
-            a.push_back(trim(s));
-        }
-    }
+	std::string s;
+	std::vector<std::string> a;
+	std::ifstream infile(in);
+	if(infile.is_open())
+	{
+		while(getline(infile, s))
+		{
+			// allow comments
+			std::string::iterator end_pos = std::remove(s.begin(), s.end(), ' ');
+			s.erase(end_pos, s.end());
+			a.push_back(trim(s));
+		}
+	}
 
-    return(a);
+	return(a);
 }
 
 std::vector<std::vector<std::string>> funct(std::string filename){
@@ -183,13 +193,13 @@ std::vector<std::vector<std::string>> funct(std::string filename){
 	std::vector <std::vector<std::string>> items;
 
 	if (csv.is_open()) {
-			for (std::string row_line; std::getline(csv, row_line);)
-			{
-				items.emplace_back();
-				std::istringstream row_stream(row_line);
-				for(std::string column; std::getline(row_stream, column, ',');)
-					items.back().push_back(column);
-			}
+		for (std::string row_line; std::getline(csv, row_line);)
+		{
+			items.emplace_back();
+			std::istringstream row_stream(row_line);
+			for(std::string column; std::getline(row_stream, column, ',');)
+			items.back().push_back(column);
+		}
 	}
 	else {
 		std::cout << "Unable to open file";
@@ -263,7 +273,7 @@ Rcpp::NumericVector listtest(Rcpp::List l, int i){
 	}
 
 	if(l.containsElementNamed("test"))
-		std::cout << "List contained an element named test" << std::endl;
+	std::cout << "List contained an element named test" << std::endl;
 
 	return fixed;
 }
@@ -303,40 +313,40 @@ double list2test(Rcpp::List l){
 //' @export
 // [[Rcpp::export]]
 double gmbp(int time, std::string file, Rcpp::NumericVector initial, Rcpp::NumericVector lifetimes, Rcpp::NumericMatrix transitions){
-	int nrow = transitions.nrow();
-	int ncol = transitions.ncol();
+int nrow = transitions.nrow();
+int ncol = transitions.ncol();
 
-	std::vector<int> init(initial.begin(), initial.end());
+std::vector<int> init(initial.begin(), initial.end());
 
-	System sys(init);
+System sys(init);
 
-	std::cout << "Making populations..." << std::endl;
-	for(size_t i = 0; i < init.size(); i++){
-		std::cout << "init[" << i << "]: " << init[i] << std::endl;
-		Population* p = new Population(lifetimes[i]);
-		sys.addPopulation(p);
-	}
+std::cout << "Making populations..." << std::endl;
+for(size_t i = 0; i < init.size(); i++){
+std::cout << "init[" << i << "]: " << init[i] << std::endl;
+Population* p = new Population(lifetimes[i]);
+sys.addPopulation(p);
+}
 
-	std::cout << "Adding transitions..." << std::endl;
-    for(int i = 0; i < nrow; i++){
-		Rcpp::NumericVector ro = transitions.row(i);
-		std::vector<double> r (ro.begin(), ro.end());
-		int population = r[0];
-		double probability = r[1];
+std::cout << "Adding transitions..." << std::endl;
+for(int i = 0; i < nrow; i++){
+Rcpp::NumericVector ro = transitions.row(i);
+std::vector<double> r (ro.begin(), ro.end());
+int population = r[0];
+double probability = r[1];
 
-		std::vector<double>::const_iterator first = r.begin() + 2;
-		std::vector<double>::const_iterator last = r.end();
-		std::vector<int> transition(first, last);
+std::vector<double>::const_iterator first = r.begin() + 2;
+std::vector<double>::const_iterator last = r.end();
+std::vector<int> transition(first, last);
 
-		sys.getPop(population)->addUpdate(probability, Update(transition));
-	}
+sys.getPop(population)->addUpdate(probability, Update(transition));
+}
 
-	sys.print();
+sys.print();
 
-	std::cout << "Simulating..." << std::endl;
-	sys.simulate(time, file);
+std::cout << "Simulating..." << std::endl;
+sys.simulate(time, file);
 
-	return 0;
+return 0;
 }
 */
 
@@ -363,9 +373,9 @@ double gmbp2(int time, std::string file, Rcpp::NumericVector initial, Rcpp::Nume
 	// Create populations with lifetimes
 	std::cout << "Making populations..." << std::endl;
 	for(size_t i = 0; i < init.size(); i++){
-		std::cout << "init[" << i << "]: " << init[i] << std::endl;
-		Population* p = new Population(lifetimes[i]);
-		sys.addPopulation(p);
+	std::cout << "init[" << i << "]: " << init[i] << std::endl;
+	Population* p = new Population(lifetimes[i]);
+	sys.addPopulation(p);
 	}
 	*/
 
@@ -373,7 +383,7 @@ double gmbp2(int time, std::string file, Rcpp::NumericVector initial, Rcpp::Nume
 	std::cout << "Adding transitions..." << std::endl;
 
 	// Iterate over transitions list
-    for(int i = 0; i < n; i++){
+	for(int i = 0; i < n; i++){
 
 		// Get the ith transition
 		Rcpp::List list_i = Rcpp::as<Rcpp::List>(transitions[i]);
@@ -445,9 +455,9 @@ double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List
 	// Create populations with lifetimes
 	std::cout << "Making populations..." << std::endl;
 	for(size_t i = 0; i < init.size(); i++){
-		std::cout << "init[" << i << "]: " << init[i] << std::endl;
-		Population* p = new Population(lifetimes[i]);
-		sys.addPopulation(p);
+	std::cout << "init[" << i << "]: " << init[i] << std::endl;
+	Population* p = new Population(lifetimes[i]);
+	sys.addPopulation(p);
 	}
 	*/
 
@@ -455,7 +465,7 @@ double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List
 	std::cout << "Adding transitions..." << std::endl;
 
 	// Iterate over transitions list
-    for(int i = 0; i < nTrans; i++){
+	for(int i = 0; i < nTrans; i++){
 
 		// Get the ith transition
 		Rcpp::List list_i = Rcpp::as<Rcpp::List>(transitions[i]);
@@ -494,7 +504,7 @@ double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List
 	std::cout << "Adding stopping criteria..." << std::endl;
 
 	// Iterate over transitions list
-    for(int i = 0; i < nStops; i++){
+	for(int i = 0; i < nStops; i++){
 
 		// Get the ith transition
 		Rcpp::List list_i = Rcpp::as<Rcpp::List>(stops[i]);
@@ -550,108 +560,108 @@ double test(double a) {
 #include <gsl/gsl_integration.h>
 
 struct f_params {
-  // Amplitude
-  double a;
-  // Phase
-  double phi;
+	// Amplitude
+	double a;
+	// Phase
+	double phi;
 };
 
 double f(double x, void *p)
 {
-  f_params &params= *reinterpret_cast<f_params *>(p);
-  return (pow(x, params.a)+params.phi);
+	f_params &params= *reinterpret_cast<f_params *>(p);
+	return (pow(x, params.a)+params.phi);
 }
 
 double g(double x, void *p)
 {
-  f_params &params= *reinterpret_cast<f_params *>(p);
-  if(x >= 5)
-    return 10;
-  else
-    return 5;
-  //return (pow(x, params.a)+params.phi);
+	f_params &params= *reinterpret_cast<f_params *>(p);
+	if(x >= 5)
+	return 10;
+	else
+	return 5;
+	//return (pow(x, params.a)+params.phi);
 }
 
 
 void dointeg(void)
 {
-  f_params params;
-  params.a=34.0;
-  params.phi=0.0;
+	f_params params;
+	params.a=34.0;
+	params.phi=0.0;
 
-  gsl_function F;
-  F.function = &f;
-  F.params = reinterpret_cast<void *>(&params);
+	gsl_function F;
+	F.function = &f;
+	F.params = reinterpret_cast<void *>(&params);
 
-  double result, error;
-  size_t neval;
+	double result, error;
+	size_t neval;
 
-  const double xlow=0;
-  const double xhigh=10;
-  const double epsabs=1e-4;
-  const double epsrel=1e-4;
+	const double xlow=0;
+	const double xhigh=10;
+	const double epsabs=1e-4;
+	const double epsrel=1e-4;
 
-  int code=gsl_integration_qng (&F,
-                                xlow,
-                                xhigh,
-                                epsabs,
-                                epsrel,
-                                &result,
-                                &error,
-                                &neval);
-  if(code)
-  {
-    std::cerr<<"There was a problem with integration: code " << code
-             <<std::endl;
-  }
-  else
-  {
-    std::cout<<"Result " << result << " +/- " << error << " from " << neval << " evaluations" <<
-             std::endl;
-  }
+	int code=gsl_integration_qng (&F,
+	xlow,
+	xhigh,
+	epsabs,
+	epsrel,
+	&result,
+	&error,
+	&neval);
+	if(code)
+	{
+		std::cerr<<"There was a problem with integration: code " << code
+		<<std::endl;
+	}
+	else
+	{
+		std::cout<<"Result " << result << " +/- " << error << " from " << neval << " evaluations" <<
+		std::endl;
+	}
 }
 
 void doqags(void)
 {
-  gsl_integration_workspace *workspace = gsl_integration_workspace_alloc(1000);
+	gsl_integration_workspace *workspace = gsl_integration_workspace_alloc(1000);
 
-  f_params params;
-  params.a=34.0;
-  params.phi=0.0;
+	f_params params;
+	params.a=34.0;
+	params.phi=0.0;
 
-  gsl_function F;
-  F.function = &g;
-  F.params = reinterpret_cast<void *>(&params);
+	gsl_function F;
+	F.function = &g;
+	F.params = reinterpret_cast<void *>(&params);
 
-  double result, error;
-  size_t neval;
+	double result, error;
+	size_t neval;
 
-  const double xlow=0;
-  const double xhigh=10;
-  const double epsabs=1e-4;
-  const double epsrel=1e-4;
+	const double xlow=0;
+	const double xhigh=10;
+	const double epsabs=1e-4;
+	const double epsrel=1e-4;
 
-  int code=gsl_integration_qags (&F,
-                                xlow,
-                                xhigh,
-                                epsabs,
-                                epsrel,
-                                1000,
-                                workspace,
-                                &result,
-                                &error);
-                                gsl_integration_workspace_free(workspace);
+	int code=gsl_integration_qags (&F,
+	xlow,
+	xhigh,
+	epsabs,
+	epsrel,
+	1000,
+	workspace,
+	&result,
+	&error);
+	gsl_integration_workspace_free(workspace);
 
-                                if(code)
-                                {
-                                  std::cerr<<"There was a problem with integration: code " << code
-                                           <<std::endl;
-                                }
-                                else
-                                {
-                                  std::cout<<"Result " << result << " +/- " << error << " from " << neval << " evaluations" <<
-                                    std::endl;
-                                }
+	if(code)
+	{
+		std::cerr<<"There was a problem with integration: code " << code
+		<<std::endl;
+	}
+	else
+	{
+		std::cout<<"Result " << result << " +/- " << error << " from " << neval << " evaluations" <<
+		std::endl;
+	}
 }
 
 //' t2
@@ -660,18 +670,71 @@ void doqags(void)
 //'
 //' @export
 // [[Rcpp::export]]
-int t2()
-{
-  /*for(int i = 0; i < 1e6; i++){
-    doqags();
-    dointeg();
-  }
-  */
+std::vector<double> t2(SEXP custom_distribution_file = R_NilValue){
+	/*for(int i = 0; i < 1e6; i++){
+	doqags();
+	dointeg();
+	}
+	*/
 
-  Rate r = Rate(&g);
-  std::cout << r.integrateFunct(0, 10) << std::endl;
-  std::cout << r.rate_homog << std::endl;
-  return 0;
+	workspace = gsl_integration_workspace_alloc(1000);
+	double (*rate)(double, void*);
+
+#ifdef _WIN32
+	HINSTANCE lib_handle;
+	HINSTANCE lib_handle_newclone;
+#else
+	void *lib_handle;
+	void *lib_handle_newclone;
+#endif
+
+	// Name for plugin library location
+	const char* plugin_location = CHAR(Rf_asChar(custom_distribution_file));
+
+	Rate r;
+
+	// Load plugin library
+#ifdef _WIN32
+	lib_handle = LoadLibrary(plugin_location);
+	if(!lib_handle)
+	{
+		Rcpp::stop("invalid file name for distribution file");
+	}
+	rate = (double (*)(double, void*))GetProcAddress(lib_handle, "birth0");
+
+	void* ptr;
+	std::cout << (*rate)(1.1, ptr) << std::endl;
+
+	r = Rate(rate);
+
+#else
+	lib_handle = dlopen(plugin_location, RTLD_NOW);
+	if(!lib_handle)
+	{
+		Rcpp::stop("invalid file name for distribution file");
+	}
+	rate = (double (*)(double, void*))dlsym(lib_handle, "CA");
+	r = Rate(rate);
+#endif
+
+	//Rate r = Rate(&g);
+
+	std::vector<double> ret;
+	for(double i = 0.0; i <= 20; i+=0.1){
+
+		ret.push_back(r.eval(i));
+	}
+	std::cout << r.integrateFunct(0, 10) << std::endl;
+	std::cout << r.rate_homog << std::endl;
+
+
+#ifdef _WIN32
+	FreeLibrary(lib_handle);
+#else
+	dlclose(lib_handle);
+#endif
+
+	return ret;
 }
 
 //' timeDepBranch
@@ -684,14 +747,24 @@ double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rc
 	double seedcpp = std::chrono::high_resolution_clock::now().time_since_epoch().count();
 	gsl_rng_set(rng, seedcpp);
 	silent = silence;
+	workspace = gsl_integration_workspace_alloc(1000);
+
+	#ifdef _WIN32
+	HINSTANCE lib_handle;
+	HINSTANCE lib_handle_newclone;
+	#else
+	void *lib_handle;
+	void *lib_handle_newclone;
+	#endif
+
 
 	if(!silent)
-		std::cout << "Starting process... " << std::endl;
+	std::cout << "Starting process... " << std::endl;
 	int nTrans = transitions.length();
 	int nStops = stops.length();
 
 	if(!silent)
-		std::cout << "Initialization system..." << std::endl;
+	std::cout << "Initialization system..." << std::endl;
 	// Initial population sizes
 	std::vector<int> init(initial.begin(), initial.end());
 
@@ -702,18 +775,18 @@ double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rc
 	// Create populations with lifetimes
 	std::cout << "Making populations..." << std::endl;
 	for(size_t i = 0; i < init.size(); i++){
-		std::cout << "init[" << i << "]: " << init[i] << std::endl;
-		Population* p = new Population(lifetimes[i]);
-		sys.addPopulation(p);
+	std::cout << "init[" << i << "]: " << init[i] << std::endl;
+	Population* p = new Population(lifetimes[i]);
+	sys.addPopulation(p);
 	}
 	*/
 
 	// Add transitions
 	if(!silent)
-		std::cout << "Adding transitions..." << std::endl;
+	std::cout << "Adding transitions..." << std::endl;
 
 	// Iterate over transitions list
-    for(int i = 0; i < nTrans; i++){
+	for(int i = 0; i < nTrans; i++){
 
 		// Get the ith transition
 		Rcpp::List list_i = Rcpp::as<Rcpp::List>(transitions[i]);
@@ -724,7 +797,44 @@ double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rc
 		Rcpp::List rateList = Rcpp::as<Rcpp::List>(list_i[2]);
 		Rate* r;
 		if(rateList.containsElementNamed("type")){
-			r = new ConstantRate(Rcpp::as<double>(rateList[1]));
+			if(Rcpp::as<int>(rateList["type"]) == 0){
+				std::cout << "Constant rate found!" << std::endl;
+				r = new ConstantRate(Rcpp::as<double>(rateList[1]));
+			} else if (Rcpp::as<int>(rateList["type"]) == 1){
+				Rcpp::NumericVector params = Rcpp::as<Rcpp::NumericVector>(rateList["params"]);
+				std::cout << "Linear rate found!" << std::endl;
+				r = new LinearRate(params[0], params[1]);
+			} else if (Rcpp::as<int>(rateList["type"]) == 2){
+				Rcpp::NumericVector params = Rcpp::as<Rcpp::NumericVector>(rateList["params"]);
+				std::cout << "Switch rate found!" << std::endl;
+				r = new SwitchRate(params[0], params[1], params[2]);
+			} else if (Rcpp::as<int>(rateList["type"]) == 3){
+				Rcpp::StringVector params = Rcpp::as<Rcpp::StringVector>(rateList["params"]);
+				std::cout << "Custom rate found!" << std::endl;
+				double (*rate)(double, void*);
+
+				// Name for plugin library location
+				const char* plugin_location = CHAR(Rf_asChar(params[0]));
+				
+				// Load plugin library
+				#ifdef _WIN32
+					lib_handle = LoadLibrary(plugin_location);
+					if(!lib_handle)
+					{
+						Rcpp::stop("invalid file name for custom dll");
+					}
+				rate = (double (*)(double, void*))GetProcAddress(lib_handle, params[1]);
+				#else
+					lib_handle = dlopen(plugin_location, RTLD_NOW);
+					if(!lib_handle)
+					{
+						Rcpp::stop("invalid file name custom dll");
+					}
+					rate = (double (*)(double, void*))dlsym(lib_handle, "CA");
+				#endif
+				
+				r = new Rate(rate);
+			}
 		} else {
 			r = new ConstantRate(Rcpp::as<double>(rateList[0]));
 		}
@@ -762,10 +872,10 @@ double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rc
 
 	// Add transitions
 	if(!silent)
-		std::cout << "Adding stopping criteria..." << std::endl;
+	std::cout << "Adding stopping criteria..." << std::endl;
 
 	// Iterate over transitions list
-    for(int i = 0; i < nStops; i++){
+	for(int i = 0; i < nStops; i++){
 
 		// Get the ith transition
 		Rcpp::List list_i = Rcpp::as<Rcpp::List>(stops[i]);
@@ -786,11 +896,20 @@ double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rc
 
 	// Simulate
 	if(!silent)
-		std::cout << "Simulating..." << std::endl;
+	std::cout << "Simulating..." << std::endl;
 	sys.simulate2(time, file);
 	if(!silent)
-		std::cout << "Ending process..." << std::endl;
+	std::cout << "Ending process..." << std::endl;
+
+	gsl_integration_workspace_free(workspace);
+	#ifdef _WIN32
+		FreeLibrary(lib_handle);
+	#else
+		dlclose(lib_handle);
+	#endif
 
 	return 0.0;
 }
+
+
 

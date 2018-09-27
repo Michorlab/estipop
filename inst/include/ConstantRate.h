@@ -32,10 +32,6 @@ struct constant_params{
 	double rate;
 };
 
-struct linear_params{
-	double slope;
-	double intercept;
-};
 
 class ConstantRate : public Rate {
 public:
@@ -52,6 +48,11 @@ virtual double operator()(double begin, double end);
 	
 };
 
+struct linear_params{
+	double slope;
+	double intercept;
+};
+
 class LinearRate : public Rate {
 public:
 
@@ -66,4 +67,26 @@ virtual double operator()(double time);
 virtual double operator()(double begin, double end);
 	
 };
+
+struct switch_params{
+	double pre;
+	double post;
+	double tswitch;
+};
+
+class SwitchRate : public Rate {
+public:
+
+switch_params params;
+
+SwitchRate(double pre, double post, double s);
+
+~SwitchRate();
+
+virtual double operator()(double time);
+
+virtual double operator()(double begin, double end);
+	
+};
+
 

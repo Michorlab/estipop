@@ -69,8 +69,8 @@ test <- function(a) {
 #' t2
 #'
 #' @export
-t2 <- function() {
-    .Call('_gmbp_t2', PACKAGE = 'gmbp')
+t2 <- function(custom_distribution_file = NULL) {
+    .Call('_gmbp_t2', PACKAGE = 'gmbp', custom_distribution_file)
 }
 
 #' timeDepBranch
