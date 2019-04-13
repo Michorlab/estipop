@@ -436,14 +436,22 @@ double gmbp2(int time, std::string file, Rcpp::NumericVector initial, Rcpp::Nume
 //'
 //' @export
 // [[Rcpp::export]]
-double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops){
-	double seedcpp = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-	gsl_rng_set(rng, seedcpp);
+double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence, SEXP seed = R_NilValue){
+	double seedcpp;
+	if(Rf_isNull(seed)){
+		seedcpp = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+	} else {
+		seedcpp = Rf_asReal(seed);
+	}
+    gsl_rng_set(rng, seedcpp);
+	silent = silence;
 
+	if(!silent)
 	std::cout << "Starting process... " << std::endl;
 	int nTrans = transitions.length();
 	int nStops = stops.length();
 
+	if(!silent)
 	std::cout << "Initialization system..." << std::endl;
 	// Initial population sizes
 	std::vector<int> init(initial.begin(), initial.end());
@@ -462,6 +470,7 @@ double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List
 	*/
 
 	// Add transitions
+	if(!silent)
 	std::cout << "Adding transitions..." << std::endl;
 
 	// Iterate over transitions list
@@ -501,6 +510,7 @@ double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List
 	}
 
 	// Add transitions
+	if(!silent)
 	std::cout << "Adding stopping criteria..." << std::endl;
 
 	// Iterate over transitions list
@@ -524,8 +534,10 @@ double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List
 	//sys.print();
 
 	// Simulate
+	if(!silent)
 	std::cout << "Simulating..." << std::endl;
 	sys.simulate(time, file);
+	if(!silent)
 	std::cout << "Ending process..." << std::endl;
 
 	return 0.0;

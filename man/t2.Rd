@@ -4,7 +4,7 @@
 \alias{t2}
 \title{t2}
 \usage{
-t2()
+t2(custom_distribution_file = NULL)
 }
 \description{
 t2

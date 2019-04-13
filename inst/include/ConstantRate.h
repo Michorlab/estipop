@@ -45,7 +45,7 @@ ConstantRate(double r);
 virtual double operator()(double time);
 
 virtual double operator()(double begin, double end);
-	
+
 };
 
 struct linear_params{
@@ -65,7 +65,7 @@ LinearRate(double i, double s);
 virtual double operator()(double time);
 
 virtual double operator()(double begin, double end);
-	
+
 };
 
 struct switch_params{
@@ -86,7 +86,29 @@ SwitchRate(double pre, double post, double s);
 virtual double operator()(double time);
 
 virtual double operator()(double begin, double end);
-	
+
+};
+
+struct pulse_params{
+	double totPeriod;
+	double lowPeriod;
+	double low;
+	double high;
+};
+
+class PulseRate : public Rate {
+public:
+
+pulse_params params;
+
+PulseRate(double totPeriod, double lowPeriod, double low, double high);
+
+~PulseRate();
+
+virtual double operator()(double time);
+
+virtual double operator()(double begin, double end);
+
 };
 
 

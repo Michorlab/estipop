@@ -67,8 +67,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // gmbp3
-double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops);
-RcppExport SEXP _gmbp_gmbp3(SEXP timeSEXP, SEXP fileSEXP, SEXP initialSEXP, SEXP transitionsSEXP, SEXP stopsSEXP) {
+double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence, SEXP seed);
+RcppExport SEXP _gmbp_gmbp3(SEXP timeSEXP, SEXP fileSEXP, SEXP initialSEXP, SEXP transitionsSEXP, SEXP stopsSEXP, SEXP silenceSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -77,7 +77,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type initial(initialSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type transitions(transitionsSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type stops(stopsSEXP);
-    rcpp_result_gen = Rcpp::wrap(gmbp3(time, file, initial, transitions, stops));
+    Rcpp::traits::input_parameter< bool >::type silence(silenceSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type seed(seedSEXP);
+    rcpp_result_gen = Rcpp::wrap(gmbp3(time, file, initial, transitions, stops, silence, seed));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -126,7 +128,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_gmbp_listtest", (DL_FUNC) &_gmbp_listtest, 2},
     {"_gmbp_list2test", (DL_FUNC) &_gmbp_list2test, 1},
     {"_gmbp_gmbp2", (DL_FUNC) &_gmbp_gmbp2, 5},
-    {"_gmbp_gmbp3", (DL_FUNC) &_gmbp_gmbp3, 5},
+    {"_gmbp_gmbp3", (DL_FUNC) &_gmbp_gmbp3, 7},
     {"_gmbp_test", (DL_FUNC) &_gmbp_test, 1},
     {"_gmbp_t2", (DL_FUNC) &_gmbp_t2, 1},
     {"_gmbp_timeDepBranch", (DL_FUNC) &_gmbp_timeDepBranch, 6},

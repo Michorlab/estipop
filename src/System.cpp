@@ -23,6 +23,8 @@
 #include <iostream>
 #include <fstream>
 #include <gsl/gsl_randist.h>
+#include <sstream>
+#include <iomanip>
 
 #include <RcppGSL.h>
 #include <Rcpp.h>
@@ -33,6 +35,14 @@ extern bool silent;
 
 void out(std::string s){
 	//std::cout << s << std::endl;
+}
+
+template <typename T>
+std::string to_string_wp(const T a_value, const int n = 20)
+{
+    std::ostringstream out;
+    out << std::setprecision(n) << a_value;
+    return out.str();
 }
 
 System::System(){
@@ -204,6 +214,7 @@ void System::simulate(int numTime, std::string file){
 }
 
 double System::getNextTime2(double curTime){
+	std::cout.precision(20);
 	double tot_rate;
 	double rand_next_time = 0.0;
 
@@ -220,7 +231,7 @@ double System::getNextTime2(double curTime){
 
 		tot_rate = 0;
 
-		out("tot_rate_homog: " + std::to_string(tot_rate_homog));
+		out("tot_rate_homog: " + to_string_wp(tot_rate_homog));
 		rand_next_time += gsl_ran_exponential(rng, 1 / tot_rate_homog);
 
 
@@ -240,7 +251,10 @@ double System::getNextTime2(double curTime){
 		}
 	}
 
-	out("Returning from nextTime2 with: " + std::to_string(rand_next_time));
+	out("Returning from nextTime2 with: " + to_string_wp(rand_next_time));
+	if(rand_next_time <= 0){
+		out("I'VE RETURNED A ZERO TIME TO NEXT EVENT!!!");
+	}
 
 	return(rand_next_time);
 }
@@ -261,6 +275,7 @@ int System::getNextEvent2(double curTime, double timeToNext){
 
 void System::simulate2(int numTime, std::string file){
 	bool verbose = false;
+	std::cout.precision(60);
 
 	std::vector<double> o_rates;
 	for(size_t i = 0; i < rates.size(); i++){
@@ -276,7 +291,7 @@ void System::simulate2(int numTime, std::string file){
     }
 	*/
 	std::vector<double> obsTimes;
-    for (double k = 0; k <= numTime; k+=0.01)
+    for (double k = 0; k <= numTime; k+=1.00)
     {
         obsTimes.push_back(k);
     }
@@ -306,19 +321,19 @@ void System::simulate2(int numTime, std::string file){
         // Get the next event time
         double timeToNext = getNextTime2(curTime);
 
-		out("Got my next time: " + std::to_string(timeToNext));
+		out("Got my next time: " + to_string_wp(timeToNext));
 
         // If our next event time is later than observation times,
         // Make our observations
         while((curTime + timeToNext > obsTimes[curObsIndex]) & curObsIndex <= obsTimes.size()-1)// & (curTime + timeToNext <= obsTimes[numTime]))
         {
-			out("Time to next: " + std::to_string(curTime + timeToNext) + " curObsIndex: " + std::to_string(curObsIndex));
+			out("Time to next: " + to_string_wp(curTime + timeToNext) + " curObsIndex: " + to_string_wp(curObsIndex));
 			out("In the observation loop");
 			// print out current state vector
 			toFile(obsTimes[curObsIndex], file);
 
 			out("Checking this");
-			if(verbose &&  (int)obsTimes[curObsIndex] % obsMod == 0){
+			if((int)obsTimes[curObsIndex] % obsMod == 0){
 				std::cout << "Time " << (int)obsTimes[curObsIndex] << " of " << numTime << std::endl;
 			}
 
@@ -326,13 +341,13 @@ void System::simulate2(int numTime, std::string file){
 
 			out("Checking here");
 			/*if((unsigned)curObsIndex >= obsTimes.size()-1){
-				out("I'm quitting in here: " + std::to_string(curObsIndex) + ", " + std::to_string(obsTimes.size()-1));
+				out("I'm quitting in here: " + to_string_wp(curObsIndex) + ", " + to_string_wp(obsTimes.size()-1));
 				break;
 			}*/
         }
 
 		if((unsigned)curObsIndex > obsTimes.size()-1){
-			out("I'm quitting in here: " + std::to_string(curObsIndex) + ", " + std::to_string(obsTimes.size()-1));
+			out("I'm quitting in here: " + to_string_wp(curObsIndex) + ", " + to_string_wp(obsTimes.size()-1));
 				break;
 		}
 
@@ -348,6 +363,7 @@ void System::simulate2(int numTime, std::string file){
 
         // Increase our current time and get the next Event Time
         curTime = curTime + timeToNext;
+		out("Curtime: " + to_string_wp(curTime));
 
 		bool stop = false;
 

@@ -4,16 +4,17 @@
 \alias{branch}
 \title{branch}
 \usage{
-branch(time, intial, transitionList, stopList)
+branch(time, initial, transitionList, stopList, silent = FALSE,
+  keep = FALSE, seed = NULL)
 }
 \arguments{
 \item{time}{number of time units to simulate}
 
+\item{initial}{intial state vector}
+
 \item{transitionList}{TransitionList object specifying transitions in system}
 
 \item{stopList}{StopList object specifying stopping conditions for the system}
-
-\item{initial}{intial state vector}
 }
 \description{
 Makes a single StopList object out of multiple StopCriterion objects

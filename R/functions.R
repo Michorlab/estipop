@@ -134,11 +134,19 @@ Rate = function(type, params){
 #'        stopList = StopList(StopCriterion(indices = c(0), inequality = ">=", value = 1000),
 #'                   StopCriterion(indices = c(0, 1), inequality = ">=", value = 10000)))
 #' }
-branch = function(time, intial, transitionList, stopList){
-  f = getAbsolutePath(tempfile(pattern = paste("system_", format(Sys.time(), "%d-%m-%Y-%H%M%S"), "_", sep = ""), fileext = ".csv", tmpdir = getwd()))
-  gmbp3(time, f, initial, transitionList, stopList)
+branch = function(time, initial, transitionList, stopList, silent = FALSE, keep = FALSE, seed = NULL){
+  f = R.utils::getAbsolutePath(tempfile(pattern = paste("system_", format(Sys.time(), "%d-%m-%Y-%H%M%S"), "_", sep = ""), fileext = ".csv", tmpdir = getwd()))
+  if(is.null(seed)){
+    gmbp3(time, f, initial, transitionList, stopList, silent)
+  } else {
+    gmbp3(time, f, initial, transitionList, stopList, silent, seed)
+  }
   res = read.csv(f, header = F)
   names(res)[1] = "time"
+
+  if(!keep)
+    file.remove(f)
+
   return(res)
 }
 
@@ -162,7 +170,7 @@ branch = function(time, intial, transitionList, stopList){
 #'                   StopCriterion(indices = c(0, 1), inequality = ">=", value = 10000)))
 #' }
 branchTD = function(time, intial, transitionList, stopList, silent = FALSE, keep = FALSE){
-  f = getAbsolutePath(tempfile(pattern = paste("system_", format(Sys.time(), "%d-%m-%Y-%H%M%S"), "_", sep = ""), fileext = ".csv", tmpdir = getwd()))
+  f = R.utils::getAbsolutePath(tempfile(pattern = paste("system_", format(Sys.time(), "%d-%m-%Y-%H%M%S"), "_", sep = ""), fileext = ".csv", tmpdir = getwd()))
   timeDepBranch(time, f, initial, transitionList, stopList, silent)
   res = read.csv(f, header = F)
   names(res)[1] = "time"

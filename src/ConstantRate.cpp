@@ -162,3 +162,76 @@ double SwitchRate::operator()(double begin, double end){
 	return -1;
 }
 
+// Pulse
+
+double pulseRate(double x, void* p){
+	pulse_params &params= *reinterpret_cast<pulse_params *>(p);
+
+	double a = floor(x);
+	double diff = x - a;
+
+	double t = fmod((int)a, params.totPeriod);
+
+	if(t + diff < params.lowPeriod){
+		return params.low;
+	} else {
+		return params.high;
+	}
+}
+
+PulseRate::PulseRate(double totPeriod, double lowPeriod, double low, double high){
+	params.totPeriod = totPeriod;
+	params.lowPeriod = lowPeriod;
+	params.low = low;
+	params.high = high;
+
+	funct.function = &pulseRate;
+	funct.params = reinterpret_cast<void *>(&params);
+
+	rate_homog = maximizeFunc(funct, 0, 1000, 1000);
+}
+
+PulseRate::~PulseRate() {}
+
+double PulseRate::operator()(double time){
+	double a = floor(time);
+	double diff = time - a;
+
+	double t = fmod((int)a, params.totPeriod);
+
+	if(t + diff < params.lowPeriod){
+		return params.low;
+	} else {
+		return params.high;
+	}
+}
+
+double PulseRate::operator()(double begin, double end){
+	double result, error;
+	size_t neval;
+
+	const double xlow=begin;
+	const double xhigh=end;
+	const double epsabs=1e-4;
+	const double epsrel=1e-4;
+
+	int code=gsl_integration_qags (&funct,
+                                xlow,
+                                xhigh,
+                                epsabs,
+                                epsrel,
+                                1000,
+                                workspace,
+                                &result,
+                                &error);
+	 if(code){
+		std::cerr<<"There was a problem with integration: code " << code
+             <<std::endl;
+	} else {
+		tot_error += error;
+		return result;
+	}
+
+	return -1;
+}
+
