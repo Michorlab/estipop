@@ -51,6 +51,8 @@
 #include <cmath>
 #include <limits>
 #include <gsl/gsl_randist.h>
+#include <cmath>
+#include <gsl/gsl_integration.h>
 
 // Rcpp headers
 #include <RcppGSL.h>
@@ -208,227 +210,6 @@ std::vector<std::vector<std::string>> funct(std::string filename){
 	return items;
 }
 
-//' rcpptest
-//'
-//' rcpptest
-//'
-//' @export
-// [[Rcpp::export]]
-double rcpptest(Rcpp::NumericVector x){
-	int n = x.size();
-	double total = 0;
-
-	for(int i = 0; i < n; ++i) {
-		total += x[i];
-	}
-
-	std::vector<double> result (x.begin(), x.end());
-
-	for(size_t i = 0; i < result.size(); i ++){
-		std::cout << result[i] << std::endl;
-	}
-
-	return total / n;
-}
-
-//' rcpptest2
-//'
-//' rcpptest2
-//'
-//' @export
-// [[Rcpp::export]]
-double rcpptest2(Rcpp::NumericMatrix x){
-	int nrow = x.nrow();
-	int ncol = x.ncol();
-
-
-	for(int i = 0; i < nrow; ++i) {
-		Rcpp::NumericVector v = x.row(i);
-		std::cout << "Probability " << v[0] << ": {" << v[1];
-		for(int j = 2; j < v.length(); j++){
-			std::cout << ", " << v[j];
-		}
-		std::cout << "}" << std::endl;
-	}
-
-	return 0;
-}
-
-//' listtest
-//'
-//' listtest
-//'
-//' @export
-// [[Rcpp::export]]
-Rcpp::NumericVector listtest(Rcpp::List l, int i){
-	Rcpp::NumericVector fixed = Rcpp::as<Rcpp::NumericVector>(l["fixed"]);
-	Rcpp::NumericVector random = Rcpp::as<Rcpp::NumericVector>(l["random"]);
-
-	Rcpp::NumericVector s = Rcpp::as<Rcpp::NumericVector>(l[i]);
-
-	std::vector<double> result (s.begin(), s.end());
-
-	for(size_t i = 0; i < result.size(); i ++){
-		std::cout << result[i] << std::endl;
-	}
-
-	if(l.containsElementNamed("test"))
-	std::cout << "List contained an element named test" << std::endl;
-
-	return fixed;
-}
-
-//' list2test
-//'
-//' list2test
-//'
-//' @export
-// [[Rcpp::export]]
-double list2test(Rcpp::List l){
-
-	int n = l.size();
-
-	for(int i = 0; i < n; i++){
-		Rcpp::List list = Rcpp::as<Rcpp::List>(l[i]);
-		Rcpp::NumericVector s = Rcpp::as<Rcpp::NumericVector>(list[0]);
-
-		bool a = list[1];
-		std::cout << "is_random: " << a << std::endl;
-
-		std::vector<double> result (s.begin(), s.end());
-		for(size_t i = 0; i < result.size(); i ++){
-			std::cout << result[i] << std::endl;
-		}
-		std::cout << std::endl;
-	}
-
-	return 0;
-}
-
-/*
-//' gmbp
-//'
-//' gmbp
-//'
-//' @export
-// [[Rcpp::export]]
-double gmbp(int time, std::string file, Rcpp::NumericVector initial, Rcpp::NumericVector lifetimes, Rcpp::NumericMatrix transitions){
-int nrow = transitions.nrow();
-int ncol = transitions.ncol();
-
-std::vector<int> init(initial.begin(), initial.end());
-
-System sys(init);
-
-std::cout << "Making populations..." << std::endl;
-for(size_t i = 0; i < init.size(); i++){
-std::cout << "init[" << i << "]: " << init[i] << std::endl;
-Population* p = new Population(lifetimes[i]);
-sys.addPopulation(p);
-}
-
-std::cout << "Adding transitions..." << std::endl;
-for(int i = 0; i < nrow; i++){
-Rcpp::NumericVector ro = transitions.row(i);
-std::vector<double> r (ro.begin(), ro.end());
-int population = r[0];
-double probability = r[1];
-
-std::vector<double>::const_iterator first = r.begin() + 2;
-std::vector<double>::const_iterator last = r.end();
-std::vector<int> transition(first, last);
-
-sys.getPop(population)->addUpdate(probability, Update(transition));
-}
-
-sys.print();
-
-std::cout << "Simulating..." << std::endl;
-sys.simulate(time, file);
-
-return 0;
-}
-*/
-
-
-
-//' gmbp2
-//'
-//' gmbp2
-//'
-//' @export
-// [[Rcpp::export]]
-double gmbp2(int time, std::string file, Rcpp::NumericVector initial, Rcpp::NumericVector lifetimes, Rcpp::List transitions){
-	std::cout << "Starting process... " << std::endl;
-	int n = transitions.length();
-
-	std::cout << "Initialization system..." << std::endl;
-	// Initial population sizes
-	std::vector<int> init(initial.begin(), initial.end());
-
-	// Initialize system
-	System sys(init);
-
-	/*
-	// Create populations with lifetimes
-	std::cout << "Making populations..." << std::endl;
-	for(size_t i = 0; i < init.size(); i++){
-	std::cout << "init[" << i << "]: " << init[i] << std::endl;
-	Population* p = new Population(lifetimes[i]);
-	sys.addPopulation(p);
-	}
-	*/
-
-	// Add transitions
-	std::cout << "Adding transitions..." << std::endl;
-
-	// Iterate over transitions list
-	for(int i = 0; i < n; i++){
-
-		// Get the ith transition
-		Rcpp::List list_i = Rcpp::as<Rcpp::List>(transitions[i]);
-
-		// Get popuation, is_random, probability
-		int population = list_i[0];
-		bool is_random = list_i[1];
-		double rate = list_i[2];
-
-		// If there is a random component, get which indices of the vector will be generated randomly
-		if(is_random){
-			// Get the offspring distribution of the Transition
-			Rcpp::NumericVector oVec = Rcpp::as<Rcpp::NumericVector>(list_i[3]);
-			std::vector<double> offspringVec (oVec.begin(), oVec.end());
-
-			// Get the distribution
-			std::string dist = list_i[4];
-
-			// Get the offspring distribution of the Transition
-			Rcpp::NumericVector p = Rcpp::as<Rcpp::NumericVector>(list_i[5]);
-			std::vector<double> offspringParams (p.begin(), p.end());
-
-			// Add this transition
-			sys.addUpdate(rate, population, Update(is_random, offspringVec, dist, offspringParams));
-			std::cout << "Added a random transtion" << std::endl;
-		} else{
-			// Get the fixed portion of the Transition
-			Rcpp::NumericVector fix = Rcpp::as<Rcpp::NumericVector>(list_i[3]);
-			std::vector<int> fixed (fix.begin(), fix.end());
-
-			// add update
-			sys.addUpdate(rate, population, Update(fixed));
-		}
-	}
-
-	//sys.print();
-
-	// Simulate
-	std::cout << "Simulating..." << std::endl;
-	sys.simulate(time, file);
-	std::cout << "Ending process..." << std::endl;
-
-	return 0.0;
-}
-
 
 //' gmbp3
 //'
@@ -560,121 +341,6 @@ double test(double a) {
 	return 0;
 }
 
-// Bojan Nikolic <bojan@bnikolic.co.uk
-// Simple Gauss-Konrod integration with GSL
-
-#include <cmath>
-#include <iostream>
-
-//#include <boost/shared_ptr.hpp>
-//#include <boost/format.hpp>
-
-#include <gsl/gsl_integration.h>
-
-struct f_params {
-	// Amplitude
-	double a;
-	// Phase
-	double phi;
-};
-
-double f(double x, void *p)
-{
-	f_params &params= *reinterpret_cast<f_params *>(p);
-	return (pow(x, params.a)+params.phi);
-}
-
-double g(double x, void *p)
-{
-	f_params &params= *reinterpret_cast<f_params *>(p);
-	if(x >= 5)
-	return 10;
-	else
-	return 5;
-	//return (pow(x, params.a)+params.phi);
-}
-
-
-void dointeg(void)
-{
-	f_params params;
-	params.a=34.0;
-	params.phi=0.0;
-
-	gsl_function F;
-	F.function = &f;
-	F.params = reinterpret_cast<void *>(&params);
-
-	double result, error;
-	size_t neval;
-
-	const double xlow=0;
-	const double xhigh=10;
-	const double epsabs=1e-4;
-	const double epsrel=1e-4;
-
-	int code=gsl_integration_qng (&F,
-	xlow,
-	xhigh,
-	epsabs,
-	epsrel,
-	&result,
-	&error,
-	&neval);
-	if(code)
-	{
-		std::cerr<<"There was a problem with integration: code " << code
-		<<std::endl;
-	}
-	else
-	{
-		std::cout<<"Result " << result << " +/- " << error << " from " << neval << " evaluations" <<
-		std::endl;
-	}
-}
-
-void doqags(void)
-{
-	gsl_integration_workspace *workspace = gsl_integration_workspace_alloc(1000);
-
-	f_params params;
-	params.a=34.0;
-	params.phi=0.0;
-
-	gsl_function F;
-	F.function = &g;
-	F.params = reinterpret_cast<void *>(&params);
-
-	double result, error;
-	size_t neval;
-
-	const double xlow=0;
-	const double xhigh=10;
-	const double epsabs=1e-4;
-	const double epsrel=1e-4;
-
-	int code=gsl_integration_qags (&F,
-	xlow,
-	xhigh,
-	epsabs,
-	epsrel,
-	1000,
-	workspace,
-	&result,
-	&error);
-	gsl_integration_workspace_free(workspace);
-
-	if(code)
-	{
-		std::cerr<<"There was a problem with integration: code " << code
-		<<std::endl;
-	}
-	else
-	{
-		std::cout<<"Result " << result << " +/- " << error << " from " << neval << " evaluations" <<
-		std::endl;
-	}
-}
 
 //' t2
 //'
@@ -756,8 +422,12 @@ std::vector<double> t2(SEXP custom_distribution_file = R_NilValue){
 //' @export
 // [[Rcpp::export]]
 double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence){
+	
+	// Set seed
 	double seedcpp = std::chrono::high_resolution_clock::now().time_since_epoch().count();
 	gsl_rng_set(rng, seedcpp);
+	
+	// Set up output preferences & integration workspace
 	silent = silence;
 	workspace = gsl_integration_workspace_alloc(1000);
 
@@ -783,16 +453,6 @@ double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rc
 	// Initialize system
 	System sys(init);
 
-	/*
-	// Create populations with lifetimes
-	std::cout << "Making populations..." << std::endl;
-	for(size_t i = 0; i < init.size(); i++){
-	std::cout << "init[" << i << "]: " << init[i] << std::endl;
-	Population* p = new Population(lifetimes[i]);
-	sys.addPopulation(p);
-	}
-	*/
-
 	// Add transitions
 	if(!silent)
 	std::cout << "Adding transitions..." << std::endl;
@@ -810,18 +470,22 @@ double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rc
 		Rate* r;
 		if(rateList.containsElementNamed("type")){
 			if(Rcpp::as<int>(rateList["type"]) == 0){
+				if(!silent)
 				std::cout << "Constant rate found!" << std::endl;
 				r = new ConstantRate(Rcpp::as<double>(rateList[1]));
 			} else if (Rcpp::as<int>(rateList["type"]) == 1){
 				Rcpp::NumericVector params = Rcpp::as<Rcpp::NumericVector>(rateList["params"]);
+				if(!silent)
 				std::cout << "Linear rate found!" << std::endl;
 				r = new LinearRate(params[0], params[1]);
 			} else if (Rcpp::as<int>(rateList["type"]) == 2){
 				Rcpp::NumericVector params = Rcpp::as<Rcpp::NumericVector>(rateList["params"]);
+				if(!silent)
 				std::cout << "Switch rate found!" << std::endl;
 				r = new SwitchRate(params[0], params[1], params[2]);
 			} else if (Rcpp::as<int>(rateList["type"]) == 3){
 				Rcpp::StringVector params = Rcpp::as<Rcpp::StringVector>(rateList["params"]);
+				if(!silent)
 				std::cout << "Custom rate found!" << std::endl;
 				double (*rate)(double, void*);
 
@@ -868,7 +532,6 @@ double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rc
 
 			// Add this transition
 			u = Update(is_random, offspringVec, dist, offspringParams);
-			//sys.addUpdate(rate, population, Update(is_random, offspringVec, dist, offspringParams));
 		} else{
 			// Get the fixed portion of the Transition
 			Rcpp::NumericVector fix = Rcpp::as<Rcpp::NumericVector>(list_i[3]);
@@ -876,25 +539,22 @@ double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rc
 
 			// add update
 			u = Update(fixed);
-			//sys.addUpdate(rate, population, Update(fixed));
 		}
 
 		sys.addUpdate(r, population, u);
 	}
 
-	// Add transitions
+	// Add StopCriteria
 	if(!silent)
 	std::cout << "Adding stopping criteria..." << std::endl;
 
-	// Iterate over transitions list
+	// Iterate over StopCriterionList list
 	for(int i = 0; i < nStops; i++){
 
-		// Get the ith transition
+		// Get the ith SC
 		Rcpp::List list_i = Rcpp::as<Rcpp::List>(stops[i]);
 
-		// Get popuation, is_random, probability
-
-		// Get the offspring distribution of the Transition
+		// Get the indices to combine, inequality for comparison, and value to compare against
 		Rcpp::NumericVector ind = Rcpp::as<Rcpp::NumericVector>(list_i[0]);
 		std::vector<int> indices (ind.begin(), ind.end());
 
@@ -913,6 +573,7 @@ double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rc
 	if(!silent)
 	std::cout << "Ending process..." << std::endl;
 
+	// Free our integration workspace & custom function handles
 	gsl_integration_workspace_free(workspace);
 	#ifdef _WIN32
 		FreeLibrary(lib_handle);
