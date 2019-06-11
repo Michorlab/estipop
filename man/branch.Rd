@@ -15,6 +15,12 @@ branch(time, initial, transitionList, stopList, silent = FALSE,
 \item{transitionList}{TransitionList object specifying transitions in system}
 
 \item{stopList}{StopList object specifying stopping conditions for the system}
+
+\item{silent}{if true, verbose output will be shown.  Default: false}
+
+\item{keep}{if true, the temporary comma-separated file generated while simulating while be kept.  if false, it will be deleted.  Default: false}
+
+\item{seed}{seed for the random number generator.  If NULL, will use computer clock to set a random seed}
 }
 \description{
 Makes a single StopList object out of multiple StopCriterion objects

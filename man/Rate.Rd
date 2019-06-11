@@ -12,10 +12,10 @@ Rate(type, params)
 \item{params}{list of parameters}
 }
 \description{
-Designates a time-dependent rate
+Designates a rate
 }
 \details{
-Specifies a time-dependent rate.  User can specify using built-in types and accompanying parameters, or use a custom C++ function of time
+Specifies a rate.  User can specify using built-in types and accompanying parameters, or use a custom C++ function of time
 }
 \examples{
 \dontrun{

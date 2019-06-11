@@ -205,7 +205,7 @@ loglik_full2_time <- function(dat, t, N, parent, rate, offspring)
 
     for(n in 1:ntypes)
     {
-      val <- val + integrate(function(s) m(t_ - s, i, n) * beta(s, n, j, k), 0, t_)$value
+      val <- val + integrate(function(s) m(t_ - s, i, n) * beta(s, n, j, k), 0, t_, subdivisions = 1000)$value
     }
     val
   }
