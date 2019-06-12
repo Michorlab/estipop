@@ -143,6 +143,7 @@ Rate = function(type, params){
 #'                   StopCriterion(indices = c(0, 1), inequality = ">=", value = 10000)))
 #' }
 branch = function(time, initial, transitionList, stopList, silent = FALSE, keep = FALSE, seed = NULL){
+  time = time + 1
   f = R.utils::getAbsolutePath(tempfile(pattern = paste("system_", format(Sys.time(), "%d-%m-%Y-%H%M%S"), "_", sep = ""), fileext = ".csv", tmpdir = getwd()))
   if(is.null(seed)){
     gmbp3(time, f, initial, transitionList, stopList, silent)
@@ -213,6 +214,21 @@ branchTD = function(time, intial, transitionList, stopList, silent = FALSE, keep
 #'                   StopCriterion(indices = c(0, 1), inequality = ">=", value = 10000)))
 #' }
 estimateBP = function(time, N, transitionList, data, initial){
+
+  if(length(transitionList) < 1){
+    stop("No model specified by transitionList.")
+  }
+
+  if(length(transitionList) != length(initial)){
+    stop("Model specified by transitionList does not have the same number of rates as the initial estimates vector.")
+  }
+
+  for(i in 1:length(transitionList)){
+    #print(transitionList[[i]]$fixed)
+    if(length(transitionList[[i]]$fixed) != ncol(data)){
+      stop("Model specified by transitionList has different number of types (columns) than the data matrix.")
+    }
+  }
 
   # Set up quantities for estimation, related to pgf
   parent = c()
