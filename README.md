@@ -777,7 +777,7 @@ As part of the ESTIpop functions, we have included some pre-built simulation fun
 
 <p>
 <center>
-![](README/images/2typereistance.PNG)
+![](/README/images/2typereistance.PNG)
 </center>
 </p>
 | Parameter  | Variable Type  | Description                                        |
