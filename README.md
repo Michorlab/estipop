@@ -760,7 +760,7 @@ As part of the ESTIpop functions, we have included some pre-built simulation fun
 
 <p>
 <center>
-![](images/birthdeathmutation.PNG)
+![](README/images/birthdeathmutation.PNG)
 </center>
 </p>
 | Parameter | Variable Type  | Description                                |
@@ -777,7 +777,7 @@ As part of the ESTIpop functions, we have included some pre-built simulation fun
 
 <p>
 <center>
-![](images/2typereistance.PNG)
+![](README/images/2typereistance.PNG)
 </center>
 </p>
 | Parameter  | Variable Type  | Description                                        |
