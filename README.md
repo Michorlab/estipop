@@ -718,7 +718,7 @@ As part of the ESTIpop functions, we have included some pre-built simulation fun
 
 <p>
 <center>
-![](images/birth.PNG)
+![](README//birth.png)
 </center>
 </p>
 | Parameter | Variable Type | Description                         |
@@ -731,7 +731,7 @@ As part of the ESTIpop functions, we have included some pre-built simulation fun
 
 <p>
 <center>
-![](images/birthdeath.PNG)
+![](README/birthdeath.png)
 </center>
 </p>
 | Parameter | Variable Type | Description                         |
@@ -745,7 +745,7 @@ As part of the ESTIpop functions, we have included some pre-built simulation fun
 
 <p>
 <center>
-![](images/birthmutation.PNG)
+![](README/birthmutation.png)
 </center>
 </p>
 | Parameter | Variable Type  | Description                                |
@@ -760,7 +760,7 @@ As part of the ESTIpop functions, we have included some pre-built simulation fun
 
 <p>
 <center>
-![](README/images/birthdeathmutation.PNG)
+![](README/birthdeathmutation.png)
 </center>
 </p>
 | Parameter | Variable Type  | Description                                |
@@ -777,7 +777,7 @@ As part of the ESTIpop functions, we have included some pre-built simulation fun
 
 <p>
 <center>
-![TWoTypeResistance](README/2typereistance.PNG)
+![TWoTypeResistance](README/2typereistance.png)
 </center>
 </p>
 | Parameter  | Variable Type  | Description                                        |
