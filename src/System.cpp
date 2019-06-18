@@ -273,7 +273,7 @@ int System::getNextEvent2(double curTime, double timeToNext){
 	return choose(cumulativeHazards);
 }
 
-void System::simulate2(int numTime, std::string file){
+void System::simulate_timedep(int numTime, std::string file){
 	bool verbose = false;
 	std::cout.precision(60);
 

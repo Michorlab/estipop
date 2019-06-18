@@ -4,7 +4,8 @@
 \alias{sim_approx_full}
 \title{sim_approx_full}
 \usage{
-sim_approx_full(numSamples, t, N, transitionList)
+sim_approx_full(numSamples, t, N, transitionList, observations = NULL,
+  dt = NULL)
 }
 \arguments{
 \item{numSamples}{number of samples}
@@ -14,6 +15,10 @@ sim_approx_full(numSamples, t, N, transitionList)
 \item{N}{k-length vector of the initial ancestor counts for each type}
 
 \item{transitionList}{transitionList object to specify the model}
+
+\item{observations}{a vector of observation times}
+
+\item{dt}{make observations from time 0 until time t in units of time dt}
 }
 \description{
 method to simulate from the asymptotic distriution of a general multitype branching process

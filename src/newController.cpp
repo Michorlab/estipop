@@ -569,7 +569,7 @@ double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rc
 	// Simulate
 	if(!silent)
 	std::cout << "Simulating..." << std::endl;
-	sys.simulate2(time, file);
+	sys.simulate_timedep(time, file);
 	if(!silent)
 	std::cout << "Ending process..." << std::endl;
 

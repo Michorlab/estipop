@@ -66,6 +66,6 @@ public:
 	
 	void simulate(int numTime, std::string file);
 	
-	void simulate2(int numTime, std::string file);
+	void simulate_timedep(int numTime, std::string file);
 };
 
