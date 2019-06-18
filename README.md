@@ -222,14 +222,14 @@ The results from estimateBP are those that are returned from the optim function,
 # Print the results from the optimizer
 print(estimates)
 #> $par
-#> [1] 0.8111400 0.5092545
+#> [1] 0.7837276 0.4793380
 #> 
 #> $value
-#> [1] 492.4554
+#> [1] 491.2492
 #> 
 #> $counts
 #> function gradient 
-#>       35       35 
+#>       22       22 
 #> 
 #> $convergence
 #> [1] 0
@@ -238,7 +238,7 @@ print(estimates)
 #> [1] "CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH"
 ```
 
-Our estimated birth rate is 0.811 and our estimated death rate is 0.509
+Our estimated birth rate is 0.784 and our estimated death rate is 0.479
 
 Two-type Birth-Death-Mutation Example
 -------------------------------------
@@ -303,14 +303,14 @@ Again, we can print out our results:
 ``` r
 print(estimates)
 #> $par
-#> [1] 0.4340697 0.1098873 0.6073416 2.9944936 4.0000000
+#> [1] 0.36619223 0.05275426 1.03036211 1.48569457 4.00000000
 #> 
 #> $value
-#> [1] 568.2609
+#> [1] 525.3233
 #> 
 #> $counts
 #> function gradient 
-#>       85       85 
+#>       94       94 
 #> 
 #> $convergence
 #> [1] 0
@@ -319,7 +319,7 @@ print(estimates)
 #> [1] "CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH"
 ```
 
-We can access our point estimates using the 'par' item of the return. We estimate birth1 by 0.434, death1 by 0.11, mutation by 0.607, birth2 by 2.994, and death2 by 4.
+We can access our point estimates using the 'par' item of the return. We estimate birth1 by 0.366, death1 by 0.053, mutation by 1.03, birth2 by 1.486, and death2 by 4.
 
 Using ESTIpop in R for Simulation
 =================================
@@ -636,8 +636,8 @@ transitionList = TransitionList(FixedTransition(population = 0, rate = birth1 * 
                                                 fixed = c(0, 0)))
 
 # Sepcify to stop simualtion once the population exceeds 1000
-stopList = StopList(StopCriterion(indices = c(0), inequality = ">=", value = 5000),
-                    StopCriterion(indices = c(1), inequality = ">=", value = 5000))
+stopList = StopList(StopCriterion(indices = c(0), inequality = ">=", value = 10000),
+                    StopCriterion(indices = c(1), inequality = ">=", value = 10000))
 
 # Run simulation and store results into res
 res = branch(time, initial, transitionList, stopList, silent = TRUE)
