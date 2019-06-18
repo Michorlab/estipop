@@ -727,11 +727,8 @@ As part of the ESTIpop functions, we have included some pre-built simulation fun
 
 ### One-Type Birth-Death Process - simBirthDeath
 
-<p>
-<center>
 ![](README/birthdeath.png)
-</center>
-</p>
+
 | Parameter | Variable Type | Description                         |
 |-----------|---------------|-------------------------------------|
 | birth     | numeric       | birth rate of individuals           |
@@ -741,11 +738,8 @@ As part of the ESTIpop functions, we have included some pre-built simulation fun
 
 ### Two-Type Birth-Mutation Process - simBirthMutation
 
-<p>
-<center>
 ![](README/birthmutation.png)
-</center>
-</p>
+
 | Parameter | Variable Type  | Description                                |
 |-----------|----------------|--------------------------------------------|
 | birth1    | numeric        | birth rate of type 1 individuals           |
@@ -756,11 +750,8 @@ As part of the ESTIpop functions, we have included some pre-built simulation fun
 
 ### Two-Type Birth-Death-Mutation Process - simBirthDeathMutation
 
-<p>
-<center>
 ![](README/birthdeathmutation.png)
-</center>
-</p>
+
 | Parameter | Variable Type  | Description                                |
 |-----------|----------------|--------------------------------------------|
 | birth1    | numeric        | birth rate of type 1 individuals           |
@@ -773,11 +764,8 @@ As part of the ESTIpop functions, we have included some pre-built simulation fun
 
 ### Two-Type Drug Resistance Model (Four Types) - simTwoTypeResistance
 
-<p>
-<center>
 ![TWoTypeResistance](README/2typereistance.png)
-</center>
-</p>
+
 | Parameter  | Variable Type  | Description                                        |
 |------------|----------------|----------------------------------------------------|
 | birth0     | numeric        | birth rate of type 0 individuals (no mutation)     |
