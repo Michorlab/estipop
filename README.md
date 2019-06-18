@@ -609,6 +609,7 @@ In our next example, let us look beyond a simple birth-death process by adding a
 
 ``` r
 library(estipop)
+#> Loading required package: MASS
 
 # Specify how many units of time to simulate
 time = 25
@@ -619,7 +620,7 @@ initial = c(100, 0)
 # Specify some parameters for rates
 birth1 = 1.0
 death1 = 0.7
-mutation1 = 0.005
+mutation1 = 0.001
 birth2 = 5
 death2 = 3
 
@@ -636,8 +637,8 @@ transitionList = TransitionList(FixedTransition(population = 0, rate = birth1 * 
                                                 fixed = c(0, 0)))
 
 # Sepcify to stop simualtion once the population exceeds 1000
-stopList = StopList(StopCriterion(indices = c(0), inequality = ">=", value = 10000),
-                    StopCriterion(indices = c(1), inequality = ">=", value = 10000))
+stopList = StopList(StopCriterion(indices = c(0), inequality = ">=", value = 5000),
+                    StopCriterion(indices = c(1), inequality = ">=", value = 5000))
 
 # Run simulation and store results into res
 res = branch(time, initial, transitionList, stopList, silent = TRUE)
