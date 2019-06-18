@@ -26,9 +26,9 @@ FixedTransition = function(population, rate = 1.0, fixed){
 #'
 #' @param population index of population for which transition applies
 #' @param rate rate at which this transition occurs
-#' @param oVec
-#' @param oDist
-#' @param oParams
+#' @param oVec offspring distribution probabilities
+#' @param oDist offspring distribution function
+#' @param oParams offspring distriution function parameters
 #'
 #' @export
 #' @examples

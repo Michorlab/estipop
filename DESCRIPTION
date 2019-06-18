@@ -1,12 +1,13 @@
-Package: gmbp
+Package: estipop
 Type: Package
-Title: gmbp is an R-wrapped C++ tool to simulate populations existing in tree-like structures
+Title: ESTIpop is a simulation software tool written in
+    C++ to simulate and estimate rate parameters for general multitype branching processes
 Version: 0.0.1
 Authors@R: c(
     person("Jeremy", "Ferlic", , "jferlic@g.harvard.edu", c("aut", "cre")),
     person("Franziska", "Michor", , "michor@jimmy.harvard.edu", c("aut")),
     person("Thomas", "McDonald", , "mcdonald@jimmy.harvard.edu", c("aut")))
-Description: gmbp is a simulation software tool written in
+Description: ESTIpop is a simulation software tool written in
     C++ to simulate and estimate rate parameters for general multitype branching processes
 License: GPL-3
 LazyData: TRUE
@@ -26,8 +27,8 @@ LinkingTo: Rcpp, RcppGSL
 SystemRequirements: GNU GSL
 NeedsCompilation: yes
 RoxygenNote: 6.0.1
-URL: https://github.com/ferlicjl/gmbp
-BugReports: https://github.com/ferlicjl/gmbp/issues
+URL: https://github.com/ferlicjl/estipop
+BugReports: https://github.com/ferlicjl/estipop/issues
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr

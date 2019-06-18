@@ -7,7 +7,7 @@
 #'
 #' @export
 gmbp3 <- function(time, file, initial, transitions, stops, silence, seed = NULL) {
-    .Call('_gmbp_gmbp3', PACKAGE = 'gmbp', time, file, initial, transitions, stops, silence, seed)
+    .Call('_estipop_gmbp3', PACKAGE = 'estipop', time, file, initial, transitions, stops, silence, seed)
 }
 
 #' test
@@ -16,7 +16,7 @@ gmbp3 <- function(time, file, initial, transitions, stops, silence, seed = NULL)
 #'
 #' @export
 test <- function(a) {
-    .Call('_gmbp_test', PACKAGE = 'gmbp', a)
+    .Call('_estipop_test', PACKAGE = 'estipop', a)
 }
 
 #' t2
@@ -25,7 +25,7 @@ test <- function(a) {
 #'
 #' @export
 t2 <- function(custom_distribution_file = NULL) {
-    .Call('_gmbp_t2', PACKAGE = 'gmbp', custom_distribution_file)
+    .Call('_estipop_t2', PACKAGE = 'estipop', custom_distribution_file)
 }
 
 #' timeDepBranch
@@ -34,6 +34,6 @@ t2 <- function(custom_distribution_file = NULL) {
 #'
 #' @export
 timeDepBranch <- function(time, file, initial, transitions, stops, silence) {
-    .Call('_gmbp_timeDepBranch', PACKAGE = 'gmbp', time, file, initial, transitions, stops, silence)
+    .Call('_estipop_timeDepBranch', PACKAGE = 'estipop', time, file, initial, transitions, stops, silence)
 }
 

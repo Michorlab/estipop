@@ -11,7 +11,11 @@ RandomTransition(population, rate, oVec, oDist, oParams)
 
 \item{rate}{rate at which this transition occurs}
 
-\item{oParams}{}
+\item{oVec}{offspring distribution probabilities}
+
+\item{oDist}{offspring distribution function}
+
+\item{oParams}{offspring distriution function parameters}
 }
 \description{
 Designates a fixed transition, that is, a transition vector that generates the number of offspring according to the distribution oDist with

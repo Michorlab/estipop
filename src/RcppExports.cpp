@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // gmbp3
 double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence, SEXP seed);
-RcppExport SEXP _gmbp_gmbp3(SEXP timeSEXP, SEXP fileSEXP, SEXP initialSEXP, SEXP transitionsSEXP, SEXP stopsSEXP, SEXP silenceSEXP, SEXP seedSEXP) {
+RcppExport SEXP _estipop_gmbp3(SEXP timeSEXP, SEXP fileSEXP, SEXP initialSEXP, SEXP transitionsSEXP, SEXP stopsSEXP, SEXP silenceSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -25,7 +25,7 @@ END_RCPP
 }
 // test
 double test(double a);
-RcppExport SEXP _gmbp_test(SEXP aSEXP) {
+RcppExport SEXP _estipop_test(SEXP aSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -36,7 +36,7 @@ END_RCPP
 }
 // t2
 std::vector<double> t2(SEXP custom_distribution_file);
-RcppExport SEXP _gmbp_t2(SEXP custom_distribution_fileSEXP) {
+RcppExport SEXP _estipop_t2(SEXP custom_distribution_fileSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -47,7 +47,7 @@ END_RCPP
 }
 // timeDepBranch
 double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence);
-RcppExport SEXP _gmbp_timeDepBranch(SEXP timeSEXP, SEXP fileSEXP, SEXP initialSEXP, SEXP transitionsSEXP, SEXP stopsSEXP, SEXP silenceSEXP) {
+RcppExport SEXP _estipop_timeDepBranch(SEXP timeSEXP, SEXP fileSEXP, SEXP initialSEXP, SEXP transitionsSEXP, SEXP stopsSEXP, SEXP silenceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -63,14 +63,14 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_gmbp_gmbp3", (DL_FUNC) &_gmbp_gmbp3, 7},
-    {"_gmbp_test", (DL_FUNC) &_gmbp_test, 1},
-    {"_gmbp_t2", (DL_FUNC) &_gmbp_t2, 1},
-    {"_gmbp_timeDepBranch", (DL_FUNC) &_gmbp_timeDepBranch, 6},
+    {"_estipop_gmbp3", (DL_FUNC) &_estipop_gmbp3, 7},
+    {"_estipop_test", (DL_FUNC) &_estipop_test, 1},
+    {"_estipop_t2", (DL_FUNC) &_estipop_t2, 1},
+    {"_estipop_timeDepBranch", (DL_FUNC) &_estipop_timeDepBranch, 6},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_gmbp(DllInfo *dll) {
+RcppExport void R_init_estipop(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }
