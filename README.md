@@ -775,11 +775,8 @@ As part of the ESTIpop functions, we have included some pre-built simulation fun
 
 ### Two-Type Drug Resistance Model (Four Types) - simTwoTypeResistance
 
-<p>
-<center>
 ![](/README/images/2typereistance.PNG)
-</center>
-</p>
+
 | Parameter  | Variable Type  | Description                                        |
 |------------|----------------|----------------------------------------------------|
 | birth0     | numeric        | birth rate of type 0 individuals (no mutation)     |
