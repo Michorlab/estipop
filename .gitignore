@@ -40,3 +40,5 @@ README.Rmd
 **/example/*
 configure
 system*.csv
+**/README_cache/
+
