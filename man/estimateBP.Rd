@@ -4,7 +4,7 @@
 \alias{estimateBP}
 \title{estimateBP}
 \usage{
-estimateBP(time, N, transitionList, data, initial, ... = NULL)
+estimateBP(time, N, transitionList, data, initial, known = NULL)
 }
 \arguments{
 \item{time}{numeric or vector of time units for data observations}

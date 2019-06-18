@@ -4,7 +4,7 @@
 \alias{FixedTransition}
 \title{FixedTransition}
 \usage{
-FixedTransition(population, rate, fixed)
+FixedTransition(population, rate = 1, fixed)
 }
 \arguments{
 \item{population}{index of population for which transition applies}

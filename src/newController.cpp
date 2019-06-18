@@ -6,7 +6,7 @@
 *    Description:  Contains simulating and input file parsing functions
 *
 *        Version:  1.0
-*        Created:  10/1/2017 14:57:27
+*        Created:  06/13/2018 14:57:27
 *       Revision:  none
 *       Compiler:  g++
 *

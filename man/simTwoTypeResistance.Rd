@@ -4,26 +4,12 @@
 \alias{simTwoTypeResistance}
 \title{simTwoTypeResistance}
 \usage{
-simTwoTypeResistance(birth1 = 1, death1 = 0, mutation = 0, birth2 = 1,
-  death2 = 0.7, init = c(100, 0), time = 1)
+simTwoTypeResistance(mutation1 = 0, mutation2 = 0, mutation12 = 0,
+  mutation21 = 0, birth0 = 1, death0 = 0.7, birth1 = 1, death1 = 0.7,
+  birth2 = 1, death2 = 0.7, birth12 = 1, death12 = 0.7, init = c(100,
+  0, 0, 0), time = 1)
 }
 \arguments{
-\item{birth1}{constant birth rate of population 1}
-
-\item{death1}{constant death rate of population 1}
-
-\item{birth2}{constant birth rate of population 2}
-
-\item{death2}{constant death rate of population 2}
-
-\item{init}{vector of initial population sizes}
-
-\item{time}{number of time units to simulate}
-
-\item{birth0}{constant birth rate of population 0}
-
-\item{death0}{constant death rate of population 0}
-
 \item{mutation1}{constant mutation rate to type-1 resistance}
 
 \item{mutation2}{constant mutation rate to type-2 resistance}
@@ -32,15 +18,31 @@ simTwoTypeResistance(birth1 = 1, death1 = 0, mutation = 0, birth2 = 1,
 
 \item{mutation21}{constant mutation rate from type-2 restistance to include type-1 resistance}
 
+\item{birth0}{constant birth rate of population 0}
+
+\item{death0}{constant death rate of population 0}
+
+\item{birth1}{constant birth rate of population 1}
+
+\item{death1}{constant death rate of population 1}
+
+\item{birth2}{constant birth rate of population 2}
+
+\item{death2}{constant death rate of population 2}
+
 \item{birth12}{constant birth rate of population 1/2}
 
 \item{death12}{constant death rate of population 1/2}
+
+\item{init}{vector of initial population sizes}
+
+\item{time}{number of time units to simulate}
 }
 \description{
 Simulates 2-type Resistance process
 }
 \examples{
 \dontrun{
-simBirthDeathMutation(birth1 = 1, death1 = 0.7, mutation = 0.1, birth2 = 1.0, death2 = 0.7, init = c(100,0), time = 10)
+simTwoTypeResistance(birth1 = 1, death1 = 0.7, mutation = 0.1, birth2 = 1.0, death2 = 0.7, init = c(100,0), time = 10)
 }
 }

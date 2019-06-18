@@ -4,13 +4,14 @@ Title: gmbp is an R-wrapped C++ tool to simulate populations existing in tree-li
 Version: 0.0.1
 Authors@R: c(
     person("Jeremy", "Ferlic", , "jferlic@g.harvard.edu", c("aut", "cre")),
-	person("Jiantao", "Shi", , "jshi@jimmy.harvard.edu", c("aut")),
-    person("Thomas", "McDonald", , "mcdonald@jimmy.harvard.edu", c("aut")),
-    person("Franziska", "Michor", , "michor@jimmy.harvard.edu", "aut"))
+    person("Franziska", "Michor", , "michor@jimmy.harvard.edu", c("aut")),
+    person("Thomas", "McDonald", , "mcdonald@jimmy.harvard.edu", c("aut")))
 Description: gmbp is a simulation software tool written in
-    C++ to simulate stochastic processes for populations existing in tree-like structures.
+    C++ to simulate and estimate rate parameters for general multitype branching processes
 License: GPL-3
 LazyData: TRUE
+Depends:
+    MASS
 Imports:
     Rcpp,
     RcppGSL,
@@ -19,7 +20,8 @@ Imports:
     ggplot2,
     dplyr,
     magrittr,
-    tidyr
+    tidyr,
+	bossMaps
 LinkingTo: Rcpp, RcppGSL
 SystemRequirements: GNU GSL
 NeedsCompilation: yes

@@ -213,7 +213,7 @@ branchTD = function(time, intial, transitionList, stopList, silent = FALSE, keep
 #'        stopList = StopList(StopCriterion(indices = c(0), inequality = ">=", value = 1000),
 #'                   StopCriterion(indices = c(0, 1), inequality = ">=", value = 10000)))
 #' }
-estimateBP = function(time, N, transitionList, data, initial){
+estimateBP = function(time, N, transitionList, data, initial, known = NULL){
 
   if(length(transitionList) < 1){
     stop("No model specified by transitionList.")
@@ -253,10 +253,18 @@ estimateBP = function(time, N, transitionList, data, initial){
   #   control = NULL
   # }
   control = NULL
-  rMLE <- optim(initial,#b+runif(n = 1, min = -.3, max = .3),d+runif(n = 1, min = -.3, max = .3)),
-                loglik_ex2, method = "L-BFGS-B",
-                lower = 1e-10*1:length(initial), upper = 4 + 1e-10*1:length(initial),
-                control = control)
+  if(is.null(known)){
+    rMLE <- optim(initial,#b+runif(n = 1, min = -.3, max = .3),d+runif(n = 1, min = -.3, max = .3)),
+                  loglik_ex2, method = "L-BFGS-B",
+                  lower = 1e-10*1:length(initial), upper = 4 + 1e-10*1:length(initial),
+                  control = control)
+  } else {
+    rMLE <- bossMaps:::optifix(initial,
+                               known,
+                               loglik_ex2, method = "L-BFGS-B",
+                               lower = 1e-10*1:length(initial), upper = 4 + 1e-10*1:length(initial),
+                               control = control)
+  }
   return(rMLE)
 }
 
