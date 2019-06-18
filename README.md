@@ -222,14 +222,14 @@ The results from estimateBP are those that are returned from the optim function,
 # Print the results from the optimizer
 print(estimates)
 #> $par
-#> [1] 0.9811878 0.6771609
+#> [1] 0.8625047 0.5548073
 #> 
 #> $value
-#> [1] 504.7254
+#> [1] 498.3562
 #> 
 #> $counts
 #> function gradient 
-#>       20       20 
+#>       22       22 
 #> 
 #> $convergence
 #> [1] 0
@@ -238,7 +238,7 @@ print(estimates)
 #> [1] "CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH"
 ```
 
-Our estimated birth rate is 0.981 and our estimated death rate is 0.677
+Our estimated birth rate is 0.863 and our estimated death rate is 0.555
 
 Two-type Birth-Death-Mutation Example
 -------------------------------------
@@ -303,14 +303,14 @@ Again, we can print out our results:
 ``` r
 print(estimates)
 #> $par
-#> [1] 0.4323054054 0.1406427020 0.3129636677 0.5108773731 0.0000000005
+#> [1] 0.4878753290 0.1822889660 0.3325536037 0.4076540999 0.0000000005
 #> 
 #> $value
-#> [1] 540.563
+#> [1] 546.1898
 #> 
 #> $counts
 #> function gradient 
-#>       41       41 
+#>       57       57 
 #> 
 #> $convergence
 #> [1] 0
@@ -319,7 +319,7 @@ print(estimates)
 #> [1] "CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH"
 ```
 
-We can access our point estimates using the 'par' item of the return. We estimate birth1 by 0.432, death1 by 0.141, mutation by 0.313, birth2 by 0.511, and death2 by 0.
+We can access our point estimates using the 'par' item of the return. We estimate birth1 by 0.488, death1 by 0.182, mutation by 0.333, birth2 by 0.408, and death2 by 0.
 
 Using ESTIpop in R for Simulation
 =================================
