@@ -1,9 +1,9 @@
-#' gmbp: simualtion of tree-like structures
+#' estipop: simualtion and estimation of general multitype branching processes
 #'
 #'
 #' @docType package
-#' @name gmbp
-#' @useDynLib gmbp
+#' @name estipop
+#' @useDynLib estipop
 #' @importFrom Rcpp evalCpp
 #' @importFrom magrittr %>%
 #' @import igraph

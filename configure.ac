@@ -1,5 +1,5 @@
 # The version set here will propagate to other files from here
-AC_INIT([diffpop], 0.0.1)
+AC_INIT([estipop], 0.0.1)
 
 # Checks for common programs using default macros
 AC_PROG_CC
