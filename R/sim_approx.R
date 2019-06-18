@@ -250,29 +250,60 @@ sim_approx2 <- function(numSamples, t, N, transitionList)
 #' @param t time to simulate until
 #' @param N k-length vector of the initial ancestor counts for each type
 #' @param transitionList transitionList object to specify the model
+#' @param observations a vector of observation times
+#' @param dt make observations from time 0 until time t in units of time dt
 #'
 #' @export
-sim_approx_full <- function(numSamples, t, N, transitionList){
-  if(numSamples == 1){
-    ret = t(as.matrix(MASS:::mvrnorm(n = numSamples, N %*% Mt, Sigmat), ncol = ntypes))
-    return(cbind(rep(t, numSamples), ret))
-  } else{
+sim_approx_full <- function(numSamples, t, N, transitionList, observations = NULL, dt = NULL){
 
-    return(cbind(rep(t, numSamples), as.matrix(MASS:::mvrnorm(n = numSamples, N %*% Mt, Sigmat))))
-  }
+  if(is.null(observations) & is.null(dt)){
 
-  prev_values = matrix(rep(initial, numSamples), ncol = length(initial), byrow = T)
+    prev_values = matrix(rep(initial, numSamples), ncol = length(initial), byrow = T)
 
-  ret = matrix(ncol = length(transitionList[[1]]$fixed )+1)
+    ret = matrix(ncol = length(transitionList[[1]]$fixed )+1)
 
-  time = 1
-  for(i in 1:t){
-    for(j in 1:nrow(prev_values)){
-      samp = sim_approx2(numSamples = 1, t = 1, N = prev_values[j,], transitionList)
-      ret = rbind(ret, c(time, samp[,2:ncol(samp)]))
+    time = 1
+    for(i in 1:t){
+      for(j in 1:nrow(prev_values)){
+        samp = sim_approx2(numSamples = 1, t = 1, N = prev_values[j,], transitionList)
+        ret = rbind(ret, c(time, samp[,2:ncol(samp)]))
+      }
+      time = time + 1
     }
-    time = time + 1
-  }
 
-  return(na.omit(ret))
+    return(na.omit(ret))
+  } else if (!is.null(observations)){
+    d_obs = c(observations[1], diff(observations))
+
+    prev_values = matrix(rep(initial, numSamples), ncol = length(initial), byrow = T)
+
+    ret = matrix(ncol = length(transitionList[[1]]$fixed )+1)
+
+    time = d_obs[1]
+    for(i in 1:length(d_obs)){
+      for(j in 1:nrow(prev_values)){
+        samp = sim_approx2(numSamples = 1, t = time, N = prev_values[j,], transitionList)
+        ret = rbind(ret, c(time, samp[,2:ncol(samp)]))
+      }
+      time = time + d_obs[i+1]
+    }
+
+    return(na.omit(ret))
+  } else if(!is.null(dt)){
+
+    prev_values = matrix(rep(initial, numSamples), ncol = length(initial), byrow = T)
+
+    ret = matrix(ncol = length(transitionList[[1]]$fixed )+1)
+
+    time = 0
+    for(i in seq(0, t, dt)){
+      for(j in 1:nrow(prev_values)){
+        samp = sim_approx2(numSamples = 1, t = dt, N = prev_values[j,], transitionList)
+        ret = rbind(ret, c(time, samp[,2:ncol(samp)]))
+      }
+      time = time + dt
+    }
+
+    return(na.omit(ret))
+  }
 }
