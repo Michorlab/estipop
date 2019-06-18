@@ -777,7 +777,7 @@ As part of the ESTIpop functions, we have included some pre-built simulation fun
 
 <p>
 <center>
-![TWoTypeResistance](README/images/2typereistance.PNG)
+![TWoTypeResistance](README/2typereistance.PNG)
 </center>
 </p>
 | Parameter  | Variable Type  | Description                                        |
