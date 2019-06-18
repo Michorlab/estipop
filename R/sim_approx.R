@@ -241,61 +241,38 @@ sim_approx2 <- function(numSamples, t, N, transitionList)
   }
 }
 
-# library(gmbp)
-#
-# transitionList = TransitionList(FixedTransition(population = 0, rate = .1, fixed = c(2, 0)),
-#                                 FixedTransition(population = 0, rate = .2, fixed = c(1, 1)),
-#                                 FixedTransition(population = 0, rate = .3, fixed = c(0, 0)),
-#                                 FixedTransition(population = 1, rate = .4, fixed = c(0, 2)),
-#                                 FixedTransition(population = 1, rate = .5, fixed = c(0, 0)))
-#
-# parent = c()
-# rate = c()
-# offspring = matrix(nrow = length(transitionList), ncol = length(transitionList[[1]]$fixed))
-# for(j in 1:length(transitionList)){
-#   parent = c(parent, transitionList[[j]]$pop)
-#   rate = c(rate, transitionList[[j]]$rate)
-#   offspring[j,] = as.matrix(transitionList[[j]]$fixed)
-# }
-#
-# parent = parent + 1
-#
-# time = 1
-#
-# N = c(500, 500)
-#
-# samp = sim_approx(n = 10000, t = time, N = N, parent = parent, rate = rate, offspring = offspring)
-#
-# library(gmbp)
-# library(doParallel)
-# library(foreach)
-#
-# # Set up parallelization
-# cores=detectCores()
-# cl <- makeCluster(cores[1]-1)
-# registerDoParallel(cl)
-#
-# # Set up time to simulate - 1 unit
-# time = 1
-#
-# # Set our initial population sizes
-# initial = c(500,500)
-#
-#
-# # No StopList items
-# stopList = StopList()
-#
-# # Simulate 1000 samples
-# ntrials = 10000
-#
-# full_res = foreach(j_=1:ntrials, .combine = "rbind", .packages = "gmbp") %dopar%{
-#   res = branch(time, initial, transitionList, stopList, keep = FALSE, silent = TRUE)
-#   as.matrix(res)
-# }
-# full_res = na.omit(full_res)
-# data = as.matrix(full_res[full_res[,1] == 1,2:3])
-#
-# print(colMeans(data))
-# print(colMeans(samp))
-# print(var(data[,1]))
-# print(var(samp[,1]))
+
+#' sim_approx_full
+#'
+#' method to simulate from the asymptotic distriution of a general multitype branching process
+#'
+#' @param numSamples number of samples
+#' @param t time to simulate until
+#' @param N k-length vector of the initial ancestor counts for each type
+#' @param transitionList transitionList object to specify the model
+#'
+#' @export
+sim_approx_full <- function(numSamples, t, N, transitionList){
+  if(numSamples == 1){
+    ret = t(as.matrix(MASS:::mvrnorm(n = numSamples, N %*% Mt, Sigmat), ncol = ntypes))
+    return(cbind(rep(t, numSamples), ret))
+  } else{
+
+    return(cbind(rep(t, numSamples), as.matrix(MASS:::mvrnorm(n = numSamples, N %*% Mt, Sigmat))))
+  }
+
+  prev_values = matrix(rep(initial, numSamples), ncol = length(initial), byrow = T)
+
+  ret = matrix(ncol = length(transitionList[[1]]$fixed )+1)
+
+  time = 1
+  for(i in 1:t){
+    for(j in 1:nrow(prev_values)){
+      samp = sim_approx2(numSamples = 1, t = 1, N = prev_values[j,], transitionList)
+      ret = rbind(ret, c(time, samp[,2:ncol(samp)]))
+    }
+    time = time + 1
+  }
+
+  return(na.omit(ret))
+}
