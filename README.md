@@ -222,14 +222,14 @@ The results from estimateBP are those that are returned from the optim function,
 # Print the results from the optimizer
 print(estimates)
 #> $par
-#> [1] 0.8625047 0.5548073
+#> [1] 0.8111400 0.5092545
 #> 
 #> $value
-#> [1] 498.3562
+#> [1] 492.4554
 #> 
 #> $counts
 #> function gradient 
-#>       22       22 
+#>       35       35 
 #> 
 #> $convergence
 #> [1] 0
@@ -238,7 +238,7 @@ print(estimates)
 #> [1] "CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH"
 ```
 
-Our estimated birth rate is 0.863 and our estimated death rate is 0.555
+Our estimated birth rate is 0.811 and our estimated death rate is 0.509
 
 Two-type Birth-Death-Mutation Example
 -------------------------------------
@@ -303,14 +303,14 @@ Again, we can print out our results:
 ``` r
 print(estimates)
 #> $par
-#> [1] 0.4878753290 0.1822889660 0.3325536037 0.4076540999 0.0000000005
+#> [1] 0.4340697 0.1098873 0.6073416 2.9944936 4.0000000
 #> 
 #> $value
-#> [1] 546.1898
+#> [1] 568.2609
 #> 
 #> $counts
 #> function gradient 
-#>       57       57 
+#>       85       85 
 #> 
 #> $convergence
 #> [1] 0
@@ -319,7 +319,7 @@ print(estimates)
 #> [1] "CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH"
 ```
 
-We can access our point estimates using the 'par' item of the return. We estimate birth1 by 0.488, death1 by 0.182, mutation by 0.333, birth2 by 0.408, and death2 by 0.
+We can access our point estimates using the 'par' item of the return. We estimate birth1 by 0.434, death1 by 0.11, mutation by 0.607, birth2 by 2.994, and death2 by 4.
 
 Using ESTIpop in R for Simulation
 =================================
@@ -619,7 +619,7 @@ initial = c(100, 0)
 # Specify some parameters for rates
 birth1 = 1.0
 death1 = 0.7
-mutation1 = 0.001
+mutation1 = 0.005
 birth2 = 5
 death2 = 3
 
@@ -716,11 +716,8 @@ As part of the ESTIpop functions, we have included some pre-built simulation fun
 
 ### One-Type Birth Process - simBirth
 
-<p>
-<center>
-![](README//birth.png)
-</center>
-</p>
+![simBirth](README//birth.png)
+
 | Parameter | Variable Type | Description                         |
 |-----------|---------------|-------------------------------------|
 | birth     | numeric       | birth rate of individuals           |
