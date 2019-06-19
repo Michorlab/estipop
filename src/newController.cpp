@@ -314,10 +314,36 @@ double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List
 
 	//sys.print();
 
+	// Observation times
+	/*
+	double skip;
+	std::vector<double> obsTimes;
+	if(Rf_isNull(observations)){
+		if(Rf_isNull(dt)){
+			skip = 1;
+		} else {
+		  skip = Rf_asReal(dt);
+		}
+		for (double k = 0; k < time + 1; k+= skip)
+		{
+			 std::cout << k << std::endl;
+			obsTimes.push_back(k);
+		}
+	} else {
+		std::vector<int> obsTimes(observations.begin(), observations.end());
+	}
+	*/
+	std::vector<double> obsTimes;
+	for (double k = 0; k < time + 1; k+= 1)
+	{
+		std::cout << k << std::endl;
+		obsTimes.push_back(k);
+	}
+
 	// Simulate
 	if(!silent)
 	std::cout << "Simulating..." << std::endl;
-	sys.simulate(time, file);
+	sys.simulate(obsTimes, file);
 	if(!silent)
 	std::cout << "Ending process..." << std::endl;
 
@@ -330,7 +356,33 @@ double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List
 //'
 //' @export
 // [[Rcpp::export]]
-double test(double a) {
+double test(double a, SEXP dt = R_NilValue, Rcpp::Nullable<Rcpp::NumericVector> initial = R_NilValue) {
+	std::cout << "Here's a: " << a << std::endl;
+
+	if(!Rf_isNull(dt)){
+		std::cout << "You gave me a dt: " << Rf_asReal(dt) << std::endl;
+	}
+
+	if(initial.isNotNull()){
+		Rcpp::NumericVector t = Rcpp::as<Rcpp::NumericVector>(initial);
+		std::cout << "You also gave me a vector of values.  Here they are!" << std::endl;
+
+		std::vector<double> init(t.begin(), t.end());
+		for(int i = 0; i < init.size(); i++){
+			std::cout << init[i] << std::endl;
+		}
+	}
+	//return sys.choosePop();
+	return 0;
+}
+
+//' zee
+//'
+//' zee
+//'
+//' @export
+// [[Rcpp::export]]
+double zee(double a) {
 	ConstantRate h(1.234234);
 	std::cout << h(1.344) << std::endl;
 
@@ -422,11 +474,11 @@ std::vector<double> t2(SEXP custom_distribution_file = R_NilValue){
 //' @export
 // [[Rcpp::export]]
 double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence){
-	
+
 	// Set seed
 	double seedcpp = std::chrono::high_resolution_clock::now().time_since_epoch().count();
 	gsl_rng_set(rng, seedcpp);
-	
+
 	// Set up output preferences & integration workspace
 	silent = silence;
 	workspace = gsl_integration_workspace_alloc(1000);
@@ -491,7 +543,7 @@ double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rc
 
 				// Name for plugin library location
 				const char* plugin_location = CHAR(Rf_asChar(params[0]));
-				
+
 				// Load plugin library
 				#ifdef _WIN32
 					lib_handle = LoadLibrary(plugin_location);
@@ -508,7 +560,7 @@ double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rc
 					}
 					rate = (double (*)(double, void*))dlsym(lib_handle, "CA");
 				#endif
-				
+
 				r = new Rate(rate);
 			}
 		} else {

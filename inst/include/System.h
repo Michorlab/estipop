@@ -64,7 +64,7 @@ public:
 	
 	int getNextEvent2(double curTime, double timeToNext);
 	
-	void simulate(int numTime, std::string file);
+	void simulate(std::vector<double> obsTimes, std::string file);
 	
 	void simulate_timedep(int numTime, std::string file);
 };

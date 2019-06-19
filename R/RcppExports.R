@@ -15,8 +15,17 @@ gmbp3 <- function(time, file, initial, transitions, stops, silence, seed = NULL)
 #' test
 #'
 #' @export
-test <- function(a) {
-    .Call('_estipop_test', PACKAGE = 'estipop', a)
+test <- function(a, dt = NULL, initial = NULL) {
+    .Call('_estipop_test', PACKAGE = 'estipop', a, dt, initial)
+}
+
+#' zee
+#'
+#' zee
+#'
+#' @export
+zee <- function(a) {
+    .Call('_estipop_zee', PACKAGE = 'estipop', a)
 }
 
 #' t2

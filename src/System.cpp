@@ -116,7 +116,7 @@ double System::getNextTime(std::vector<double>& o_rates){
 	return(gsl_ran_exponential(rng, 1 / std::accumulate(o_rates.begin(), o_rates.end(), 0.0)));
 }
 
-void System::simulate(int numTime, std::string file){
+void System::simulate(std::vector<double> obsTimes, std::string file){
 	bool verbose = false;
 
 	std::vector<double> o_rates;
@@ -124,12 +124,14 @@ void System::simulate(int numTime, std::string file){
 		o_rates.push_back(0.0);
 	}
 
-	// Set up vector of observation times
+	/* // Set up vector of observation times
     std::vector<int> obsTimes;
     for (int k = 0; k < numTime + 1; k++)
     {
         obsTimes.push_back(k);
-    }
+    } */
+
+	double numTime = obsTimes[obsTimes.size()-1];
 
 
     // Set variables to keep track of our current time and which observation time comes next
@@ -142,7 +144,7 @@ void System::simulate(int numTime, std::string file){
 	if(!silent){
 		std::cout << "numTime: " << numTime << std::endl;
 		std::cout << "Simulation Start Time: " << curTime << std::endl;
-		std::cout << "Simulation End Time: " << obsTimes[numTime] << std::endl;
+		std::cout << "Simulation End Time: " << obsTimes[obsTimes.size()-1] << std::endl;
 		std::cout << "obsTimes.size(): " << obsTimes.size() << std::endl;
 	}
 
@@ -161,14 +163,17 @@ void System::simulate(int numTime, std::string file){
 			// print out current state vector
 			toFile(obsTimes[curObsIndex], file);
 
-			if(verbose &&  obsTimes[curObsIndex] % obsMod == 0 && !silent)
+			if(verbose &&  int(obsTimes[curObsIndex]) % obsMod == 0 && !silent)
 				std::cout << "Time " << obsTimes[curObsIndex] << " of " << numTime << std::endl;
-      curObsIndex++;
+			
+			curObsIndex++;
+			
 			if((unsigned)curObsIndex >= obsTimes.size()-1)
 				break;
         }
-		if((unsigned)curObsIndex >= obsTimes.size()-1)
-				break;
+		
+		//if((unsigned)curObsIndex >= obsTimes.size()-1)
+			//	break;
 
         // Update our System
         int index = choose(o_rates);
@@ -210,7 +215,9 @@ void System::simulate(int numTime, std::string file){
 
     }
 		if(!silent)
-	std::cout << "End Simulation Time: " << obsTimes[curObsIndex] << std::endl;
+	std::cout << "End Simulation Time: " << obsTimes[obsTimes.size()-1] << std::endl;
+	if(!silent)
+		std::cout << "Actual current time: " << curTime << std::endl;
 }
 
 double System::getNextTime2(double curTime){

@@ -24,13 +24,26 @@ BEGIN_RCPP
 END_RCPP
 }
 // test
-double test(double a);
-RcppExport SEXP _estipop_test(SEXP aSEXP) {
+double test(double a, SEXP dt, Rcpp::Nullable<Rcpp::NumericVector> initial);
+RcppExport SEXP _estipop_test(SEXP aSEXP, SEXP dtSEXP, SEXP initialSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type a(aSEXP);
-    rcpp_result_gen = Rcpp::wrap(test(a));
+    Rcpp::traits::input_parameter< SEXP >::type dt(dtSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericVector> >::type initial(initialSEXP);
+    rcpp_result_gen = Rcpp::wrap(test(a, dt, initial));
+    return rcpp_result_gen;
+END_RCPP
+}
+// zee
+double zee(double a);
+RcppExport SEXP _estipop_zee(SEXP aSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type a(aSEXP);
+    rcpp_result_gen = Rcpp::wrap(zee(a));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -64,7 +77,8 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_estipop_gmbp3", (DL_FUNC) &_estipop_gmbp3, 7},
-    {"_estipop_test", (DL_FUNC) &_estipop_test, 1},
+    {"_estipop_test", (DL_FUNC) &_estipop_test, 3},
+    {"_estipop_zee", (DL_FUNC) &_estipop_zee, 1},
     {"_estipop_t2", (DL_FUNC) &_estipop_t2, 1},
     {"_estipop_timeDepBranch", (DL_FUNC) &_estipop_timeDepBranch, 6},
     {NULL, NULL, 0}
