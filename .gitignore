@@ -42,3 +42,6 @@ configure
 system*.csv
 **/README_cache/
 
+# R project files
+*.Rproj
+
