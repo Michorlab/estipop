@@ -304,6 +304,6 @@ sim_approx_full <- function(numSamples, t, N, transitionList, observations = NUL
       time = time + dt
     }
 
-    return(na.omit(ret))
+    return(as.matrix(na.omit(ret)))
   }
 }
