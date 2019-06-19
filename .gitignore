@@ -41,6 +41,7 @@ README.Rmd
 configure
 system*.csv
 **/README_cache/
+*.Rproj
 
 # R project files
 *.Rproj
