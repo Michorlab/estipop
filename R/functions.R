@@ -143,7 +143,7 @@ Rate = function(type, params){
 #'                   StopCriterion(indices = c(0, 1), inequality = ">=", value = 10000)))
 #' }
 branch = function(time, initial, transitionList, stopList, silent = FALSE, keep = FALSE, seed = NULL){
-  time = time + 1
+  time = time
   f = R.utils::getAbsolutePath(tempfile(pattern = paste("system_", format(Sys.time(), "%d-%m-%Y-%H%M%S"), "_", sep = ""), fileext = ".csv", tmpdir = getwd()))
   if(is.null(seed)){
     gmbp3(time, f, initial, transitionList, stopList, silent)

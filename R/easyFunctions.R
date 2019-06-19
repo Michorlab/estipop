@@ -16,7 +16,7 @@ simBirth = function(birth = 1.0, init = 100, time = 1){
 
   stopList = StopList()
 
-  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = FALSE))
+  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = TRUE))
 }
 
 #' simBirthDeath

@@ -7,8 +7,8 @@
 using namespace Rcpp;
 
 // gmbp3
-double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence, SEXP seed);
-RcppExport SEXP _estipop_gmbp3(SEXP timeSEXP, SEXP fileSEXP, SEXP initialSEXP, SEXP transitionsSEXP, SEXP stopsSEXP, SEXP silenceSEXP, SEXP seedSEXP) {
+double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence, SEXP seed, SEXP dt, Rcpp::Nullable<Rcpp::NumericVector> observations);
+RcppExport SEXP _estipop_gmbp3(SEXP timeSEXP, SEXP fileSEXP, SEXP initialSEXP, SEXP transitionsSEXP, SEXP stopsSEXP, SEXP silenceSEXP, SEXP seedSEXP, SEXP dtSEXP, SEXP observationsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -19,7 +19,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::List >::type stops(stopsSEXP);
     Rcpp::traits::input_parameter< bool >::type silence(silenceSEXP);
     Rcpp::traits::input_parameter< SEXP >::type seed(seedSEXP);
-    rcpp_result_gen = Rcpp::wrap(gmbp3(time, file, initial, transitions, stops, silence, seed));
+    Rcpp::traits::input_parameter< SEXP >::type dt(dtSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericVector> >::type observations(observationsSEXP);
+    rcpp_result_gen = Rcpp::wrap(gmbp3(time, file, initial, transitions, stops, silence, seed, dt, observations));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -76,7 +78,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_estipop_gmbp3", (DL_FUNC) &_estipop_gmbp3, 7},
+    {"_estipop_gmbp3", (DL_FUNC) &_estipop_gmbp3, 9},
     {"_estipop_test", (DL_FUNC) &_estipop_test, 3},
     {"_estipop_zee", (DL_FUNC) &_estipop_zee, 1},
     {"_estipop_t2", (DL_FUNC) &_estipop_t2, 1},

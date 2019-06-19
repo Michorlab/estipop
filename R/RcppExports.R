@@ -6,8 +6,8 @@
 #' gmbp3
 #'
 #' @export
-gmbp3 <- function(time, file, initial, transitions, stops, silence, seed = NULL) {
-    .Call('_estipop_gmbp3', PACKAGE = 'estipop', time, file, initial, transitions, stops, silence, seed)
+gmbp3 <- function(time, file, initial, transitions, stops, silence, seed = NULL, dt = NULL, observations = NULL) {
+    .Call('_estipop_gmbp3', PACKAGE = 'estipop', time, file, initial, transitions, stops, silence, seed, dt, observations)
 }
 
 #' test
