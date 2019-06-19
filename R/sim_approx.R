@@ -258,7 +258,7 @@ sim_approx_full <- function(numSamples, t, N, transitionList, observations = NUL
 
   if(is.null(observations) & is.null(dt)){
 
-    prev_values = matrix(rep(initial, numSamples), ncol = length(initial), byrow = T)
+    prev_values = matrix(rep(N, numSamples), ncol = length(N), byrow = T)
 
     ret = matrix(ncol = length(transitionList[[1]]$fixed )+1)
 
@@ -275,7 +275,7 @@ sim_approx_full <- function(numSamples, t, N, transitionList, observations = NUL
   } else if (!is.null(observations)){
     d_obs = c(observations[1], diff(observations))
 
-    prev_values = matrix(rep(initial, numSamples), ncol = length(initial), byrow = T)
+    prev_values = matrix(rep(N, numSamples), ncol = length(N), byrow = T)
 
     ret = matrix(ncol = length(transitionList[[1]]$fixed )+1)
 
@@ -291,7 +291,7 @@ sim_approx_full <- function(numSamples, t, N, transitionList, observations = NUL
     return(na.omit(ret))
   } else if(!is.null(dt)){
 
-    prev_values = matrix(rep(initial, numSamples), ncol = length(initial), byrow = T)
+    prev_values = matrix(rep(N, numSamples), ncol = length(N), byrow = T)
 
     ret = matrix(ncol = length(transitionList[[1]]$fixed )+1)
 
