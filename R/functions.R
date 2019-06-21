@@ -142,7 +142,11 @@ Rate = function(type, params){
 #'        stopList = StopList(StopCriterion(indices = c(0), inequality = ">=", value = 1000),
 #'                   StopCriterion(indices = c(0, 1), inequality = ">=", value = 10000)))
 #' }
-branch = function(time, initial, transitionList, stopList, silent = FALSE, keep = FALSE, seed = NULL){
+branch = function(time, initial, transitionList, stopList, silent = FALSE, keep = FALSE, seed = NULL, approx = FALSE){
+  if(approx){
+    return(estipop:::sim_approx_full(1, time, initial, transitionList))
+  }
+
   time = time
   f = R.utils::getAbsolutePath(tempfile(pattern = paste("system_", format(Sys.time(), "%d-%m-%Y-%H%M%S"), "_", sep = ""), fileext = ".csv", tmpdir = getwd()))
   if(is.null(seed)){

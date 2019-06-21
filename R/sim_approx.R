@@ -261,11 +261,13 @@ sim_approx_full <- function(numSamples, t, N, transitionList, observations = NUL
     prev_values = matrix(rep(N, numSamples), ncol = length(N), byrow = T)
 
     ret = matrix(ncol = length(transitionList[[1]]$fixed )+1)
+    ret = rbind(ret, c(0, N))
 
     time = 1
     for(i in 1:t){
       for(j in 1:nrow(prev_values)){
         samp = sim_approx2(numSamples = 1, t = 1, N = prev_values[j,], transitionList)
+        prev_values[j,] = samp[,2:ncol(samp)]
         ret = rbind(ret, c(time, samp[,2:ncol(samp)]))
       }
       time = time + 1
@@ -278,11 +280,13 @@ sim_approx_full <- function(numSamples, t, N, transitionList, observations = NUL
     prev_values = matrix(rep(N, numSamples), ncol = length(N), byrow = T)
 
     ret = matrix(ncol = length(transitionList[[1]]$fixed )+1)
+    ret = rbind(ret, c(0, N))
 
     time = d_obs[1]
     for(i in 1:length(d_obs)){
       for(j in 1:nrow(prev_values)){
         samp = sim_approx2(numSamples = 1, t = time, N = prev_values[j,], transitionList)
+        prev_values[j,] = samp[,2:ncol(samp)]
         ret = rbind(ret, c(time, samp[,2:ncol(samp)]))
       }
       time = time + d_obs[i+1]
@@ -294,11 +298,13 @@ sim_approx_full <- function(numSamples, t, N, transitionList, observations = NUL
     prev_values = matrix(rep(N, numSamples), ncol = length(N), byrow = T)
 
     ret = matrix(ncol = length(transitionList[[1]]$fixed )+1)
+    ret = rbind(ret, c(0, N))
 
     time = 0
     for(i in seq(0, t, dt)){
       for(j in 1:nrow(prev_values)){
         samp = sim_approx2(numSamples = 1, t = dt, N = prev_values[j,], transitionList)
+        prev_values[j,] = samp[,2:ncol(samp)]
         ret = rbind(ret, c(time, samp[,2:ncol(samp)]))
       }
       time = time + dt
