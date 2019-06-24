@@ -66,7 +66,11 @@ simpBirthDeath = function(b = 1.0, d = 0.0, init = 100, t = 1, N = 1){
 
   Y = rbinom(n = N, size = init, prob = 1 - alpha)
   add_x = function(y){
+    if(y > 0){
     return(y + rnbinom(n = 1, size = y, prob = 1 - beta))
+    } else{
+      return(0)
+    }
   }
   X = sapply(Y, add_x)
   return(X)
