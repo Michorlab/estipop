@@ -4,7 +4,7 @@
 \alias{simBirth}
 \title{simBirth}
 \usage{
-simBirth(birth = 1, init = 100, time = 1)
+simBirth(birth = 1, init = 100, time = 1, approx = FALSE)
 }
 \arguments{
 \item{birth}{constant birth rate}
@@ -12,6 +12,8 @@ simBirth(birth = 1, init = 100, time = 1)
 \item{init}{initial population size}
 
 \item{time}{number of time units to simulate}
+
+\item{approx}{boolean if TRUE, approximate simulation is used, if FALSE, exact simulation is performed}
 }
 \description{
 Simulates a 1-type linear birth process

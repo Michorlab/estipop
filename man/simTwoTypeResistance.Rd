@@ -7,7 +7,7 @@
 simTwoTypeResistance(mutation1 = 0, mutation2 = 0, mutation12 = 0,
   mutation21 = 0, birth0 = 1, death0 = 0.7, birth1 = 1, death1 = 0.7,
   birth2 = 1, death2 = 0.7, birth12 = 1, death12 = 0.7, init = c(100,
-  0, 0, 0), time = 1)
+  0, 0, 0), time = 1, approx = FALSE)
 }
 \arguments{
 \item{mutation1}{constant mutation rate to type-1 resistance}
@@ -37,6 +37,8 @@ simTwoTypeResistance(mutation1 = 0, mutation2 = 0, mutation12 = 0,
 \item{init}{vector of initial population sizes}
 
 \item{time}{number of time units to simulate}
+
+\item{approx}{boolean if TRUE, approximate simulation is used, if FALSE, exact simulation is performed}
 }
 \description{
 Simulates 2-type Resistance process

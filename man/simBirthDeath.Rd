@@ -4,7 +4,8 @@
 \alias{simBirthDeath}
 \title{simBirthDeath}
 \usage{
-simBirthDeath(birth = 1, death = 0, init = 100, time = 1)
+simBirthDeath(birth = 1, death = 0, init = 100, time = 1,
+  approx = FALSE)
 }
 \arguments{
 \item{birth}{constant birth rate}
@@ -14,6 +15,8 @@ simBirthDeath(birth = 1, death = 0, init = 100, time = 1)
 \item{init}{initial population size}
 
 \item{time}{number of time units to simulate}
+
+\item{approx}{boolean if TRUE, approximate simulation is used, if FALSE, exact simulation is performed}
 }
 \description{
 Simulates a 1-type linear birth-death process

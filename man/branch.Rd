@@ -5,7 +5,7 @@
 \title{branch}
 \usage{
 branch(time, initial, transitionList, stopList, silent = FALSE,
-  keep = FALSE, seed = NULL)
+  keep = FALSE, seed = NULL, approx = FALSE)
 }
 \arguments{
 \item{time}{number of time units to simulate}
