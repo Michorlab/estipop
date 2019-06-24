@@ -17,7 +17,7 @@ simBirth = function(birth = 1.0, init = 100, time = 1, approx = FALSE){
 
   stopList = StopList()
 
-  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = TRUE, approx))
+  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = TRUE, approx = approx))
 }
 
 #' simBirthDeath
@@ -41,7 +41,7 @@ simBirthDeath = function(birth = 1.0, death = 0.0, init = 100, time = 1, approx 
 
   stopList = StopList()
 
-  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = TRUE, approx))
+  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = TRUE, approx = approx))
 }
 
 #' simpBirthDeath
@@ -95,7 +95,7 @@ simBirthMutation = function(birth1 = 1.0, mutation = 0.0, birth2 = 1.0, init = c
 
   stopList = StopList()
 
-  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = TRUE, approx))
+  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = TRUE, approx = approx))
 }
 
 #' simBirthDeathMutation
@@ -125,7 +125,7 @@ simBirthDeathMutation = function(birth1 = 1.0, death1 = 0.0, mutation = 0.0, bir
 
   stopList = StopList()
 
-  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = TRUE, approx))
+  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = TRUE, approx = approx))
 }
 
 #' simTwoTypeResistance
@@ -174,6 +174,6 @@ simTwoTypeResistance = function(mutation1 = 0.0, mutation2 = 0.0, mutation12 = 0
 
   stopList = StopList()
 
-  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = TRUE, approx))
+  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = TRUE, approx = approx))
 }
 
