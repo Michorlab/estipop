@@ -217,7 +217,7 @@ std::vector<std::vector<std::string>> funct(std::string filename){
 //'
 //' @export
 // [[Rcpp::export]]
-double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence, SEXP seed = R_NilValue, SEXP dt = R_NilValue, Rcpp::Nullable<Rcpp::NumericVector> observations = R_NilValue){
+double gmbp3(double time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence, SEXP seed = R_NilValue, SEXP dt = R_NilValue, Rcpp::Nullable<Rcpp::NumericVector> observations = R_NilValue){
 	double seedcpp;
 	if(Rf_isNull(seed)){
 		seedcpp = std::chrono::high_resolution_clock::now().time_since_epoch().count();
@@ -313,7 +313,7 @@ double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List
 	}
 
 	//sys.print();
-
+	
 	// Observation times
 	double skip;
 	std::vector<double> obsTimes;
@@ -321,16 +321,19 @@ double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List
 		if(Rf_isNull(dt)){
 			skip = 1;
 		} else {
-		  skip = Rf_asReal(dt);
+		  skip = (double) Rf_asReal(dt);
 		}
-		for (double k = 0; k < time + 1; k+= skip)
+		for (double j = 0; j <= time; j += skip)
 		{
 			 //std::cout << k << std::endl;
-			obsTimes.push_back(k);
+			obsTimes.push_back(j);
 		}
 	} else {
 		Rcpp::NumericVector o_temp = Rcpp::as<Rcpp::NumericVector>(observations);
-		std::vector<int> obsTimes(o_temp.begin(), o_temp.end());
+		std::vector<double> obsTimes2(o_temp.begin(), o_temp.end());
+		for(int k = 0; k < obsTimes2.size(); k++){
+			obsTimes.push_back(obsTimes2[k]);
+		}
 	}
 	/*
 	std::vector<double> obsTimes;

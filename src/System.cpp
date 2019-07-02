@@ -124,13 +124,6 @@ void System::simulate(std::vector<double> obsTimes, std::string file){
 		o_rates.push_back(0.0);
 	}
 
-	/* // Set up vector of observation times
-    std::vector<int> obsTimes;
-    for (int k = 0; k < numTime + 1; k++)
-    {
-        obsTimes.push_back(k);
-    } */
-
 	double numTime = obsTimes[obsTimes.size()-1];
 
 

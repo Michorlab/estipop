@@ -7,12 +7,12 @@
 using namespace Rcpp;
 
 // gmbp3
-double gmbp3(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence, SEXP seed, SEXP dt, Rcpp::Nullable<Rcpp::NumericVector> observations);
+double gmbp3(double time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence, SEXP seed, SEXP dt, Rcpp::Nullable<Rcpp::NumericVector> observations);
 RcppExport SEXP _estipop_gmbp3(SEXP timeSEXP, SEXP fileSEXP, SEXP initialSEXP, SEXP transitionsSEXP, SEXP stopsSEXP, SEXP silenceSEXP, SEXP seedSEXP, SEXP dtSEXP, SEXP observationsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type time(timeSEXP);
+    Rcpp::traits::input_parameter< double >::type time(timeSEXP);
     Rcpp::traits::input_parameter< std::string >::type file(fileSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type initial(initialSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type transitions(transitionsSEXP);
