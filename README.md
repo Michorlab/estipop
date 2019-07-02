@@ -177,7 +177,7 @@ transitionList = TransitionList(FixedTransition(population = 0, rate = 1.0, fixe
 stopList = StopList()
 
 # Simulation 100 trials
-ntrials = 100
+ntrials = 1000
 
 full_res = matrix(ncol = 2)
 
@@ -222,14 +222,14 @@ The results from estimateBP are those that are returned from the optim function,
 # Print the results from the optimizer
 print(estimates)
 #> $par
-#> [1] 0.7837276 0.4793380
+#> [1] 1.0702261 0.7701298
 #> 
 #> $value
-#> [1] 491.2492
+#> [1] 5083.622
 #> 
 #> $counts
 #> function gradient 
-#>       22       22 
+#>       31       31 
 #> 
 #> $convergence
 #> [1] 0
@@ -238,7 +238,7 @@ print(estimates)
 #> [1] "CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH"
 ```
 
-Our estimated birth rate is 0.784 and our estimated death rate is 0.479
+Our estimated birth rate is 1.07 and our estimated death rate is 0.77
 
 Two-type Birth-Death-Mutation Example
 -------------------------------------
@@ -252,7 +252,7 @@ library(estipop)
 full_res = matrix(ncol = 3)
 
 # Set number of trials
-ntrials = 100
+ntrials = 1000
 
 # Simulate trials and store to full_res
 for(i in 1:ntrials){
@@ -303,14 +303,14 @@ Again, we can print out our results:
 ``` r
 print(estimates)
 #> $par
-#> [1] 0.36619223 0.05275426 1.03036211 1.48569457 4.00000000
+#> [1] 0.4069505 0.1096858 0.2965296 0.7007437 0.0639363
 #> 
 #> $value
-#> [1] 525.3233
+#> [1] 5461.758
 #> 
 #> $counts
 #> function gradient 
-#>       94       94 
+#>       37       37 
 #> 
 #> $convergence
 #> [1] 0
@@ -319,7 +319,7 @@ print(estimates)
 #> [1] "CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH"
 ```
 
-We can access our point estimates using the 'par' item of the return. We estimate birth1 by 0.366, death1 by 0.053, mutation by 1.03, birth2 by 1.486, and death2 by 4.
+We can access our point estimates using the 'par' item of the return. We estimate birth1 by 0.407, death1 by 0.11, mutation by 0.297, birth2 by 0.701, and death2 by 0.064.
 
 Using ESTIpop in R for Simulation
 =================================
@@ -609,7 +609,6 @@ In our next example, let us look beyond a simple birth-death process by adding a
 
 ``` r
 library(estipop)
-#> Loading required package: MASS
 
 # Specify how many units of time to simulate
 time = 25
