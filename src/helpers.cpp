@@ -28,17 +28,6 @@
 
 extern gsl_rng* rng;
 
-// Given a list of fitness values, choose one according to the fitness values
-long int cellByFitness(std::vector<double> fitness)
-{
-    gsl_ran_discrete_t * F;
-    F = gsl_ran_discrete_preproc(fitness.size(), &fitness[0]);
-
-    double draw = gsl_ran_discrete(rng, F);
-
-    gsl_ran_discrete_free(F);
-    return draw;
-}
 
 // Helper method to take vector, normalize to length 1, and then return the cumulative vector
 std::vector<double> normalize(std::vector<double> input)
@@ -70,93 +59,6 @@ int choose(std::vector<double> input)
 
     }
     return -1;
-}
-
-// Helper method - return a count map of instances of a barcode in a cell population
-std::map<long int, int> count_map(std::vector<long int> input)
-{
-    // Define a type for convenience
-    typedef std::map<long int,int> CounterMap;
-    CounterMap counts;
-
-    // Iterate over our barcodes and increase/initiate counts
-    for (size_t i = 0; i < input.size(); i++)
-    {
-        CounterMap::iterator j(counts.find(input[i]));
-        if (j != counts.end())
-        {
-            j->second++;
-        }
-        else
-        {
-            counts[input[i]] = 1;
-        }
-    }
-    return counts;
-}
-
-// Helper method - return a count map of mutations in a cell population
-std::map<int, int> count_map(std::vector<int> input)
-{
-    // Define a type for convenience
-    typedef std::map<int,int> CounterMap;
-    CounterMap counts;
-
-    // Iterate over our barcodes and increase/initiate counts
-    for (size_t i = 0; i < input.size(); i++)
-    {
-        CounterMap::iterator j(counts.find(input[i]));
-        if (j != counts.end())
-        {
-            j->second++;
-        }
-        else
-        {
-            counts[input[i]] = 1;
-        }
-    }
-    return counts;
-}
-
-// Helper Method - prints a vector of long ints
-void printVec(std::vector<long int> v)
-{
-    std::copy(v.begin(), v.end(), std::ostream_iterator<long int>(std::cout, " "));
-}
-
-// Helper Method - prints a vector of doubles
-void printVec(std::vector<double> v)
-{
-    std::copy(v.begin(), v.end(), std::ostream_iterator<long int>(std::cout, " "));
-}
-
-// Helper method - find the beginning index for a certain triangle and level
-int beginIndex(int mfac, int level)
-{
-    if(level < 2)
-    {
-        return 0;
-    }
-    int ret = 0;
-    for(int i = 2; i <= level; i++)
-    {
-        ret = ret + mfac * std::pow(2, i - 2);
-    }
-    return ret;
-}
-
-// Helper method - doubles and splits a vector into groups according to probabilities
-std::vector<std::vector<long int>> splitDoubleVector(std::vector<long int> v, std::vector<double> probs)
-{
-    std::vector<std::vector<long int>> ret = std::vector<std::vector<long int>>(probs.size());
-
-    for(size_t i = 0; i < v.size(); i++)
-    {
-        int choice = choose(probs);
-        ret[choice].push_back(v[i]);
-        ret[choice].push_back(v[i]);
-    }
-    return ret;
 }
 
 // Maximize a function

@@ -16,12 +16,7 @@ Depends:
 Imports:
     Rcpp,
     RcppGSL,
-    igraph,
 	R.utils,
-    ggplot2,
-    dplyr,
-    magrittr,
-    tidyr,
 	bossMaps
 LinkingTo: Rcpp, RcppGSL
 SystemRequirements: GNU GSL

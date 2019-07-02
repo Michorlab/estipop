@@ -122,7 +122,7 @@ Rate = function(type, params){
 
 #' branch
 #'
-#' Makes a single StopList object out of multiple StopCriterion objects
+#' Simulates a continuous-time markov branching process using the specified parameters.  Used for rates that are constant throughout time.
 #'
 #' @param time number of time units to simulate
 #' @param initial intial state vector
@@ -165,7 +165,7 @@ branch = function(time, initial, transitionList, stopList, silent = FALSE, keep 
 
 #' branchTD
 #'
-#' Makes a single StopList object out of multiple StopCriterion objects
+#' Simulates a continuous-time markov branching process using the specified parameters.  Used for time-dependent rate simulation.
 #'
 #' @param time number of time units to simulate
 #' @param initial intial state vector
