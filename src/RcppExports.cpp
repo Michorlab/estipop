@@ -6,22 +6,31 @@
 
 using namespace Rcpp;
 
-// gmbp3
-double gmbp3(double time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence, SEXP seed, SEXP dt, Rcpp::Nullable<Rcpp::NumericVector> observations);
-RcppExport SEXP _estipop_gmbp3(SEXP timeSEXP, SEXP fileSEXP, SEXP initialSEXP, SEXP transitionsSEXP, SEXP stopsSEXP, SEXP silenceSEXP, SEXP seedSEXP, SEXP dtSEXP, SEXP observationsSEXP) {
+// sexp_type
+int sexp_type(SEXP x);
+RcppExport SEXP _estipop_sexp_type(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type time(timeSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(sexp_type(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gmbp3
+double gmbp3(Rcpp::NumericVector observations, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence, SEXP seed);
+RcppExport SEXP _estipop_gmbp3(SEXP observationsSEXP, SEXP fileSEXP, SEXP initialSEXP, SEXP transitionsSEXP, SEXP stopsSEXP, SEXP silenceSEXP, SEXP seedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type observations(observationsSEXP);
     Rcpp::traits::input_parameter< std::string >::type file(fileSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type initial(initialSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type transitions(transitionsSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type stops(stopsSEXP);
     Rcpp::traits::input_parameter< bool >::type silence(silenceSEXP);
     Rcpp::traits::input_parameter< SEXP >::type seed(seedSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type dt(dtSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericVector> >::type observations(observationsSEXP);
-    rcpp_result_gen = Rcpp::wrap(gmbp3(time, file, initial, transitions, stops, silence, seed, dt, observations));
+    rcpp_result_gen = Rcpp::wrap(gmbp3(observations, file, initial, transitions, stops, silence, seed));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -61,28 +70,30 @@ BEGIN_RCPP
 END_RCPP
 }
 // timeDepBranch
-double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence);
-RcppExport SEXP _estipop_timeDepBranch(SEXP timeSEXP, SEXP fileSEXP, SEXP initialSEXP, SEXP transitionsSEXP, SEXP stopsSEXP, SEXP silenceSEXP) {
+double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence, SEXP seed);
+RcppExport SEXP _estipop_timeDepBranch(SEXP observationsSEXP, SEXP fileSEXP, SEXP initialSEXP, SEXP transitionsSEXP, SEXP stopsSEXP, SEXP silenceSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type time(timeSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type observations(observationsSEXP);
     Rcpp::traits::input_parameter< std::string >::type file(fileSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type initial(initialSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type transitions(transitionsSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type stops(stopsSEXP);
     Rcpp::traits::input_parameter< bool >::type silence(silenceSEXP);
-    rcpp_result_gen = Rcpp::wrap(timeDepBranch(time, file, initial, transitions, stops, silence));
+    Rcpp::traits::input_parameter< SEXP >::type seed(seedSEXP);
+    rcpp_result_gen = Rcpp::wrap(timeDepBranch(observations, file, initial, transitions, stops, silence, seed));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_estipop_gmbp3", (DL_FUNC) &_estipop_gmbp3, 9},
+    {"_estipop_sexp_type", (DL_FUNC) &_estipop_sexp_type, 1},
+    {"_estipop_gmbp3", (DL_FUNC) &_estipop_gmbp3, 7},
     {"_estipop_test", (DL_FUNC) &_estipop_test, 3},
     {"_estipop_zee", (DL_FUNC) &_estipop_zee, 1},
     {"_estipop_t2", (DL_FUNC) &_estipop_t2, 1},
-    {"_estipop_timeDepBranch", (DL_FUNC) &_estipop_timeDepBranch, 6},
+    {"_estipop_timeDepBranch", (DL_FUNC) &_estipop_timeDepBranch, 7},
     {NULL, NULL, 0}
 };
 

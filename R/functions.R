@@ -131,6 +131,9 @@ Rate = function(type, params){
 #' @param silent if true, verbose output will be shown.  Default: false
 #' @param keep if true, the temporary comma-separated file generated while simulating while be kept.  if false, it will be deleted.  Default: false
 #' @param seed seed for the random number generator.  If NULL, will use computer clock to set a random seed
+#' @param approx if true, simulation will proceed from draws from the asymptotic distribution
+#' @param dtime if dtime and time are not null, observations will be made from time 0 to time in units of dtime
+#' @param observations numeric vector specifying custom observation times
 #'
 #' @export
 #' @examples
@@ -142,17 +145,28 @@ Rate = function(type, params){
 #'        stopList = StopList(StopCriterion(indices = c(0), inequality = ">=", value = 1000),
 #'                   StopCriterion(indices = c(0, 1), inequality = ">=", value = 10000)))
 #' }
-branch = function(time, initial, transitionList, stopList, silent = FALSE, keep = FALSE, seed = NULL, approx = FALSE){
+branch = function(time, initial, transitionList, stopList, silent = FALSE, keep = FALSE, seed = NULL, approx = FALSE, dtime = NULL, observations = NULL){
   if(approx){
     return(estipop:::sim_approx_full(1, time, initial, transitionList))
   }
 
-  time = time
+  time_obs = c()
+
+  if(!is.null(observations)){
+    time_obs = c(time_obs, observations)
+  } else if (!is.null(dtime) & !is.null(time)){
+    time_obs = seq(0, time, dtime)
+  } else {
+    time_obs = seq(0, time)
+  }
+
+  time_obs = as.matrix(time_obs)
+
   f = R.utils::getAbsolutePath(tempfile(pattern = paste("system_", format(Sys.time(), "%d-%m-%Y-%H%M%S"), "_", sep = ""), fileext = ".csv", tmpdir = getwd()))
   if(is.null(seed)){
-    gmbp3(time, f, initial, transitionList, stopList, silent)
+    gmbp3(time_obs, f, initial, transitionList, stopList, silent)
   } else {
-    gmbp3(time, f, initial, transitionList, stopList, silent, seed)
+    gmbp3(time_obs, f, initial, transitionList, stopList, silent, seed)
   }
   res = read.csv(f, header = F)
   names(res)[1] = "time"
@@ -171,6 +185,11 @@ branch = function(time, initial, transitionList, stopList, silent = FALSE, keep 
 #' @param initial intial state vector
 #' @param transitionList TransitionList object specifying transitions in system
 #' @param stopList StopList object specifying stopping conditions for the system
+#' @param silent if true, verbose output will be shown.  Default: false
+#' @param keep if true, the temporary comma-separated file generated while simulating while be kept.  if false, it will be deleted.  Default: false
+#' @param seed seed for the random number generator.  If NULL, will use computer clock to set a random seed
+#' @param dtime if dtime and time are not null, observations will be made from time 0 to time in units of dtime
+#' @param observations numeric vector specifying custom observation times
 #'
 #' @export
 #' @examples
@@ -182,14 +201,32 @@ branch = function(time, initial, transitionList, stopList, silent = FALSE, keep 
 #'        stopList = StopList(StopCriterion(indices = c(0), inequality = ">=", value = 1000),
 #'                   StopCriterion(indices = c(0, 1), inequality = ">=", value = 10000)))
 #' }
-branchTD = function(time, intial, transitionList, stopList, silent = FALSE, keep = FALSE){
+branchTD = function(time, initial, transitionList, stopList, silent = FALSE, keep = FALSE, seed = NULL, dtime = NULL, observations = NULL){
+
+  time_obs = c()
+
+  if(!is.null(observations)){
+    time_obs = c(time_obs, observations)
+  } else if (!is.null(dtime) & !is.null(time)){
+    time_obs = seq(0, time, dtime)
+  } else {
+    time_obs = seq(0, time)
+  }
+
+  time_obs = as.matrix(time_obs)
+
   f = R.utils::getAbsolutePath(tempfile(pattern = paste("system_", format(Sys.time(), "%d-%m-%Y-%H%M%S"), "_", sep = ""), fileext = ".csv", tmpdir = getwd()))
-  timeDepBranch(time, f, initial, transitionList, stopList, silent)
+  if(is.null(seed)){
+    timeDepBranch(time_obs, f, initial, transitionList, stopList, silent)
+  } else {
+    timeDepBranch(time_obs, f, initial, transitionList, stopList, silent, seed)
+  }
   res = read.csv(f, header = F)
   names(res)[1] = "time"
 
   if(!keep)
     file.remove(f)
+
   return(res)
 }
 

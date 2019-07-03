@@ -273,7 +273,7 @@ int System::getNextEvent2(double curTime, double timeToNext){
 	return choose(cumulativeHazards);
 }
 
-void System::simulate_timedep(int numTime, std::string file){
+void System::simulate_timedep(std::vector<double> obsTimes, std::string file){
 	bool verbose = false;
 	std::cout.precision(60);
 
@@ -282,21 +282,7 @@ void System::simulate_timedep(int numTime, std::string file){
 		o_rates.push_back(0.0);
 	}
 
-	/*
-	// Set up vector of observation times
-    std::vector<int> obsTimes;
-    for (int k = 0; k < numTime + 1; k++)
-    {
-        obsTimes.push_back(k);
-    }
-	*/
-	std::vector<double> obsTimes;
-    for (double k = 0; k <= numTime; k+=1.00)
-    {
-        obsTimes.push_back(k);
-    }
-	numTime = obsTimes.size()-1;
-
+	double numTime = obsTimes[obsTimes.size()-1];
 
 
     // Set variables to keep track of our current time and which observation time comes next
@@ -306,15 +292,15 @@ void System::simulate_timedep(int numTime, std::string file){
 	int obsMod = std::max(1, (int)pow(10, round(log10(numTime)-1)));
 
     // Display some stuff  if verbose
-	if(verbose){
+	if(!silent){
 		std::cout << "numTime: " << numTime << std::endl;
 		std::cout << "Simulation Start Time: " << curTime << std::endl;
-		std::cout << "Simulation End Time: " << obsTimes[numTime] << std::endl;
+		std::cout << "Simulation End Time: " << obsTimes[obsTimes.size()-1] << std::endl;
 		std::cout << "obsTimes.size(): " << obsTimes.size() << std::endl;
 	}
 
     // Run until our currentTime is greater than our largest Observation time
-    while(curTime <= obsTimes[numTime])
+    while(curTime <= obsTimes[obsTimes.size()-1])
     {
         Rcpp::checkUserInterrupt();
 
@@ -325,32 +311,21 @@ void System::simulate_timedep(int numTime, std::string file){
 
         // If our next event time is later than observation times,
         // Make our observations
-        while((curTime + timeToNext > obsTimes[curObsIndex]) & curObsIndex <= obsTimes.size()-1)// & (curTime + timeToNext <= obsTimes[numTime]))
+        while((curTime + timeToNext > obsTimes[curObsIndex]))// & (curTime + timeToNext <= obsTimes[numTime]))
         {
 			out("Time to next: " + to_string_wp(curTime + timeToNext) + " curObsIndex: " + to_string_wp(curObsIndex));
 			out("In the observation loop");
 			// print out current state vector
 			toFile(obsTimes[curObsIndex], file);
 
-			out("Checking this");
-			if((int)obsTimes[curObsIndex] % obsMod == 0){
-				std::cout << "Time " << (int)obsTimes[curObsIndex] << " of " << numTime << std::endl;
-			}
+			if(verbose &&  int(obsTimes[curObsIndex]) % obsMod == 0 && !silent)
+				std::cout << "Time " << obsTimes[curObsIndex] << " of " << numTime << std::endl;
 
 			curObsIndex++;
 
-			out("Checking here");
-			/*if((unsigned)curObsIndex >= obsTimes.size()-1){
-				out("I'm quitting in here: " + to_string_wp(curObsIndex) + ", " + to_string_wp(obsTimes.size()-1));
+			if((unsigned)curObsIndex >= obsTimes.size()-1)
 				break;
-			}*/
         }
-
-		if((unsigned)curObsIndex > obsTimes.size()-1){
-			out("I'm quitting in here: " + to_string_wp(curObsIndex) + ", " + to_string_wp(obsTimes.size()-1));
-				break;
-		}
-
 
         // Update our System
 		out("headed from sim2 to getEvent2");
@@ -391,6 +366,8 @@ void System::simulate_timedep(int numTime, std::string file){
 		}
 
     }
-	//toFile(obsTimes[obsTimes.size() - 1], file);
-	std::cout << "End Simulation Time: " << obsTimes[curObsIndex-1] << std::endl;
+	if(!silent)
+	std::cout << "End Simulation Time: " << obsTimes[obsTimes.size()-1] << std::endl;
+	if(!silent)
+		std::cout << "Actual current time: " << curTime << std::endl;
 }

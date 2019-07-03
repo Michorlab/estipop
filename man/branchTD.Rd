@@ -4,20 +4,30 @@
 \alias{branchTD}
 \title{branchTD}
 \usage{
-branchTD(time, intial, transitionList, stopList, silent = FALSE,
-  keep = FALSE)
+branchTD(time, initial, transitionList, stopList, silent = FALSE,
+  keep = FALSE, seed = NULL, dtime = NULL, observations = NULL)
 }
 \arguments{
 \item{time}{number of time units to simulate}
+
+\item{initial}{intial state vector}
 
 \item{transitionList}{TransitionList object specifying transitions in system}
 
 \item{stopList}{StopList object specifying stopping conditions for the system}
 
-\item{initial}{intial state vector}
+\item{silent}{if true, verbose output will be shown.  Default: false}
+
+\item{keep}{if true, the temporary comma-separated file generated while simulating while be kept.  if false, it will be deleted.  Default: false}
+
+\item{seed}{seed for the random number generator.  If NULL, will use computer clock to set a random seed}
+
+\item{dtime}{if dtime and time are not null, observations will be made from time 0 to time in units of dtime}
+
+\item{observations}{numeric vector specifying custom observation times}
 }
 \description{
-Makes a single StopList object out of multiple StopCriterion objects
+Simulates a continuous-time markov branching process using the specified parameters.  Used for time-dependent rate simulation.
 }
 \examples{
 \dontrun{

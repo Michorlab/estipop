@@ -5,7 +5,8 @@
 \title{branch}
 \usage{
 branch(time, initial, transitionList, stopList, silent = FALSE,
-  keep = FALSE, seed = NULL, approx = FALSE)
+  keep = FALSE, seed = NULL, approx = FALSE, dtime = NULL,
+  observations = NULL)
 }
 \arguments{
 \item{time}{number of time units to simulate}
@@ -21,9 +22,15 @@ branch(time, initial, transitionList, stopList, silent = FALSE,
 \item{keep}{if true, the temporary comma-separated file generated while simulating while be kept.  if false, it will be deleted.  Default: false}
 
 \item{seed}{seed for the random number generator.  If NULL, will use computer clock to set a random seed}
+
+\item{approx}{if true, simulation will proceed from draws from the asymptotic distribution}
+
+\item{dtime}{if dtime and time are not null, observations will be made from time 0 to time in units of dtime}
+
+\item{observations}{numeric vector specifying custom observation times}
 }
 \description{
-Makes a single StopList object out of multiple StopCriterion objects
+Simulates a continuous-time markov branching process using the specified parameters.  Used for rates that are constant throughout time.
 }
 \examples{
 \dontrun{

@@ -210,6 +210,15 @@ std::vector<std::vector<std::string>> funct(std::string filename){
 	return items;
 }
 
+//' sexp_type
+//'
+//' sexp_type
+//'
+//' @export
+// [[Rcpp::export]]
+int sexp_type(SEXP x)
+{ return TYPEOF(x); }
+
 
 //' gmbp3
 //'
@@ -217,7 +226,7 @@ std::vector<std::vector<std::string>> funct(std::string filename){
 //'
 //' @export
 // [[Rcpp::export]]
-double gmbp3(double time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence, SEXP seed = R_NilValue, SEXP dt = R_NilValue, Rcpp::Nullable<Rcpp::NumericVector> observations = R_NilValue){
+double gmbp3(Rcpp::NumericVector observations, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence, SEXP seed = R_NilValue){
 	double seedcpp;
 	if(Rf_isNull(seed)){
 		seedcpp = std::chrono::high_resolution_clock::now().time_since_epoch().count();
@@ -313,36 +322,9 @@ double gmbp3(double time, std::string file, Rcpp::NumericVector initial, Rcpp::L
 	}
 
 	//sys.print();
-	
+
 	// Observation times
-	double skip;
-	std::vector<double> obsTimes;
-	if(!observations.isNotNull()){
-		if(Rf_isNull(dt)){
-			skip = 1;
-		} else {
-		  skip = (double) Rf_asReal(dt);
-		}
-		for (double j = 0; j <= time; j += skip)
-		{
-			 //std::cout << k << std::endl;
-			obsTimes.push_back(j);
-		}
-	} else {
-		Rcpp::NumericVector o_temp = Rcpp::as<Rcpp::NumericVector>(observations);
-		std::vector<double> obsTimes2(o_temp.begin(), o_temp.end());
-		for(int k = 0; k < obsTimes2.size(); k++){
-			obsTimes.push_back(obsTimes2[k]);
-		}
-	}
-	/*
-	std::vector<double> obsTimes;
-	for (double k = 0; k < time + 1; k+= 1)
-	{
-		std::cout << k << std::endl;
-		obsTimes.push_back(k);
-	}
-	*/
+	std::vector<double> obsTimes(observations.begin(), observations.end());
 
 	// Simulate
 	if(!silent)
@@ -477,14 +459,17 @@ std::vector<double> t2(SEXP custom_distribution_file = R_NilValue){
 //'
 //' @export
 // [[Rcpp::export]]
-double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence){
+double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence, SEXP seed = R_NilValue){
 
-	// Set seed
-	double seedcpp = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-	gsl_rng_set(rng, seedcpp);
-
-	// Set up output preferences & integration workspace
+	double seedcpp;
+	if(Rf_isNull(seed)){
+		seedcpp = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+	} else {
+		seedcpp = Rf_asReal(seed);
+	}
+    gsl_rng_set(rng, seedcpp);
 	silent = silence;
+	
 	workspace = gsl_integration_workspace_alloc(1000);
 
 	#ifdef _WIN32
@@ -621,11 +606,14 @@ double timeDepBranch(int time, std::string file, Rcpp::NumericVector initial, Rc
 	}
 
 	//sys.print();
+	
+	// Observation times
+	std::vector<double> obsTimes(observations.begin(), observations.end());
 
 	// Simulate
 	if(!silent)
 	std::cout << "Simulating..." << std::endl;
-	sys.simulate_timedep(time, file);
+	sys.simulate_timedep(obsTimes, file);
 	if(!silent)
 	std::cout << "Ending process..." << std::endl;
 
