@@ -5,7 +5,7 @@
 \title{simBirthMutation}
 \usage{
 simBirthMutation(birth1 = 1, mutation = 0, birth2 = 1, init = c(100, 0),
-  time = 1, approx = FALSE)
+  time = 1, approx = FALSE, dtime = NULL, observations = NULL)
 }
 \arguments{
 \item{birth1}{constant birth rate of population 1}
@@ -19,6 +19,10 @@ simBirthMutation(birth1 = 1, mutation = 0, birth2 = 1, init = c(100, 0),
 \item{time}{number of time units to simulate}
 
 \item{approx}{boolean if TRUE, approximate simulation is used, if FALSE, exact simulation is performed}
+
+\item{dtime}{if dtime and time are not null, observations will be made from time 0 to time in units of dtime}
+
+\item{observations}{numeric vector specifying custom observation times}
 }
 \description{
 Simulates a 2-type birth-mutation process

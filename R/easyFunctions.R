@@ -6,6 +6,8 @@
 #' @param init initial population size
 #' @param time number of time units to simulate
 #' @param approx boolean if TRUE, approximate simulation is used, if FALSE, exact simulation is performed
+#' @param dtime if dtime and time are not null, observations will be made from time 0 to time in units of dtime
+#' @param observations numeric vector specifying custom observation times
 #'
 #' @export
 #' @examples
@@ -30,6 +32,8 @@ simBirth = function(birth = 1.0, init = 100, time = 1, approx = FALSE, dtime = N
 #' @param init initial population size
 #' @param time number of time units to simulate
 #' @param approx boolean if TRUE, approximate simulation is used, if FALSE, exact simulation is performed
+#' @param dtime if dtime and time are not null, observations will be made from time 0 to time in units of dtime
+#' @param observations numeric vector specifying custom observation times
 #'
 #' @export
 #' @examples
@@ -89,6 +93,8 @@ simpBirthDeath = function(b = 1.0, d = 0.0, init = 100, t = 1, N = 1){
 #' @param init vector of initial population sizes
 #' @param time number of time units to simulate
 #' @param approx boolean if TRUE, approximate simulation is used, if FALSE, exact simulation is performed
+#' @param dtime if dtime and time are not null, observations will be made from time 0 to time in units of dtime
+#' @param observations numeric vector specifying custom observation times
 #'
 #' @export
 #' @examples
@@ -118,6 +124,8 @@ simBirthMutation = function(birth1 = 1.0, mutation = 0.0, birth2 = 1.0, init = c
 #' @param init vector of initial population sizes
 #' @param time number of time units to simulate
 #' @param approx boolean if TRUE, approximate simulation is used, if FALSE, exact simulation is performed
+#' @param dtime if dtime and time are not null, observations will be made from time 0 to time in units of dtime
+#' @param observations numeric vector specifying custom observation times
 #'
 #' @export
 #' @examples
@@ -157,6 +165,8 @@ simBirthDeathMutation = function(birth1 = 1.0, death1 = 0.0, mutation = 0.0, bir
 #' @param init vector of initial population sizes
 #' @param time number of time units to simulate
 #' @param approx boolean if TRUE, approximate simulation is used, if FALSE, exact simulation is performed
+#' @param dtime if dtime and time are not null, observations will be made from time 0 to time in units of dtime
+#' @param observations numeric vector specifying custom observation times
 #'
 #' @export
 #' @examples

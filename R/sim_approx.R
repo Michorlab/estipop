@@ -10,8 +10,6 @@ library(MASS)
 #' @param parent a d-length vector specifying which population type is associated with a specific offspring transition
 #' @param rate a d-length vector specifying the rate at which each offspring transition is occurring
 #' @param offspring a dxk matrix specifying the offspring transitions
-#'
-#' @export
 sim_approx <- function(numSamples, t, N, parent, rate, offspring)
 {
 
@@ -127,8 +125,6 @@ sim_approx <- function(numSamples, t, N, parent, rate, offspring)
 #' @param t N-length vecotr of time from system initialization until each observation in dat were made
 #' @param N k-length vector of the initial ancestor counts for each type
 #' @param transitionList transitionList object to specify the model
-#'
-#' @export
 sim_approx2 <- function(numSamples, t, N, transitionList)
 {
 
@@ -252,8 +248,6 @@ sim_approx2 <- function(numSamples, t, N, transitionList)
 #' @param transitionList transitionList object to specify the model
 #' @param observations a vector of observation times
 #' @param dt make observations from time 0 until time t in units of time dt
-#'
-#' @export
 sim_approx_full <- function(numSamples, t, N, transitionList, observations = NULL, dt = NULL){
 
   if(is.null(observations) & is.null(dt)){
