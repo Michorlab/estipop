@@ -17,18 +17,8 @@ estimateBP(time, N, transitionList, data, initial, known = NULL)
 
 \item{initial}{vector of initial estimates for MLE optimization}
 
-\item{...}{additional parameters to pass to optimizer}
+\item{known}{boolean vector of known parameter rates, if NULL, all rates will be estimated}
 }
 \description{
 Estimates the rate parameters for a general multitype branching process
-}
-\examples{
-\dontrun{
-estimateBP(time = 100,
-       initial = c(1,0),
-       transistionList = TransitionList(Transition(prob = 0.5, fixed = c(1, 1, 0), random = c(FALSE, FALSE, TRUE)),
-                                        Transition(prob = 0.5, fixed = c(0, 0, 0), random = c(TRUE, FALSE, FALSE))),
-       stopList = StopList(StopCriterion(indices = c(0), inequality = ">=", value = 1000),
-                  StopCriterion(indices = c(0, 1), inequality = ">=", value = 10000)))
-}
 }

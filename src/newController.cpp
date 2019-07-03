@@ -392,6 +392,8 @@ std::vector<double> t2(SEXP custom_distribution_file = R_NilValue){
 	dointeg();
 	}
 	*/
+	
+	std::cout << "HI" << std::endl;
 
 	workspace = gsl_integration_workspace_alloc(1000);
 	double (*rate)(double, void*);

@@ -12,12 +12,13 @@
 #' \dontrun{
 #' simBirth(birth = 1, init = 100, time = 10)
 #' }
-simBirth = function(birth = 1.0, init = 100, time = 1, approx = FALSE){
+simBirth = function(birth = 1.0, init = 100, time = 1, approx = FALSE, dtime = NULL, observations = NULL){
   transitionList = TransitionList(FixedTransition(population = 0, rate = birth, fixed = c(2)))
 
   stopList = StopList()
 
-  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = TRUE, approx = approx))
+  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = TRUE, approx = approx,
+                          dtime = dtime, observations = observations))
 }
 
 #' simBirthDeath
@@ -35,13 +36,15 @@ simBirth = function(birth = 1.0, init = 100, time = 1, approx = FALSE){
 #' \dontrun{
 #' simBirthDeath(birth = 1, death = 0.7, init = 100, time = 10)
 #' }
-simBirthDeath = function(birth = 1.0, death = 0.0, init = 100, time = 1, approx = FALSE){
+simBirthDeath = function(birth = 1.0, death = 0.0, init = 100, time = 1, approx = FALSE,
+                         dtime = NULL, observations = NULL){
   transitionList = TransitionList(FixedTransition(population = 0, rate = birth, fixed = c(2)),
                                   FixedTransition(population = 0, rate = death, fixed = c(0)))
 
   stopList = StopList()
 
-  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = TRUE, approx = approx))
+  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = TRUE, approx = approx,
+                          dtime = dtime, observations = observations))
 }
 
 #' simpBirthDeath
@@ -92,14 +95,15 @@ simpBirthDeath = function(b = 1.0, d = 0.0, init = 100, t = 1, N = 1){
 #' \dontrun{
 #' simBirthMutation(birth1 = 1, death1 = 0.7, mutation = 0.1, birth2 = 1.0, death2 = 0.7, init = c(100,0), time = 10)
 #' }
-simBirthMutation = function(birth1 = 1.0, mutation = 0.0, birth2 = 1.0, init = c(100,0), time = 1, approx = FALSE){
+simBirthMutation = function(birth1 = 1.0, mutation = 0.0, birth2 = 1.0, init = c(100,0), time = 1, approx = FALSE,dtime = NULL, observations = NULL){
   transitionList = TransitionList(FixedTransition(population = 0, rate = birth1, fixed = c(2,0)),
                                   FixedTransition(population = 0, rate = mutation, fixed = c(1,1)),
                                   FixedTransition(population = 1, rate = birth2, fixed = c(0,2)))
 
   stopList = StopList()
 
-  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = TRUE, approx = approx))
+  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = TRUE, approx = approx,
+                          dtime = dtime, observations = observations))
 }
 
 #' simBirthDeathMutation
@@ -120,7 +124,8 @@ simBirthMutation = function(birth1 = 1.0, mutation = 0.0, birth2 = 1.0, init = c
 #' \dontrun{
 #' simBirthDeathMutation(birth1 = 1, death1 = 0.7, mutation = 0.1, birth2 = 1.0, death2 = 0.7, init = c(100,0), time = 10)
 #' }
-simBirthDeathMutation = function(birth1 = 1.0, death1 = 0.0, mutation = 0.0, birth2 = 1.0, death2 = 0.7, init = c(100,0), time = 1, approx = FALSE){
+simBirthDeathMutation = function(birth1 = 1.0, death1 = 0.0, mutation = 0.0, birth2 = 1.0, death2 = 0.7, init = c(100,0), time = 1, approx = FALSE,
+                                 dtime = NULL, observations = NULL){
   transitionList = TransitionList(FixedTransition(population = 0, rate = birth1, fixed = c(2,0)),
                                   FixedTransition(population = 0, rate = death1, fixed = c(0,0)),
                                   FixedTransition(population = 0, rate = mutation, fixed = c(1,1)),
@@ -129,7 +134,8 @@ simBirthDeathMutation = function(birth1 = 1.0, death1 = 0.0, mutation = 0.0, bir
 
   stopList = StopList()
 
-  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = TRUE, approx = approx))
+  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = TRUE, approx = approx,
+                          dtime = dtime, observations = observations))
 }
 
 #' simTwoTypeResistance
@@ -162,7 +168,8 @@ simTwoTypeResistance = function(mutation1 = 0.0, mutation2 = 0.0, mutation12 = 0
                                 birth1 = 1.0, death1 = 0.7,
                                 birth2 = 1.0, death2 = 0.7,
                                 birth12 = 1.0, death12 = 0.7,
-                                init = c(100,0,0,0), time = 1, approx = FALSE){
+                                init = c(100,0,0,0), time = 1, approx = FALSE,
+                                dtime = NULL, observations = NULL){
   transitionList = TransitionList(FixedTransition(population = 0, rate = mutation1, fixed = c(1, 1, 0, 0)),
                                   FixedTransition(population = 0, rate = mutation2, fixed = c(1, 0, 1, 0)),
                                   FixedTransition(population = 1, rate = mutation12, fixed = c(0, 1, 0, 1)),
@@ -178,6 +185,7 @@ simTwoTypeResistance = function(mutation1 = 0.0, mutation2 = 0.0, mutation12 = 0
 
   stopList = StopList()
 
-  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = TRUE, approx = approx))
+  return(estipop:::branch(time, init, transitionList, stopList, keep = FALSE, silent = TRUE, approx = approx,
+                          dtime = dtime, observations = observations))
 }
 

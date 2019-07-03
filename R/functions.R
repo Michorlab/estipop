@@ -242,18 +242,9 @@ branchTD = function(time, initial, transitionList, stopList, silent = FALSE, kee
 #' @param transitionList TransitionList object specifying transitions in system
 #' @param data n x k data matrix
 #' @param initial vector of initial estimates for MLE optimization
-#' @param ... additional parameters to pass to optimizer
+#' @param known boolean vector of known parameter rates, if NULL, all rates will be estimated
 #'
 #' @export
-#' @examples
-#' \dontrun{
-#' estimateBP(time = 100,
-#'        initial = c(1,0),
-#'        transistionList = TransitionList(Transition(prob = 0.5, fixed = c(1, 1, 0), random = c(FALSE, FALSE, TRUE)),
-#'                                         Transition(prob = 0.5, fixed = c(0, 0, 0), random = c(TRUE, FALSE, FALSE))),
-#'        stopList = StopList(StopCriterion(indices = c(0), inequality = ">=", value = 1000),
-#'                   StopCriterion(indices = c(0, 1), inequality = ">=", value = 10000)))
-#' }
 estimateBP = function(time, N, transitionList, data, initial, known = NULL){
 
   if(length(transitionList) < 1){
@@ -286,7 +277,7 @@ estimateBP = function(time, N, transitionList, data, initial, known = NULL){
   t = time
 
   # MLE
-  loglik_ex2 <- function(rates) -1 * loglik_full2_time(data, t, N, parent, rates, offspring)
+  loglik_ex2 <- function(rates) -1 * loglik_est_time(data, t, N, parent, rates, offspring)
 
   # if (!is.na(...)){
   #   control = list(...)
@@ -295,7 +286,7 @@ estimateBP = function(time, N, transitionList, data, initial, known = NULL){
   # }
   control = NULL
   if(is.null(known)){
-    rMLE <- optim(initial,#b+runif(n = 1, min = -.3, max = .3),d+runif(n = 1, min = -.3, max = .3)),
+    rMLE <- optim(initial,
                   loglik_ex2, method = "L-BFGS-B",
                   lower = 1e-10*1:length(initial), upper = 4 + 1e-10*1:length(initial),
                   control = control)
