@@ -1290,3 +1290,120 @@ bploglikelihood = function(dat, t, N, transitionList){
 
 }
 
+
+loglik_full_time_temp <- function(dat, t, N, parent, rate, offspring)
+{
+  if(length(t) == 1){
+    t = rep(t, nrow(dat))
+  }
+  #print(t)
+  ntypes <- ncol(offspring)
+
+  full_dat = as.data.frame(cbind(dat, t))
+  full_dat = full_dat[order(full_dat[,ntypes+1]),]
+  dat = as.matrix(full_dat[,1:ntypes])
+  t = as.matrix(full_dat[,ntypes+1])
+
+  A <- matrix(ncol = ntypes, nrow = ntypes)
+  for(i in 1:ntypes){
+    ei <- rep(0, ntypes)
+    ei[i] <- 1
+    #b[i,] <- colSums(offspring[parent==i,] * prob[parent==i]) - ei
+    A[i,] <- colSums(offspring[parent==i,,drop=F] * rate[parent==i]) - ei * sum(rate[parent == i])
+  }
+  #  A = diag(a) %*% b
+
+
+  C <- array(rep(NA, ntypes^3), c(ntypes, ntypes, ntypes))
+  for(i in 1:dim(C)[1])
+  {
+    tmp <- expand.grid(1:ntypes, 1:ntypes)
+    for(j in 1:nrow(tmp))
+    {
+      #C[i,tmp[j,1], tmp[j,2]] <- sum(offspring[parent==i,tmp[j, 1]] * (offspring[parent==i,tmp[j, 2]] - I(tmp[j,1]==tmp[j,2])) * prob[parent==i]) * a[i]
+      C[i,tmp[j,1], tmp[j,2]] <- sum(offspring[parent==i,tmp[j, 1],drop=F] * (offspring[parent==i,tmp[j, 2],drop=F] - I(tmp[j,1]==tmp[j,2])) * rate[parent==i])
+    }
+  }
+
+  # Moments of the process --------------
+  VL <- eigen(A)
+  V <- VL$vectors
+  L <- VL$values
+  Vi <- solve(V)
+
+  # Mean growth function
+  m <- function(t_, i, j)
+  {
+    val <- 0
+    for(k in 1:ntypes)
+    {
+      val <- val + V[i,k] * exp(L[k]*t_) * Vi[k,j]
+    }
+    val
+  }
+
+  beta <- function(t_, i, j, k)
+  {
+    val <- 0;
+    for(l in 1:ntypes)
+    {
+      for(n in 1:ntypes)
+      {
+        val <- val + C[i,l,n] * m(t_, l, k) * m(t_, n, j)
+      }
+    }
+    val
+  }
+
+  d <- function(t_, i, j, k)
+  {
+    val <- 0
+    if(j == k) val <- val + m(t_, i, j)
+
+    for(n in 1:ntypes)
+    {
+      val <- val + integrate(function(s) m(t_ - s, i, n) * beta(s, n, j, k), 0, t_)$value
+    }
+    val
+  }
+
+  nonSingular <- function(m) class(try(solve(m),silent=T))=="matrix"
+
+  var_t <- function(t_, j, k){
+    val <- 0;
+    for(n in 1:ntypes)
+    {
+      val <- val + N[n] * (d(t_, n, j, k) - m(t_, n, j) * m(t_, n, k))
+    }
+    val
+  }
+
+  ll = 0
+  t_curr = -1
+  Mt <- matrix(ncol = ntypes, nrow = ntypes)
+  Sigmat <- matrix(0, ncol = ntypes, nrow = ntypes)
+  for(ind in 1:nrow(dat)){
+    if(ind == 1 || t[ind] != t[ind-1]){
+      for(n1 in 1:ntypes){
+        for(n2 in 1:ntypes){
+          Mt[n1, n2] <- m(t[ind], n1, n2)
+          Sigmat[n1, n2] <- var_t(t[ind], n1, n2)
+          t_curr = t[ind]
+        }
+      }
+    }
+
+    Sigma_inv <- solve(Sigmat)
+    #print(paste(ind, ": ", sep = ""))
+    #print(Mt)
+    #print(dat[ind,])
+    #print(N)
+    ll = ll - ntypes / 2 * log(2*pi) - 1 / 2 * log(det(Sigmat))
+    ll <- ll - 1/2 * (dat[ind,] - N%*%Mt) %*% Sigma_inv %*% t(dat[ind,] - N%*%Mt)
+    #print((dat[ind,] - N%*%Mt) %*% Sigma_inv %*% t(dat[ind,] - N%*%Mt))
+    #print((dat[ind,] - N%*%Mt))
+    #print(Sigma_inv)
+    #print(t(dat[ind,] - N%*%Mt))
+  }
+  ll
+}

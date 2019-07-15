@@ -245,7 +245,7 @@ branchTD = function(time, initial, transitionList, stopList, silent = FALSE, kee
 #' @param known boolean vector of known parameter rates, if NULL, all rates will be estimated
 #'
 #' @export
-estimateBP = function(time, N, transitionList, data, initial, known = NULL){
+estimateBP = function(time, N, transitionList, data, initial, known = NULL, trace = 0, lower = NULL, upper = NULL){
 
   if(length(transitionList) < 1){
     stop("No model specified by transitionList.")
@@ -277,24 +277,33 @@ estimateBP = function(time, N, transitionList, data, initial, known = NULL){
   t = time
 
   # MLE
-  loglik_ex2 <- function(rates) -1 * loglik_est_time(data, t, N, parent, rates, offspring)
+  loglik_ex2 <- function(rates) -1 * estipop:::loglik_est_time(data, t, N, parent, rates, offspring)
 
   # if (!is.na(...)){
   #   control = list(...)
   # } else {
   #   control = NULL
   # }
-  control = NULL
+  control =  list(trace = trace, factr=10, pgtol=1e-20, ndeps = rep(1e-8, length(parent)))
+
+  if(is.null(lower)){
+    lower = 1e-10*1:length(initial)
+  }
+
+  if(is.null(upper)){
+    upper = 1.75 + 1e-10*1:length(initial)
+  }
+
   if(is.null(known)){
     rMLE <- optim(initial,
                   loglik_ex2, method = "L-BFGS-B",
-                  lower = 1e-10*1:length(initial), upper = 4 + 1e-10*1:length(initial),
+                  lower = lower, upper = upper,
                   control = control)
   } else {
     rMLE <- bossMaps:::optifix(initial,
                                known,
                                loglik_ex2, method = "L-BFGS-B",
-                               lower = 1e-10*1:length(initial), upper = 4 + 1e-10*1:length(initial),
+                               lower = lower, upper = upper,
                                control = control)
   }
   return(rMLE)
