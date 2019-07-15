@@ -4,7 +4,8 @@
 \alias{estimateBP}
 \title{estimateBP}
 \usage{
-estimateBP(time, N, transitionList, data, initial, known = NULL)
+estimateBP(time, N, transitionList, data, initial, known = NULL,
+  lower = NULL, upper = NULL, trace = 0)
 }
 \arguments{
 \item{time}{numeric or vector of time units for data observations}
@@ -18,6 +19,12 @@ estimateBP(time, N, transitionList, data, initial, known = NULL)
 \item{initial}{vector of initial estimates for MLE optimization}
 
 \item{known}{boolean vector of known parameter rates, if NULL, all rates will be estimated}
+
+\item{lower}{vector of lower bounds on rate parameters for optimization}
+
+\item{upper}{vector of upper bounds on rate parameters for optimization}
+
+\item{trace}{level of output for optimizer - see optim function, control - trace for "L-BFGS-B" method}
 }
 \description{
 Estimates the rate parameters for a general multitype branching process

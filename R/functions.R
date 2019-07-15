@@ -243,9 +243,12 @@ branchTD = function(time, initial, transitionList, stopList, silent = FALSE, kee
 #' @param data n x k data matrix
 #' @param initial vector of initial estimates for MLE optimization
 #' @param known boolean vector of known parameter rates, if NULL, all rates will be estimated
+#' @param lower vector of lower bounds on rate parameters for optimization
+#' @param upper vector of upper bounds on rate parameters for optimization
+#' @param trace level of output for optimizer - see optim function, control - trace for "L-BFGS-B" method
 #'
 #' @export
-estimateBP = function(time, N, transitionList, data, initial, known = NULL, trace = 0, lower = NULL, upper = NULL){
+estimateBP = function(time, N, transitionList, data, initial, known = NULL, lower = NULL, upper = NULL, trace = 0){
 
   if(length(transitionList) < 1){
     stop("No model specified by transitionList.")
