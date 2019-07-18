@@ -171,7 +171,7 @@ As an introduction to estimation via ESTIpop, let us start with the one-type bir
 
 ![](README//birthdeath.png)
 
-Figure 2: One-type birth-death model in which members of the population live for an exponentially-distributed time with parameter 1/(*b**i**r**t**h* + *d**e**a**t**h*). At the end of an individual's lifetime, an individual gives birth to two new individuals with probability *b**i**r**t**h*/(*b**i**r**t**h* + *d**e**a**t**h*) for a net population increase of 1 and will dies with probability *d**e**a**t**h*/(*b**i**r**t**h* + *d**e**a**t**h*) for a net population decrease of 1.
+Figure 2: One-type birth-death model in which members of the population live for an exponentially-distributed time with parameter `1/(birth+death)`. At the end of an individual's lifetime, an individual gives birth to two new individuals with probability `birth/(birth+death)` for a net population increase of 1 and will dies with probability `death/(birth+death)` for a net population decrease of 1.
 
 ``` r
 library(estipop)
