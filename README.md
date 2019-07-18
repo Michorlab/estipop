@@ -169,7 +169,7 @@ One-Type Birth-Death Process
 
 As an introduction to estimation via ESTIpop, let us start with the one-type birth-death model shown in Figure 2. In this model, a population of a single type experiences birth events, in which an individual from the population is chosen to replicate, and death events, in which an individual from the population is chosen for removal. To test our estimation procedure, we begin by simulating data using functions available in ESTIpop. We initiate the population with size 100 and allow it expand for 5 units of time with birth parameter 1 and death paramter 0.7. Using the following code, we generate 1,000 samples from this process.
 
-!(README//birthdeath.png)
+![](README//birthdeath.png)
 
     Figure 2: One-type birth-death model in which members of the population live for an exponentially-distributed time with parameter $1/(birth+death)$.  At the end of an individual's lifetime, an individual gives birth to two new individuals with probability $birth/(birth+death)$ for a net population increase of 1 and will dies with probability $death/(birth+death)$ for a net population decrease of 1.
 
