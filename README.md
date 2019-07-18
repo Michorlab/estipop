@@ -756,6 +756,8 @@ As part of the ESTIpop functions, we have included some pre-built simulation fun
 
 The one-type birth process is a one-type process. Birth events have the effect of adding an additional individual to the population. The birth process is shown in Figure 7 and the `simBirth` function parameters are shown in Table 9.
 
+![](README//birth.png)
+
 Figure 7: The birth process is a one-type process with birth events.
 
 <table>
@@ -799,6 +801,8 @@ Figure 7: The birth process is a one-type process with birth events.
 ### One-Type Birth-Death Process - `simBirthDeath`
 
 The one-type birth-death process is a one-type process, in which the population experiences both birth and death. The birth-death process is shown in Figure 8 and the `simBirthDeath` function parameters are shown in Table 10.
+
+![](README//birthdeath.png)
 
 Figure 8: The birth-death process is a one-type process with birth and death events.
 
@@ -848,6 +852,8 @@ Figure 8: The birth-death process is a one-type process with birth and death eve
 ### Two-Type Birth-Mutation Process - `simBirthMutation`
 
 The birth-mutation process is a two-type process, in which each population type experiences birth events, as well a mutation event occuring between the first type and the second type. The birth-mutation process is shown in Figure 9 and the `simBirthMutation` function parameters are shown in Table 11.
+
+![](README//birthmutation.png)
 
 Figure 9: The birth-mutation process is a two-type process with birth events for both types and a mutation event from type 1 (blue cells) to type 2 (red cells).
 
@@ -902,6 +908,8 @@ Figure 9: The birth-mutation process is a two-type process with birth events for
 ### Two-Type Birth-Death-Mutation Process - `simBirthDeathMutation`
 
 The birth-death-mutation process is a two-type process, in which each population type experiences birth and death events, as well a mutation event occuring between the first type and the second type. The birth-mutation process is shown in Figure 10 and the `simBirthDeathMutation` function parameters are shown in Table 12.
+
+![](README//birthdeathmutation.png)
 
 Figure 10: The birth-death-mutation process is a two-type process with birth and death events for both types and a mutation event from type 1 (blue cells) to type 2 (red cells).
 
@@ -966,6 +974,8 @@ Figure 10: The birth-death-mutation process is a two-type process with birth and
 ### Two-Type Drug Resistance Model (Four Types) - `simTwoTypeResistance`
 
 The two-type drug resistance model is a four-type process in which two types of mutation are possible. The type 0 population harbors no mutations, the type 1 population harbors mutation 1, the type 2 population harbors mutation 2, and the type 12 population harbors both mutations 1 and 2. Each type undergoes birth and death events, as well as the possibily for further mutation. The two-type drug resistance model is shown in Figure 11 and the `simTwoTypeResistance` function parameters are shown in Table 13.
+
+![](README//2typereistance.png)
 
 Figure 11: The two-type drug resistance model is a four-type process in which two types of mutation are possible. The type 0 population (blue cells) harbors no mutations, the type 1 population (green cells) harbors mutation 1, the type 2 population (red cells) harbors mutation 2, and the type 12 population (brown cells) harbors both mutations 1 and 2. Each type undergoes birth and death events, as well as the possibily for further mutation.
 
