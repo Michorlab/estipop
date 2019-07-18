@@ -682,6 +682,8 @@ plot(res$time, res$V2, col = "black",
 points(res$time, res$V3, col = "red")
 ```
 
+![](README//bd4-1.png)
+
 Figure 5: Population size of a two-type birth-death-mutation process shown over time. The first population (black circles) grows according to its birth and death parameters. The second population (red circles) remains at 0 until a mutation event generates one individual, at which time the population experiences tremendous growth.
 
 Time-Dependent Rates
@@ -740,6 +742,8 @@ points(res$time, res$V3, col = "red")
 ```
 
 The resulting plot is shown in Figure 6, where the type 2 population remains constant for 5 units of time according to the switch rate, and then experiences growth following time unit 5.
+
+![](README//bd6-1.png)
 
 Figure 6: Population size of a two-type birth-death-mutation process shown over time. The first population (black circles) grows according to its birth and death parameters. The second population (red circles) remains at its initial value of 500 for 5 units of time and then experiences growth thereafter.
 
