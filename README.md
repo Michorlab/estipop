@@ -113,7 +113,7 @@ A FixedTransition is a transition in which the update vector is the fixed across
 
 As another example, in a two-type process, the update vector (2, 0) enacted from parent population 0 would represent a net increase of 1 in the 0 population. A single enactment of this FixedTransition is demonstrated in Figure 1.
 
-\[\]{README/transition}\\
+\[Example of FIxedTransition(parent = 0 (blue), fixed = c(2, 0)). The blue circles represent indivdiuals of type 0 and the green circles represent individuals of type 1.\]{README/transition}
 
     Figure 1: Example of FIxedTransition(parent = 0 (blue), fixed = c(2, 0)).  The blue circles represent indivdiuals of type 0 and the green circles represent individuals of type 1.
 
