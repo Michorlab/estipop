@@ -257,7 +257,9 @@ Our estimated birth rate is 1.07 and our estimated death rate is 0.77. Our true 
 Two-Type Birth-Death-Mutation Process
 -------------------------------------
 
-Let us move on to a more complicated process, the two-type process shown in Figure 3. Here, each of the two population types has separate birth and death rates, as well a mutation rate from the type 1 population to the type 2 population. We generate data using one of the `simBirthDeathMutation` simulation method in ESTIpop. Let us again simulate 1000 samples from this branching process using the following code. Here
+Let us move on to a more complicated process, the two-type process shown in Figure 3. Here, each of the two population types has separate birth and death rates, as well a mutation rate from the type 1 population to the type 2 population. We generate data using one of the `simBirthDeathMutation` simulation method in ESTIpop. Let us again simulate 1000 samples from this branching process using the following code.
+
+![](README//birthdeathmutation.png)
 
 Figure 3: Two-type birth-death-mutation model. Each type has its own birth and death rate parameters in addition to a mutation event from type 1 to type 2.
 
