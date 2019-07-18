@@ -628,6 +628,8 @@ plot(res$time, res$V2, xlab = "Time", ylab = "Population Size",
 
 The resulting plot is shown in Figure 4.
 
+![](README//bd2-1)
+
 Figure 4: Population size of a one-type birth-death process shown over time. The birth rate is 1.0 events per indivdiual per time unit and the death rate is 0.7 events per individual per time unit.
 
 Extending the Birth-Death Process
