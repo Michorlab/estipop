@@ -127,10 +127,15 @@ Known Parameters
 
 It can sometimes be the case that some parameters have been previously characterized either by experimentation or literature results. In those cases, it might be necessary to fix a rate parameter to a particular value. This can be accomplished by using the `known` parameter, which is a boolean vector the same length as the TransitionList object, where `TRUE` designates that the parameter is fixed at the initial estimate value and will not be estimated and, `FALSE` designates that the rate parameter is to be estimated.
 
+Lower and Upper Bounds
+----------------------
+
+By default, the optimizer will use the "L-BFGS-B" method (Zhu et al., 1997) with lower bounds on the rate estimates around 1e-10 and upper bounds around 4, which have provided good results for estimating rate parameters for biological processes given in units of number of events per individual per day. However, the lower and upper bounds can be specified using the `lower` and `upper` parameters of the `estimateBP` function. Both should be a vector the same length as the TransitionList object, specifying a lower and upper bound for each rate parameter to be estimated.
+
 Likelihood Functions
 --------------------
 
-As previously mentioned, the `estimateBP` function will perform optimization on the log-likelihood function derived from the Central Limit Theorem applied to general multitype branching processes. By default, the optimizer will use the "L-BFGS-B" method (Zhu et al., 1997) with lower bounds on the rate estimates around 1e-10 and upper bounds around 4, which have provided good results for estimating rate parameters for biological processes given in units of number of events per individual per day. If the user wishes to more finely tune the optimization scheme or set differing bounds, we also provide access to the log-likelihood functions, which may be maximized over the rate parameter space to provide a maximum likelihood estimate. The likelihood function, `bploglikelihood` has parameters listed in Table 2.
+As previously mentioned, the `estimateBP` function will perform optimization on the log-likelihood function derived from the Central Limit Theorem applied to general multitype branching processes. By default, the optimizer will use the "L-BFGS-B" method (Zhu et al., 1997) with lower bounds on the rate estimates around 1e-10 and upper bounds around 4, which have provided good results for estimating rate parameters for biological processes given in units of number of events per individual per day. If the user wishes to more finely tune the optimization scheme, we also provide access to the log-likelihood functions, which may be maximized over the rate parameter space to provide a maximum likelihood estimate. The likelihood function, `bploglikelihood` has parameters listed in Table 2.
 
 <table>
 <caption><code>bploglikelihood</code> parameters</caption>
