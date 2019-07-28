@@ -1,5 +1,3 @@
-library(MASS)
-
 #' sim_approx
 #'
 #' method to simulate from the asymptotic distriution of a general multitype branching process
