@@ -147,7 +147,7 @@ Rate = function(type, params){
 #' }
 branch = function(time, initial, transitionList, stopList, silent = FALSE, keep = FALSE, seed = NULL, approx = FALSE, dtime = NULL, observations = NULL){
   if(approx){
-    return(estipop:::sim_approx_full(1, time, initial, transitionList))
+    return(estipop:::sim_approx_full(1, time, initial, transitionList, observations, dtime))
   }
 
   time_obs = c()
