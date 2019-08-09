@@ -38,7 +38,7 @@ To install in R, type:
 
 ``` r
 install.packages("devtools")
-devtools::install_git("https://github.com/ferlicjl/estipop.git")
+devtools::install_git("https://github.com/Michorlab/estipop.git")
 ```
 
 Uses
