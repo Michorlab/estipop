@@ -287,7 +287,7 @@ estimateBP = function(time, N, transitionList, data, initial, known = NULL, lowe
   # } else {
   #   control = NULL
   # }
-  control =  list(trace = trace, factr=10, pgtol=1e-20, ndeps = rep(1e-8, length(parent)))
+  control =  list(trace = trace, factr=10, pgtol=1e-20)
 
   if(is.null(lower)){
     lower = 1e-10*1:length(initial)
