@@ -276,6 +276,9 @@ sim_approx_full <- function(numSamples, t, N, transitionList, observations = NUL
 
     ret = matrix(ncol = length(transitionList[[1]]$fixed )+1)
     ret = rbind(ret, c(0, N))
+    
+    # Remove 0 from our list of observations
+    d_obs = d_obs[d_obs != 0]
 
     time = d_obs[1]
     for(i in 1:length(d_obs)){
@@ -290,13 +293,13 @@ sim_approx_full <- function(numSamples, t, N, transitionList, observations = NUL
     if(any(ret_matrix[,-1] < 30)) warning("Population goes below 30. Normal approximation conditions may not hold.")
     return(ret_matrix)
   } else if(!is.null(dt)){
-
     prev_values = matrix(rep(N, numSamples), ncol = length(N), byrow = T)
 
     ret = matrix(ncol = length(transitionList[[1]]$fixed )+1)
     ret = rbind(ret, c(0, N))
 
-    time = 0
+    # Change time = 0 to time = dt
+    time = dt
     for(i in seq(0, t, dt)){
       for(j in 1:nrow(prev_values)){
         samp = sim_approx2(numSamples = 1, t = dt, N = prev_values[j,], transitionList)
