@@ -107,11 +107,12 @@ sim_approx <- function(numSamples, t, N, parent, rate, offspring)
   #print(N %*% Mt)
   #print(Sigmat)
   if(numSamples == 1){
-    ret = t(as.matrix(MASS:::mvrnorm(n = numSamples, N %*% Mt, Sigmat), ncol = ntypes))
+    ret = t(as.matrix(round(MASS:::mvrnorm(n = numSamples, N %*% Mt, Sigmat)), ncol = ntypes))
     return(cbind(rep(t, numSamples), ret))
-  } else{
-
-    return(cbind(rep(t, numSamples), as.matrix(MASS:::mvrnorm(n = numSamples, N %*% Mt, Sigmat))))
+  }
+  else{
+    ret = as.matrix(round(MASS:::mvrnorm(n = numSamples, N %*% Mt, Sigmat)))
+    return(cbind(rep(t, numSamples), ret))
   }
 }
 
@@ -227,11 +228,11 @@ sim_approx2 <- function(numSamples, t, N, transitionList)
   #print(Sigmat)
 
   if(numSamples == 1){
-    ret = t(as.matrix(MASS:::mvrnorm(n = numSamples, N %*% Mt, Sigmat), ncol = ntypes))
+    ret = t(as.matrix(round(MASS:::mvrnorm(n = numSamples, N %*% Mt, Sigmat)), ncol = ntypes))
     return(cbind(rep(t, numSamples), ret))
   } else{
-
-    return(cbind(rep(t, numSamples), as.matrix(MASS:::mvrnorm(n = numSamples, N %*% Mt, Sigmat))))
+    ret = t(as.matrix(round(MASS:::mvrnorm(n = numSamples, N %*% Mt, Sigmat)), ncol = ntypes))
+    return(cbind(rep(t, numSamples), ret))
   }
 }
 
@@ -265,7 +266,9 @@ sim_approx_full <- function(numSamples, t, N, transitionList, observations = NUL
       time = time + 1
     }
 
-    return(na.omit(ret))
+    ret_matrix <- na.omit(ret)
+    if(any(ret_matrix[,-1] < 30)) warning("Population goes below 30. Normal approximation conditions may not hold.")
+    return(ret_matrix)
   } else if (!is.null(observations)){
     d_obs = c(observations[1], diff(observations))
 
@@ -283,8 +286,9 @@ sim_approx_full <- function(numSamples, t, N, transitionList, observations = NUL
       }
       time = time + d_obs[i+1]
     }
-
-    return(na.omit(ret))
+    ret_matrix <- na.omit(ret)
+    if(any(ret_matrix[,-1] < 30)) warning("Population goes below 30. Normal approximation conditions may not hold.")
+    return(ret_matrix)
   } else if(!is.null(dt)){
 
     prev_values = matrix(rep(N, numSamples), ncol = length(N), byrow = T)
@@ -301,7 +305,8 @@ sim_approx_full <- function(numSamples, t, N, transitionList, observations = NUL
       }
       time = time + dt
     }
-
-    return(as.matrix(na.omit(ret)))
+    ret_matrix <- as.matrix(na.omit(ret))
+    if(any(ret_matrix[,-1] < 30)) warning("Population goes below 30. Normal approximation conditions may not hold.")
+    return(ret_matrix)
   }
 }
