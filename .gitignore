@@ -38,7 +38,6 @@ README.Rmd
 **/graph_files/*
 **/output/*
 **/example/*
-configure
 system*.csv
 **/README_cache/
 *.Rproj
