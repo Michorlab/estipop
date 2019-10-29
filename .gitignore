@@ -46,3 +46,5 @@ system*.csv
 *.Rproj
 *.Rdata
 
+# Other
+.DS_Store

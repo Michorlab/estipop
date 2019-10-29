@@ -392,7 +392,7 @@ std::vector<double> t2(SEXP custom_distribution_file = R_NilValue){
 	dointeg();
 	}
 	*/
-	
+
 	std::cout << "HI" << std::endl;
 
 	workspace = gsl_integration_workspace_alloc(1000);
@@ -431,7 +431,7 @@ std::vector<double> t2(SEXP custom_distribution_file = R_NilValue){
 	{
 		Rcpp::stop("invalid file name for distribution file");
 	}
-	rate = (double (*)(double, void*))dlsym(lib_handle, "CA");
+	rate = (double (*)(double, void*))dlsym(lib_handle, "birth0");
 	r = Rate(rate);
 #endif
 
@@ -471,7 +471,7 @@ double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::N
 	}
     gsl_rng_set(rng, seedcpp);
 	silent = silence;
-	
+
 	workspace = gsl_integration_workspace_alloc(1000);
 
 	#ifdef _WIN32
@@ -534,7 +534,7 @@ double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::N
 
 				// Name for plugin library location
 				const char* plugin_location = CHAR(Rf_asChar(params[0]));
-
+				Rcpp::Rcout << params[1] << std::endl;
 				// Load plugin library
 				#ifdef _WIN32
 					lib_handle = LoadLibrary(plugin_location);
@@ -549,7 +549,7 @@ double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::N
 					{
 						Rcpp::stop("invalid file name custom dll");
 					}
-					rate = (double (*)(double, void*))dlsym(lib_handle, "CA");
+					rate = (double (*)(double, void*))dlsym(lib_handle, params[1]);
 				#endif
 
 				r = new Rate(rate);
@@ -608,7 +608,7 @@ double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::N
 	}
 
 	//sys.print();
-	
+
 	// Observation times
 	std::vector<double> obsTimes(observations.begin(), observations.end());
 
@@ -629,6 +629,3 @@ double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::N
 
 	return 0.0;
 }
-
-
-
