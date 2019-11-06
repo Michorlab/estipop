@@ -34,22 +34,21 @@ public:
 	int type; // 0 (constant), 1 (linear), 2 (quadratic), 3 (custom)
 	std::vector<double> params;
 	double rate_homog;
-	
+
 	double tot_error;
-	
+
 	gsl_function funct;
-	
-	
+
+
 
 	// Constructors
 	Rate();
 	Rate(double (*f)(double, void*));
-	~Rate();
-	
+	virtual ~Rate();
+
 	double integrateFunct(double a, double b);
 	double eval(double time);
-	
+
 	virtual double operator()(double time);
 	virtual double operator()(double begin, double end);
 };
-

@@ -113,7 +113,8 @@ double System::getNextTime(std::vector<double>& o_rates){
 	for(size_t i = 0; i < rates.size(); i++){
 		o_rates[i] = rates[i] * state[from[i]];
 	}
-	return(gsl_ran_exponential(rng, 1 / std::accumulate(o_rates.begin(), o_rates.end(), 0.0)));
+  double next_time = gsl_ran_exponential(rng, 1 / std::accumulate(o_rates.begin(), o_rates.end(), 0.0));
+	return(next_time);
 }
 
 void System::simulate(std::vector<double> obsTimes, std::string file){
@@ -158,13 +159,13 @@ void System::simulate(std::vector<double> obsTimes, std::string file){
 
 			if(verbose &&  int(obsTimes[curObsIndex]) % obsMod == 0 && !silent)
 				std::cout << "Time " << obsTimes[curObsIndex] << " of " << numTime << std::endl;
-			
+
 			curObsIndex++;
-			
+
 			if((unsigned)curObsIndex >= obsTimes.size()-1)
 				break;
         }
-		
+
 		//if((unsigned)curObsIndex >= obsTimes.size()-1)
 			//	break;
 
@@ -243,7 +244,9 @@ double System::getNextTime2(double curTime){
 
 		double u_thin = gsl_ran_flat(rng, 0, 1);
 		double beta_ratio = tot_rate / tot_rate_homog;
-		//std::cout << beta_ratio << "\n";
+    //Rcpp::Rcout << "homog rate: " << tot_rate_homog << "\n";
+    //Rcpp::Rcout << "total rate: " << tot_rate << "\n";
+		//Rcpp::Rcout << "beta ratio: " << beta_ratio << "\n";
 
 		if(u_thin <= beta_ratio)
 		{

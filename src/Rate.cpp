@@ -42,7 +42,7 @@ double Rate::integrateFunct(double a, double b){
 	//gsl_integration_workspace *workspace = gsl_integration_workspace_alloc(1000);
 
 	double result, error;
-	size_t neval;
+	//size_t neval;
 
 	const double xlow=a;
 	const double xhigh=b;
@@ -70,8 +70,8 @@ double Rate::integrateFunct(double a, double b){
 	  //std::cout<<"Result " << result << " +/- " << error << " from " << neval << " evaluations" <<
 	//	std::endl;
 		tot_error += error;
-		return result;
 	}
+	return result;
 }
 
 double Rate::eval(double time){
@@ -86,7 +86,7 @@ double Rate::operator()(double a, double b){
 	//gsl_integration_workspace *workspace = gsl_integration_workspace_alloc(1000);
 
 	double result, error;
-	size_t neval;
+	//size_t neval;
 
 	const double xlow=a;
 	const double xhigh=b;
@@ -115,7 +115,7 @@ double Rate::operator()(double a, double b){
 	  //std::cout<<"Result " << result << " +/- " << error << " from " << neval << " evaluations" <<
 		//std::endl;
 		tot_error += error;
-		return result;
 	}
-}
+	return result;
 
+}
