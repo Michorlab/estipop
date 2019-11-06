@@ -135,7 +135,6 @@ double SwitchRate::operator()(double time){
 
 double SwitchRate::operator()(double begin, double end){
 	double result, error;
-	//size_t neval;
 
 	const double xlow=begin;
 	const double xhigh=end;
