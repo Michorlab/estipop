@@ -526,7 +526,7 @@ double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::N
 
 				// Name for plugin library location
 				const char* plugin_location = CHAR(Rf_asChar(params[0]));
-				Rcpp::Rcout << params[1] << std::endl;
+				//Rcpp::Rcout << params[1] << std::endl;
 				// Load plugin library
 				#ifdef _WIN32
 					lib_handle = LoadLibrary(plugin_location);
