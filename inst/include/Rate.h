@@ -24,6 +24,9 @@
 #include <vector>
 
 #include <gsl/gsl_integration.h>
+#include <gsl/gsl_min.h>
+#include <Rcpp.h>
+
 //#include <map>
 
 
@@ -34,12 +37,8 @@ public:
 	int type; // 0 (constant), 1 (linear), 2 (quadratic), 3 (custom)
 	std::vector<double> params;
 	double rate_homog;
-
 	double tot_error;
-
 	gsl_function funct;
-
-
 
 	// Constructors
 	Rate();

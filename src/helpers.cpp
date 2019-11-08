@@ -48,7 +48,7 @@ int choose(std::vector<double> input)
 {
     std::vector<double> c_norm = normalize(input);
     double r = gsl_rng_uniform(rng);
-  
+
     // Choose which input
     for(size_t i = 0; i < input.size(); i++)
     {
@@ -65,7 +65,7 @@ int choose(std::vector<double> input)
 double maximizeFunc(gsl_function rate_function, double start_time, double end_time, int bins)
 {
   double max = GSL_FN_EVAL(&(rate_function), start_time);
-  double test_max;
+  double test_max = 0;
   double delta_t = (end_time - start_time) / bins;
 
   if(delta_t > 0.1)
@@ -81,6 +81,3 @@ double maximizeFunc(gsl_function rate_function, double start_time, double end_ti
   }
   return max;
 }
-
-
-

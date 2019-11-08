@@ -28,15 +28,22 @@ extern gsl_rng* rng;
 extern gsl_integration_workspace* workspace;
 extern bool silent;
 
-Rate::Rate(){tot_error = 0;}
+
+Rate::Rate()
+{
+	tot_error = 0;
+}
 
 Rate::Rate(double (*f)(double, void*)) : Rate(){
 	funct.function = f;
-	funct.params = reinterpret_cast<void *>(&params);
-	rate_homog = maximizeFunc(funct, 0, 1000, 1000);
+	funct.params = 0; //reinterpret_cast<void *>(&params);
+	tot_error = 0;
+	rate_homog = maximizeFunc(funct, 0, 1, 1000);
 }
 
 Rate::~Rate(){}
+
+
 
 double Rate::integrateFunct(double a, double b){
 	//gsl_integration_workspace *workspace = gsl_integration_workspace_alloc(1000);

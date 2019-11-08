@@ -21,17 +21,6 @@
 
 #include <iostream>
 #include <fstream>
-//#include <iomanip>
-//#include <stdlib.h>     /* srand, rand */
-//#include <time.h>       /* time */
-//#include <numeric>
-//#include <algorithm>
-//#include <assert.h>     /* assert */
-//#include <map>
-//#include <math.h>
-//#include <random>
-//#include <iterator>
-//#include <cmath>
 #include <gsl/gsl_randist.h>
 
 extern gsl_rng* rng;
@@ -49,31 +38,6 @@ bool StopCriterion::check(std::vector<int> state){
 	for(size_t i = 0; i < indices.size(); i++){
 		checkVal += state[indices[i]];
 	}
-
-	/*
-	switch(inequality){
-		case ">": {
-			if(checkVal > value)
-				return true;
-			return false;
-		} case ">=": {
-			if(checkVal >= value)
-				return true;
-			return false;
-		} case "<": {
-			if(checkVal < value)
-				return true;
-			return false;
-		} case "<=": {
-			if(checkVal <= value)
-				return true;
-			return false;
-		} case "=": {
-			if(checkVal == value)
-				return true;
-			return false;
-		}
-	}*/
 
 	if(inequality == ">"){
 		if(checkVal > value)
@@ -104,5 +68,3 @@ bool StopCriterion::check(std::vector<int> state){
 
 	return false;
 }
-
-

@@ -125,20 +125,19 @@ void System::simulate(std::vector<double> obsTimes, std::string file){
 		o_rates.push_back(0.0);
 	}
 
-	double numTime = obsTimes[obsTimes.size()-1];
+	double totTime = obsTimes[obsTimes.size()-1];
 
 
     // Set variables to keep track of our current time and which observation time comes next
     double curTime = 0;
     int curObsIndex = 0;
 
-	int obsMod = pow(10, round(log10(numTime)-1));
+	int obsMod = pow(10, round(log10(totTime)-1));
 
     // Display some stuff  if verbose
 	if(!silent){
-		std::cout << "numTime: " << numTime << std::endl;
 		std::cout << "Simulation Start Time: " << curTime << std::endl;
-		std::cout << "Simulation End Time: " << obsTimes[obsTimes.size()-1] << std::endl;
+		std::cout << "Simulation End Time: " << totTime << std::endl;
 		std::cout << "obsTimes.size(): " << obsTimes.size() << std::endl;
 	}
 
@@ -158,7 +157,7 @@ void System::simulate(std::vector<double> obsTimes, std::string file){
 			toFile(obsTimes[curObsIndex], file);
 
 			if(verbose &&  int(obsTimes[curObsIndex]) % obsMod == 0 && !silent)
-				std::cout << "Time " << obsTimes[curObsIndex] << " of " << numTime << std::endl;
+				std::cout << "Time " << obsTimes[curObsIndex] << " of " << totTime << std::endl;
 
 			curObsIndex++;
 
@@ -214,7 +213,7 @@ void System::simulate(std::vector<double> obsTimes, std::string file){
 		std::cout << "Actual current time: " << curTime << std::endl;
 }
 
-double System::getNextTime2(double curTime){
+double System::getNextTime2(double curTime, double totTime){
 	std::cout.precision(20);
 	double tot_rate;
 	double rand_next_time = 0.0;
@@ -222,8 +221,11 @@ double System::getNextTime2(double curTime){
 	tot_rate_homog = 0.0;
 
 	for(size_t i = 0; i < rates2.size(); i++){
+    rates2[i]->rate_homog = maximizeFunc(rates2[i]->funct, curTime, totTime, 1000);
+    //Rcpp::Rcout << rates2[i]->rate_homog << "\n";
 		tot_rate_homog += rates2[i]->rate_homog * state[from[i]];
 	}
+  //Rcpp::Rcout << "tot_rate_homog " << tot_rate_homog << "\n";
 
 	out("In nextTime2");
 
@@ -285,18 +287,17 @@ void System::simulate_timedep(std::vector<double> obsTimes, std::string file){
 		o_rates.push_back(0.0);
 	}
 
-	double numTime = obsTimes[obsTimes.size()-1];
+	double totTime = obsTimes[obsTimes.size()-1];
 
 
     // Set variables to keep track of our current time and which observation time comes next
     double curTime = 0;
     int curObsIndex = 0;
 
-	int obsMod = std::max(1, (int)pow(10, round(log10(numTime)-1)));
+	int obsMod = std::max(1, (int)pow(10, round(log10(totTime)-1)));
 
     // Display some stuff  if verbose
 	if(!silent){
-		std::cout << "numTime: " << numTime << std::endl;
 		std::cout << "Simulation Start Time: " << curTime << std::endl;
 		std::cout << "Simulation End Time: " << obsTimes[obsTimes.size()-1] << std::endl;
 		std::cout << "obsTimes.size(): " << obsTimes.size() << std::endl;
@@ -308,7 +309,7 @@ void System::simulate_timedep(std::vector<double> obsTimes, std::string file){
         Rcpp::checkUserInterrupt();
 
         // Get the next event time
-        double timeToNext = getNextTime2(curTime);
+        double timeToNext = getNextTime2(curTime, totTime);
 
 		out("Got my next time: " + to_string_wp(timeToNext));
 
@@ -322,7 +323,7 @@ void System::simulate_timedep(std::vector<double> obsTimes, std::string file){
 			toFile(obsTimes[curObsIndex], file);
 
 			if(verbose &&  int(obsTimes[curObsIndex]) % obsMod == 0 && !silent)
-				std::cout << "Time " << obsTimes[curObsIndex] << " of " << numTime << std::endl;
+				std::cout << "Time " << obsTimes[curObsIndex] << " of " << totTime << std::endl;
 
 			curObsIndex++;
 

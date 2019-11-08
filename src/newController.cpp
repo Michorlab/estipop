@@ -236,13 +236,11 @@ double gmbp3(Rcpp::NumericVector observations, std::string file, Rcpp::NumericVe
     gsl_rng_set(rng, seedcpp);
 	silent = silence;
 
-	if(!silent)
-	std::cout << "Starting process... " << std::endl;
+	if(!silent) std::cout << "Starting process... " << std::endl;
 	int nTrans = transitions.length();
 	int nStops = stops.length();
 
-	if(!silent)
-	std::cout << "Initialization system..." << std::endl;
+	if(!silent) std::cout << "Initialization system..." << std::endl;
 	// Initial population sizes
 	std::vector<int> init(initial.begin(), initial.end());
 
@@ -260,8 +258,7 @@ double gmbp3(Rcpp::NumericVector observations, std::string file, Rcpp::NumericVe
 	*/
 
 	// Add transitions
-	if(!silent)
-	std::cout << "Adding transitions..." << std::endl;
+	if(!silent) std::cout << "Adding transitions..." << std::endl;
 
 	// Iterate over transitions list
 	for(int i = 0; i < nTrans; i++){
@@ -300,8 +297,7 @@ double gmbp3(Rcpp::NumericVector observations, std::string file, Rcpp::NumericVe
 	}
 
 	// Add transitions
-	if(!silent)
-	std::cout << "Adding stopping criteria..." << std::endl;
+	if(!silent) std::cout << "Adding stopping criteria..." << std::endl;
 
 	// Iterate over transitions list
 	for(int i = 0; i < nStops; i++){
@@ -327,11 +323,9 @@ double gmbp3(Rcpp::NumericVector observations, std::string file, Rcpp::NumericVe
 	std::vector<double> obsTimes(observations.begin(), observations.end());
 
 	// Simulate
-	if(!silent)
-	std::cout << "Simulating..." << std::endl;
+	if(!silent) std::cout << "Simulating..." << std::endl;
 	sys.simulate(obsTimes, file);
-	if(!silent)
-	std::cout << "Ending process..." << std::endl;
+	if(!silent) std::cout << "Ending process..." << std::endl;
 
 	return 0.0;
 }
@@ -400,10 +394,8 @@ std::vector<double> t2(SEXP custom_distribution_file = R_NilValue){
 
 #ifdef _WIN32
 	HINSTANCE lib_handle;
-	HINSTANCE lib_handle_newclone;
 #else
 	void *lib_handle;
-	void *lib_handle_newclone;
 #endif
 
 	// Name for plugin library location
@@ -476,20 +468,16 @@ double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::N
 
 	#ifdef _WIN32
 	HINSTANCE lib_handle;
-	HINSTANCE lib_handle_newclone;
 	#else
 	void *lib_handle;
-	void *lib_handle_newclone;
 	#endif
 
 
-	if(!silent)
-	std::cout << "Starting process... " << std::endl;
+	if(!silent) std::cout << "Starting process... " << std::endl;
 	int nTrans = transitions.length();
 	int nStops = stops.length();
 
-	if(!silent)
-	std::cout << "Initialization system..." << std::endl;
+	if(!silent) std::cout << "Initialization system..." << std::endl;
 	// Initial population sizes
 	std::vector<int> init(initial.begin(), initial.end());
 
@@ -497,8 +485,7 @@ double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::N
 	System sys(init);
 
 	// Add transitions
-	if(!silent)
-	std::cout << "Adding transitions..." << std::endl;
+	if(!silent) std::cout << "Adding transitions..." << std::endl;
 
 	// Iterate over transitions list
 	for(int i = 0; i < nTrans; i++){
@@ -510,26 +497,31 @@ double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::N
 		int population = list_i[0];
 		bool is_random = list_i[1];
 		Rcpp::List rateList = Rcpp::as<Rcpp::List>(list_i[2]);
-		Rate* r;
+		Rate* r = nullptr;
 		if(rateList.containsElementNamed("type")){
-			if(Rcpp::as<int>(rateList["type"]) == 0){
-				if(!silent)
-				std::cout << "Constant rate found!" << std::endl;
+			if(Rcpp::as<int>(rateList["type"]) == 0)
+			{
+
+				if(!silent) std::cout << "Constant rate found!" << std::endl;
 				r = new ConstantRate(Rcpp::as<double>(rateList[1]));
-			} else if (Rcpp::as<int>(rateList["type"]) == 1){
+
+			} else if (Rcpp::as<int>(rateList["type"]) == 1)
+			{
+
 				Rcpp::NumericVector params = Rcpp::as<Rcpp::NumericVector>(rateList["params"]);
-				if(!silent)
-				std::cout << "Linear rate found!" << std::endl;
+				if(!silent) std::cout << "Linear rate found!" << std::endl;
 				r = new LinearRate(params[0], params[1]);
+
 			} else if (Rcpp::as<int>(rateList["type"]) == 2){
+
 				Rcpp::NumericVector params = Rcpp::as<Rcpp::NumericVector>(rateList["params"]);
-				if(!silent)
-				std::cout << "Switch rate found!" << std::endl;
+				if(!silent) std::cout << "Switch rate found!" << std::endl;
 				r = new SwitchRate(params[0], params[1], params[2]);
+
 			} else if (Rcpp::as<int>(rateList["type"]) == 3){
+
 				Rcpp::StringVector params = Rcpp::as<Rcpp::StringVector>(rateList["params"]);
-				if(!silent)
-				std::cout << "Custom rate found!" << std::endl;
+				if(!silent) std::cout << "Custom rate found!" << std::endl;
 				double (*rate)(double, void*);
 
 				// Name for plugin library location
@@ -553,6 +545,9 @@ double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::N
 				#endif
 
 				r = new Rate(rate);
+			}
+			else{
+				Rcpp::stop("invalid rate selection");
 			}
 		} else {
 			r = new ConstantRate(Rcpp::as<double>(rateList[0]));
@@ -588,8 +583,7 @@ double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::N
 	}
 
 	// Add StopCriteria
-	if(!silent)
-	std::cout << "Adding stopping criteria..." << std::endl;
+	if(!silent) std::cout << "Adding stopping criteria..." << std::endl;
 
 	// Iterate over StopCriterionList list
 	for(int i = 0; i < nStops; i++){
@@ -613,11 +607,9 @@ double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::N
 	std::vector<double> obsTimes(observations.begin(), observations.end());
 
 	// Simulate
-	if(!silent)
-	std::cout << "Simulating..." << std::endl;
+	if(!silent) std::cout << "Simulating..." << std::endl;
 	sys.simulate_timedep(obsTimes, file);
-	if(!silent)
-	std::cout << "Ending process..." << std::endl;
+	if(!silent) std::cout << "Ending process..." << std::endl;
 
 	// Free our integration workspace & custom function handles
 	gsl_integration_workspace_free(workspace);
