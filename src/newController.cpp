@@ -242,7 +242,7 @@ double gmbp3(Rcpp::NumericVector observations, std::string file, Rcpp::NumericVe
 
 	if(!silent) std::cout << "Initialization system..." << std::endl;
 	// Initial population sizes
-	std::vector<int> init(initial.begin(), initial.end());
+	std::vector<long int> init(initial.begin(), initial.end());
 
 	// Initialize system
 	System sys(init);
@@ -479,7 +479,7 @@ double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::N
 
 	if(!silent) std::cout << "Initialization system..." << std::endl;
 	// Initial population sizes
-	std::vector<int> init(initial.begin(), initial.end());
+	std::vector<long int> init(initial.begin(), initial.end());
 
 	// Initialize system
 	System sys(init);

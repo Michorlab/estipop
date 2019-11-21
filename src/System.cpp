@@ -49,7 +49,7 @@ System::System(){
 
 }
 
-System::System(std::vector<int> s){
+System::System(std::vector<long int> s){
 	state = s;
 	tot_rate_homog = 0.0;
 }

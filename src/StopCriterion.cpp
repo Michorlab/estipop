@@ -33,8 +33,8 @@ StopCriterion::StopCriterion(std::vector<int> ind, std::string ineq, double v) :
 
 StopCriterion::~StopCriterion(){}
 
-bool StopCriterion::check(std::vector<int> state){
-	int checkVal = 0;
+bool StopCriterion::check(std::vector<long int> state){
+	long int checkVal = 0;
 	for(size_t i = 0; i < indices.size(); i++){
 		checkVal += state[indices[i]];
 	}

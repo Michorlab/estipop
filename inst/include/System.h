@@ -33,7 +33,7 @@ public:
 	// Members
 	double tot_rate_homog;
 
-	std::vector<int> state;
+	std::vector<long int> state;
 
 	std::vector<double> rates;
 	std::vector<Rate*> rates2;
@@ -44,7 +44,7 @@ public:
 
 	// Constructors
 	System();
-	System(std::vector<int> s);
+	System(std::vector<long int> s);
 	~System();
 
 	// Methods

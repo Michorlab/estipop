@@ -31,11 +31,10 @@ public:
 	std::vector<int> indices;
 	std::string inequality;
 	double value;
-	
+
 	StopCriterion();
 	StopCriterion(std::vector<int> ind, std::string ineq, double v);
 	~StopCriterion();
-	
-	bool check(std::vector<int> state);
-};
 
+	bool check(std::vector<long int> state);
+};
