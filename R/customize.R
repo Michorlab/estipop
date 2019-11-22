@@ -49,7 +49,7 @@ create_timedep_template <- function(cppfile = "custom_rate_plugin.cpp"){
   cpp_con <- file(cppfile)
   cpp_lines <- readLines(cpp_con)
   include_header <- paste("#include \"", hfile, "\"", sep = "")
-  cpp_lines <- c(include_header, cpp_lines)
+  if(!(include_header %in% cpp_lines)) cpp_lines <- c(include_header, cpp_lines)
   write(cpp_lines, cppfile)
   close(cpp_con)
 }
@@ -73,6 +73,7 @@ create_timedep_template <- function(cppfile = "custom_rate_plugin.cpp"){
 compile_timedep <- function(cppfile){
   cpproot <- .pop_off(cppfile, ".", fixed = T)
   cppsuffix <- .pop(cppfile, ".", fixed = T)
+  hfile <- paste(cpproot, ".h", sep = "")
 
   concopy <- paste(cppfile, ".backup", sep = "")
   file.copy(cppfile, concopy)
@@ -90,10 +91,32 @@ compile_timedep <- function(cppfile){
     stop("Customization only support on Windows, OS X, and Linux systems")
   }
 
+  # Update Header File if function names are different
+  cppfiletext <- readLines(con = cppfile)
+  decl_lines <- cppfiletext[grepl("\\(double time, void\\* p\\)", cppfiletext)]
+
+  decl_lines <- sapply(1:length(decl_lines), function(x) .pop(decl_lines[x], "\\{"))
+  decl_lines <- paste(decl_lines, ";", sep = "")
+
+  hfiletext <- readLines(con = hfile)
+  line_number <- grep("\\*\\*\\*", hfiletext)
+
+  incl_lines <- rep(NA, length(decl_lines))
+  for(i in 1:length(decl_lines))
+  {
+    incl_lines[i] <- ifelse(decl_lines[i] %in% hfiletext, FALSE, TRUE)
+  }
+  decl_lines <- decl_lines[incl_lines]
+
+
+  hfiletext <- c(hfiletext[1:line_number],
+                 decl_lines,
+                 hfiletext[(line_number+1):length(hfiletext)])
+
+  writeLines(hfiletext, hfile)
+
+
   # Need to make windows version
   shlib <- paste("R CMD SHLIB", cppfile)
   system(shlib)
 }
-
-
-

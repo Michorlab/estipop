@@ -8,7 +8,13 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 double rate(double time, void* p);
+
+
+
+//Additional defined functions - Do not modify below this line
+/***/
 #ifdef __cplusplus
 }
 #endif
