@@ -120,6 +120,8 @@ loglik_est <- function(dat, t, N, parent, rate, offspring)
   ll
 }
 
+
+
 #' loglik_est_time
 #'
 #' log-likelihood function for N replicates various time observations from a general k-type branching process with d transitions
@@ -1407,3 +1409,102 @@ loglik_full_time_temp <- function(dat, t, N, parent, rate, offspring)
   }
   ll
 }
+
+#' loglik_time_dependent
+#'
+#' log-likelihood function for N replicates from various time observations and possibly different initial counts from a general time-inhomogenous k-type branching process with d transitions
+#'
+#' @param dat Nxk matrix of observed data where each column is a count from a type and each row is an observation
+#' @param t N-length vector of time from system initialization until each observation in dat were made
+#' @param N Nxk matrix of initial ancestor counts for each type for each observation
+#' @param parent a d-length vector specifying which population type is associated with a specific offspring transition
+#' @param rate_func a function of time returning a d-length vector specifying the rate at which each offspring transition is occurring
+#' @param offspring a dxk matrix specifying the offspring transitions
+loglik_time_dependent <- function(dat, t, N, parent, rate_func, offspring){
+  
+  tf = max(t)
+  ntype = ncol(offspring)
+  
+  #state is a vector containing all first and second moments evolving over time 
+  moment_de <- function(curr_t, state, params){
+    s = tf - curr_t
+    rate_vec = rate_func(s)
+    
+    #Expand rate vector to be a matrix where rate is in a colum corresponding to the parent
+    rate_mat <- matrix(rep(0,nrow(offspring)*ntype), c(nrow(offspring),ntype))
+    rate_mat[cbind(1:nrow(offspring), parent)] <- rate_vec
+    
+    lamb <- colSums(rate_mat)
+    b_mat <- t(t(offspring)%*%rate_mat)/lamb
+    
+    a_mat <-  lamb*(b_mat - diag(ntype))
+    
+    c_mat <- array(rep(0,ntype**3), c(ntype, ntype, ntype)); #matrix of second derivatives of offspring PGF
+    
+    for(i in 1:ntype){
+      i_mat <- t(t(offspring*offspring[,i])%*%rate_mat)/lamb
+      i_mat[,i] <- i_mat[,i] - b_mat[,i]
+      c_mat[,i,] <- t(i_mat)
+      c_mat[i,,] <- t(i_mat)
+    }
+    
+    mt_mat = matrix(state[1:ntype**2], c(ntype, ntype)) 
+    dt_mat = matrix(state[(ntype**2+1):(ntype**3+ntype**2)], c(ntype, ntype*ntype)) 
+    
+    beta_mat <- matrix(rep(0,ntype**3), nrow = ntype, ncol = ntype*ntype); #beta_mat array for second moment ODE
+    for(i in 1:ntype){
+      ai <- lamb[i]
+      beta_mat[i,] <- c(ai*t(mt_mat)%*%c_mat[,,i]%*%mt_mat) #vectorized computation of beta_mat
+    }
+    mt_prime <- c(a_mat%*%mt_mat)
+    dt_prime <- c(a_mat%*%dt_mat + beta_mat)
+    return(list(c(mt_prime, dt_prime)))
+  }
+  
+  init_dt <- array(rep(0,ntype**3),c(ntype,ntype,ntype)) #inital values of second moments
+  init_mt = array(rep(0, ntype**2), c(ntype, ntype))
+  for(i in 1:ntype){
+    init_dt[i,i,i] <- 1;
+    init_mt[i,i] <- 1;
+  }
+  
+  
+  init_state <- c(c(init_mt),c(init_dt))
+  times <- sort(tf - unique(t))
+  
+  out <- data.frame(deSolve::ode(y = init_state, times, func = moment_de, parms = 0))
+  
+  m_mat <- array(out[nrow(out),2:(ntype**2 + 1)],c(ntype,ntype))
+  dt_mat <- array(out[nrow(out),(ntype**2 + 2):(ntype**3 + ntype**2 + 1)],c(ntype,ntype*ntype)) #second moment array
+  
+  
+  #Compute likelihood
+  ll = 0
+  for(obs in 1:nrow(dat)){
+    init_pop <- N[obs,]
+    pop <- dat[obs,]
+    timepoint <- t[obs]
+    
+    #get the state vector at the correct time
+    desol <- out[out$time == tf - timepoint, -1] # -1 = don't include time in state vector 
+    
+    m_mat <- array(out[nrow(out),1:ntype**2],c(ntype,ntype))
+    dt_mat <- array(out[nrow(out),(ntype**2 + 1):(ntype**3 + ntype**2)],c(ntype,ntype*ntype)) #second moment array
+      
+    mu_vec <- t(m_mat)%*%init_pop #final mean population vector
+    sigma_mat <- matrix(init_pop%*%dt_mat,c(ntype,ntype*ntype)) #final population covariance matrix
+    
+    for(i in 1:ntype){
+      for(j in 1:ntype){
+        sigma_mat[i,j] <-  sigma_mat[i,j] - init_pop%*%(m_mat[,i]*m_mat[,j])
+      }
+    }
+    
+    #compute multivatiate normal likelihood
+    ll <- ll - ntype/2*log(2*pi) - 1/2*log(det(sigma_mat))
+    ll <- ll - -1/2*(mu_vec - pop)%*%solve(sigma_mat)%*%(mu_vec - pop)
+  }  
+  ll
+}
+  
+
