@@ -1419,8 +1419,9 @@ loglik_full_time_temp <- function(dat, t, N, parent, rate, offspring)
 #' @param N Nxk matrix of initial ancestor counts for each type for each observation
 #' @param parent a d-length vector specifying which population type is associated with a specific offspring transition
 #' @param rate_func a function of time returning a d-length vector specifying the rate at which each offspring transition is occurring
+#' @param rate_params a vector of parameters for the rate functions. These are the parameters than will be estimated 
 #' @param offspring a dxk matrix specifying the offspring transitions
-loglik_time_dependent <- function(dat, t, N, parent, rate_func, offspring){
+loglik_time_dependent <- function(dat, t, N, parent, rate_func, rate_params, offspring){
   
   tf = max(t)
   ntype = ncol(offspring)
@@ -1428,7 +1429,7 @@ loglik_time_dependent <- function(dat, t, N, parent, rate_func, offspring){
   #state is a vector containing all first and second moments evolving over time 
   moment_de <- function(curr_t, state, params){
     s = tf - curr_t
-    rate_vec = rate_func(s)
+    rate_vec = rate_func(s, rate_params)
     
     #Expand rate vector to be a matrix where rate is in a colum corresponding to the parent
     rate_mat <- matrix(rep(0,nrow(offspring)*ntype), c(nrow(offspring),ntype))

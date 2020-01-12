@@ -227,7 +227,6 @@ double System::getNextTime2(double curTime, double totTime){
 	}
   //Rcpp::Rcout << "tot_rate_homog " << tot_rate_homog << "\n";
 
-	out("In nextTime2");
 
 	while(true){
 		Rcpp::checkUserInterrupt();

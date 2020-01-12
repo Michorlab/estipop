@@ -21,7 +21,7 @@ FixedTransition = function(population, rate = 1.0, fixed){
 
 #' RandomTransition
 #'
-#' Designates a fixed transition, that is, a transition vector that generates the number of offspring according to the distribution oDist with
+#' Designates a random transition, that is, a transition vector that generates the number of offspring according to the distribution oDist with
 #' parameters oParams, and then divides these according to a multinomial distribution with probability vector oVec
 #'
 #' @param population index of population for which transition applies
@@ -312,6 +312,111 @@ estimateBP = function(time, N, transitionList, data, initial, known = NULL, lowe
   return(rMLE)
 }
 
+#' estimateBP_TD
+#'
+#' Estimates the rate parameters for a general multitype branching process with time-dependent rates
+#'
+#' @param time numeric or vector of time units for data observations
+#' @param N intial state vector
+#' @param transitionList TransitionList object specifying transitions in system
+#' @param data n x k data matrix
+#' @param initial vector of initial estimates for MLE optimization
+#' @param known boolean vector of known parameter rates, if NULL, all rates will be estimated
+#' @param lower vector of lower bounds on rate parameters for optimization
+#' @param upper vector of upper bounds on rate parameters for optimization
+#' @param trace level of output for optimizer - see optim function, control - trace for "L-BFGS-B" method
+#'
+#' @export
+estimateBP_TD = function(time, N, transitionList, data, initial, known = NULL, lower = NULL, upper = NULL, trace = 0){
+  
+  if(length(transitionList) < 1){
+    stop("No model specified by transitionList.")
+  }
+  
+  if(length(transitionList) != length(initial)){
+    stop("Model specified by transitionList does not have the same number of rates as the initial estimates vector.")
+  }
+  
+  for(i in 1:length(transitionList)){
+    #print(transitionList[[i]]$fixed)
+    if(length(transitionList[[i]]$fixed) != ncol(data)){
+      stop("Model specified by transitionList has different number of types (columns) than the data matrix.")
+    }
+  }
+  
+  # Set up quantities for estimation, related to pgf
+  parent = c()
+  rate_list = c() #list of all of the rates. Can include both numerics and rate objects
+  offspring = matrix(nrow = length(transitionList), ncol = length(transitionList[[1]]$fixed))
+  
+  for(i in 1:length(transitionList)){
+    parent = c(parent, transitionList[[i]]$pop)
+    rate_list = c(rate_list, transitionList[[i]]$rate)
+    if(transitionList[[i]]$rate$type == 3){
+      #load cpp source
+      Rcpp::sourceCpp(transitionList[[i]]$rate$params[1])
+    }
+    offspring[i,] = as.matrix(transitionList[[i]]$fixed)
+  }
+  
+  rate_func = function(t){
+    sapply(rate_list, 
+      function(r){ 
+        if(is.numeric(r)){
+          return(r)
+        }
+        if(r$type == 0){
+          return(r$params[1])
+        }
+        if(r$type == 1){
+          return(r$params[1] + r$params[2]*t)
+        }
+        if(r$type == 2){
+          return(r$params[1]*(t <= r$params[3]) + r$params[2]*(t > r$params[3]))
+        }
+        if(r$type == 3){
+          return(eval(parse(text = paste(r$params[2], "(t,r$params[3])", sep=""))))
+        }
+      }
+    )
+  }
+  
+  parent = parent + 1
+  
+  t = time
+  
+  # MLE
+  loglik_ex2 <- function(rates) -1 * estipop:::loglik_est_time(data, t, N, parent, rates, offspring)
+  
+  # if (!is.na(...)){
+  #   control = list(...)
+  # } else {
+  #   control = NULL
+  # }
+  control =  list(trace = trace, factr=10, pgtol=1e-20)
+  
+  if(is.null(lower)){
+    lower = 1e-10*1:length(initial)
+  }
+  
+  if(is.null(upper)){
+    upper = 1.75 + 1e-10*1:length(initial)
+  }
+  
+  if(is.null(known)){
+    rMLE <- optim(initial,
+                  loglik_ex2, method = "L-BFGS-B",
+                  lower = lower, upper = upper,
+                  control = control)
+  } else {
+    rMLE <- bossMaps:::optifix(initial,
+                               known,
+                               loglik_ex2, method = "L-BFGS-B",
+                               lower = lower, upper = upper,
+                               control = control)
+  }
+  return(rMLE)
+}
 
 
 
