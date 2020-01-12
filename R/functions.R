@@ -53,8 +53,8 @@ RandomTransition = function(population, rate, oVec, oDist, oParams){
 #' TransitionList(Transition(prob = 0.5, fixed = c(1, 1, 0), random = c(FALSE, FALSE, TRUE)),
 #'                Transition(prob = 0.5, fixed = c(0, 0, 0), random = c(TRUE, FALSE, FALSE)))
 #' }
-TransitionList = function(...){
-  ts = list(...)
+TransitionList = function(nparams, ...){
+  ts = list(nparams, ...)
   return(ts)
 }
 
@@ -98,23 +98,18 @@ StopList = function(...){
 
 #' Rate
 #'
-#' Designates a rate
+#' Specifies a rate.  User writes an R expression which can involve time (t) or params[1..n] 
 #'
-#' Specifies a rate.  User can specify using built-in types and accompanying parameters, or use a custom C++ function of time
-#'
-#' @param type type of rate function, see README
-#' @param params list of parameters
+#' @param expr the expression representing the function of time
 #'
 #' @export
 #' @examples
 #' \dontrun{
-#' Rate(type = 0, params = c(0.01))
-#' Rate(type = 1, params = c(0.1, -0.01))
+#' Rate(params[0]*t + params[1])
 #' }
-Rate = function(type, params){
-  rlist = list(type, params)
-  names(rlist) = c("type", "params")
-  return(rlist)
+#' 
+Rate = function(expr){
+  return(substitute(expr))
 }
 
 
@@ -352,33 +347,13 @@ estimateBP_TD = function(time, N, transitionList, data, initial, known = NULL, l
   for(i in 1:length(transitionList)){
     parent = c(parent, transitionList[[i]]$pop)
     rate_list = c(rate_list, transitionList[[i]]$rate)
-    if(transitionList[[i]]$rate$type == 3){
-      #load cpp source
-      Rcpp::sourceCpp(transitionList[[i]]$rate$params[1])
-    }
     offspring[i,] = as.matrix(transitionList[[i]]$fixed)
   }
+  # custom rate will now have 3 parameters:
+  # 1. DLL path 2. Function name 3. Number of function parameters
   
-  rate_func = function(t){
-    sapply(rate_list, 
-      function(r){ 
-        if(is.numeric(r)){
-          return(r)
-        }
-        if(r$type == 0){
-          return(r$params[1])
-        }
-        if(r$type == 1){
-          return(r$params[1] + r$params[2]*t)
-        }
-        if(r$type == 2){
-          return(r$params[1]*(t <= r$params[3]) + r$params[2]*(t > r$params[3]))
-        }
-        if(r$type == 3){
-          return(eval(parse(text = paste(r$params[2], "(t,r$params[3])", sep=""))))
-        }
-      }
-    )
+  rate_func = function(t, params){
+    sapply(rate, function(r)eval(r, list(t = t, params = params)))
   }
   
   parent = parent + 1
@@ -386,7 +361,7 @@ estimateBP_TD = function(time, N, transitionList, data, initial, known = NULL, l
   t = time
   
   # MLE
-  loglik_ex2 <- function(rates) -1 * estipop:::loglik_est_time(data, t, N, parent, rates, offspring)
+  loglik_ex2 <- function(params) -1 * estipop:::loglik_est_time(data, t, N, parent, rate_func, params, offspring)
   
   # if (!is.na(...)){
   #   control = list(...)
