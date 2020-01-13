@@ -173,7 +173,7 @@ branch = function(time, initial, transitionList, stopList, silent = FALSE, keep 
 }
 
 #' branchTD
-#'
+#' TODO: Parse the R expression into CPP for fast sim
 #' Simulates a continuous-time markov branching process using the specified parameters.  Used for time-dependent rate simulation.
 #'
 #' @param time number of time units to simulate
@@ -196,7 +196,7 @@ branch = function(time, initial, transitionList, stopList, silent = FALSE, keep 
 #'        stopList = StopList(StopCriterion(indices = c(0), inequality = ">=", value = 1000),
 #'                   StopCriterion(indices = c(0, 1), inequality = ">=", value = 10000)))
 #' }
-branchTD = function(time, initial, transitionList, stopList, silent = FALSE, keep = FALSE, seed = NULL, dtime = NULL, observations = NULL){
+branchTD = function(time, initial, transitionList, transitionParams, stopList, silent = FALSE, keep = FALSE, seed = NULL, dtime = NULL, observations = NULL){
 
   time_obs = c()
 
@@ -230,85 +230,6 @@ branchTD = function(time, initial, transitionList, stopList, silent = FALSE, kee
 
 #' estimateBP
 #'
-#' Estimates the rate parameters for a general multitype branching process
-#'
-#' @param time numeric or vector of time units for data observations
-#' @param N intial state vector
-#' @param transitionList TransitionList object specifying transitions in system
-#' @param data n x k data matrix
-#' @param initial vector of initial estimates for MLE optimization
-#' @param known boolean vector of known parameter rates, if NULL, all rates will be estimated
-#' @param lower vector of lower bounds on rate parameters for optimization
-#' @param upper vector of upper bounds on rate parameters for optimization
-#' @param trace level of output for optimizer - see optim function, control - trace for "L-BFGS-B" method
-#'
-#' @export
-estimateBP = function(time, N, transitionList, data, initial, known = NULL, lower = NULL, upper = NULL, trace = 0){
-
-  if(length(transitionList) < 1){
-    stop("No model specified by transitionList.")
-  }
-
-  if(length(transitionList) != length(initial)){
-    stop("Model specified by transitionList does not have the same number of rates as the initial estimates vector.")
-  }
-
-  for(i in 1:length(transitionList)){
-    #print(transitionList[[i]]$fixed)
-    if(length(transitionList[[i]]$fixed) != ncol(data)){
-      stop("Model specified by transitionList has different number of types (columns) than the data matrix.")
-    }
-  }
-
-  # Set up quantities for estimation, related to pgf
-  parent = c()
-  rate = c()
-  offspring = matrix(nrow = length(transitionList), ncol = length(transitionList[[1]]$fixed))
-  for(i in 1:length(transitionList)){
-    parent = c(parent, transitionList[[i]]$pop)
-    rate = c(rate, transitionList[[i]]$rate)
-    offspring[i,] = as.matrix(transitionList[[i]]$fixed)
-  }
-
-  parent = parent + 1
-
-  t = time
-
-  # MLE
-  loglik_ex2 <- function(rates) -1 * estipop:::loglik_est_time(data, t, N, parent, rates, offspring)
-
-  # if (!is.na(...)){
-  #   control = list(...)
-  # } else {
-  #   control = NULL
-  # }
-  control =  list(trace = trace, factr=10, pgtol=1e-20)
-
-  if(is.null(lower)){
-    lower = 1e-10*1:length(initial)
-  }
-
-  if(is.null(upper)){
-    upper = 1.75 + 1e-10*1:length(initial)
-  }
-
-  if(is.null(known)){
-    rMLE <- optim(initial,
-                  loglik_ex2, method = "L-BFGS-B",
-                  lower = lower, upper = upper,
-                  control = control)
-  } else {
-    rMLE <- bossMaps:::optifix(initial,
-                               known,
-                               loglik_ex2, method = "L-BFGS-B",
-                               lower = lower, upper = upper,
-                               control = control)
-  }
-  return(rMLE)
-}
-
-#' estimateBP_TD
-#'
 #' Estimates the rate parameters for a general multitype branching process with time-dependent rates
 #'
 #' @param time numeric or vector of time units for data observations
@@ -322,7 +243,7 @@ estimateBP = function(time, N, transitionList, data, initial, known = NULL, lowe
 #' @param trace level of output for optimizer - see optim function, control - trace for "L-BFGS-B" method
 #'
 #' @export
-estimateBP_TD = function(time, N, transitionList, data, initial, known = NULL, lower = NULL, upper = NULL, trace = 0){
+estimateBP = function(time, N, transitionList, data, initial, known = NULL, lower = NULL, upper = NULL, trace = 0){
   
   if(length(transitionList) < 1){
     stop("No model specified by transitionList.")
