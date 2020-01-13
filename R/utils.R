@@ -42,7 +42,7 @@ reload <- function( path ){
 #' @export
 .pop_off <- function(string, pattern = ">", ...){
   string <- unlist(strsplit(string, pattern, ...))
-  string <- string[1:length(string)-1]
+  string <- string[1:lengthgth(string)-1]
   paste(string, collapse = pattern)
 }
 
@@ -58,7 +58,7 @@ reload <- function( path ){
 #' @export
 .pop <- function(string, pattern = ">", ...){
   string <- unlist(strsplit(string, pattern, ...))
-  string[length(string)]
+  string[lengthgth(string)]
 }
 
 
@@ -83,7 +83,7 @@ reload <- function( path ){
 
 #' Generate CPP code for computing a custom rate
 #' @export
-generateCpp <- function(exprm, nparams)
+generateCpp <- function(exprn, params)
 {
   if (is.atomic(exprn) || is.name(exprn))
   {
@@ -97,46 +97,51 @@ generateCpp <- function(exprm, nparams)
   {
     return(first)
   }
+  if (is.name(first) && deparse(first) == "t"){
+    return("t")
+  }
   if (deparse(first) %in% c("+", "-", "/", "*", "^", "<", ">", "<=", ">="))
   {
     # allowed operations
     if (length(exprn) > 2)
     {
-      return(paste("(", generateCpp(exprn[[2]], nparams), 
-                   ")", deparse(first), "(", generateCpp(exprn[[3]], nparams), ")", sep = " "))
+      return(paste("(", generateCpp(exprn[[2]], params), 
+                   ")", deparse(first), "(", generateCpp(exprn[[3]], params), ")", sep = " "))
     } else
     {
-      return(paste(deparse(first), "(", generateCpp(exprn[[2]], nparams), ")", sep = ""))
+      return(paste(deparse(first), "(", generateCpp(exprn[[2]], params), ")", sep = ""))
     }
   }
-  if(deparse(first) %in% c("exp", "log", "sin", "cos", "tan"))
+  if(deparse(first) %in% c("exp", "log", "sin", "cos"))
   {
     if (length(exprn) > 2)
     {
       stop("log and exp take only one parameter")  
     } else
     {
-      return(paste(deparse(first), "(", generateCpp(exprn[[2]], nparams), ")", sep = ""))
+      return(paste(deparse(first), "(", generateCpp(exprn[[2]], params), ")", sep = ""))
     }
     
   }
   if (deparse(first) == "(")
   {
-    return(generateCpp(exprn[[2]], nparams))
+    return(generateCpp(exprn[[2]], params))
   }
   if (deparse(first) == "[")
   {
     if (!is.na(stringr::str_extract(deparse(exprn), "^params\\[[0-9]+\\]$")))
     {
       # function parameters
-      s <- stringr::str_extract(deparse(exprn), "^[params\\[[0-9]+\\]$")
+      s <- stringr::str_extract(deparse(exprn), "^params\\[[0-9]+\\]$")
       num <- strtoi(substr(s, 8, nchar(s) - 1))
-      if (num > nparams || num <= 0)
+      if (num > length(params) || num <= 0)
       {
+        print(num)
+        print(params)
         stop(paste("Parameter", s, "goes beyond the number of parameters specified.", 
                    sep = " "))
       }
-      return(sprintf("params[%d]", num))
+      return(sprintf("%f", params[num]))
     }
     stop(paste("Invalid expression:", deparse(exprn), sep = " "))
   } 

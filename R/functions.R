@@ -54,7 +54,7 @@ RandomTransition = function(population, rate, oVec, oDist, oParams){
 #'                Transition(prob = 0.5, fixed = c(0, 0, 0), random = c(TRUE, FALSE, FALSE)))
 #' }
 TransitionList = function(nparams, ...){
-  ts = list(nparams, ...)
+  ts = list(...,nparams = nparams)
   return(ts)
 }
 
@@ -249,11 +249,11 @@ estimateBP = function(time, N, transitionList, data, initial, known = NULL, lowe
     stop("No model specified by transitionList.")
   }
   
-  if(length(transitionList) != length(initial)){
+  if(transitionList$nparams != length(initial)){
     stop("Model specified by transitionList does not have the same number of rates as the initial estimates vector.")
   }
   
-  for(i in 1:length(transitionList)){
+  for(i in 1:(length(transitionList)-1)){
     #print(transitionList[[i]]$fixed)
     if(length(transitionList[[i]]$fixed) != ncol(data)){
       stop("Model specified by transitionList has different number of types (columns) than the data matrix.")
@@ -265,7 +265,7 @@ estimateBP = function(time, N, transitionList, data, initial, known = NULL, lowe
   rate_list = c() #list of all of the rates. Can include both numerics and rate objects
   offspring = matrix(nrow = length(transitionList), ncol = length(transitionList[[1]]$fixed))
   
-  for(i in 1:length(transitionList)){
+  for(i in 1:(length(transitionList)-1)){
     parent = c(parent, transitionList[[i]]$pop)
     rate_list = c(rate_list, transitionList[[i]]$rate)
     offspring[i,] = as.matrix(transitionList[[i]]$fixed)
@@ -274,8 +274,9 @@ estimateBP = function(time, N, transitionList, data, initial, known = NULL, lowe
   # 1. DLL path 2. Function name 3. Number of function parameters
   
   rate_func = function(t, params){
-    sapply(rate, function(r)eval(r, list(t = t, params = params)))
+    sapply(rate_list, function(r)eval(r, list(t = t, params = params)))
   }
+  return(rate_func)
   
   parent = parent + 1
   

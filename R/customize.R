@@ -23,7 +23,7 @@
 #' \dontrun{
 #' create_timedep_template(cppfile = "custom_rate_plugin.cpp")
 #' }
-create_timedep_template <- function(cppfile = "custom_rate_plugin.cpp"){
+create_timedep_template <- function(exprn, params, cppfile = "custom_rate_plugin.cpp"){
   cppfile <- unlist(strsplit(cppfile, ".", fixed = T))
   if(cppfile[length(cppfile)] != "cpp")
   {
@@ -39,8 +39,9 @@ create_timedep_template <- function(cppfile = "custom_rate_plugin.cpp"){
   hfile <- paste(hfile, collapse = ".")
 
 
-  cpp_location <- paste(.libPaths()[1], "/estipop/extras/timedependent_template.cpp", sep = "")
-  h_location <- paste(.libPaths()[1], "/estipop/extras/timedependent_template.h", sep = "")
+  cpp_location <- "./inst/extras/timedependent_template.cpp"
+  h_location <- "./inst/extras/timedependent_template.h"
+
 
   file.copy(cpp_location, cppfile)
   file.copy(h_location, hfile)
@@ -48,6 +49,7 @@ create_timedep_template <- function(cppfile = "custom_rate_plugin.cpp"){
   # Update cpp file's include statement
   cpp_con <- file(cppfile)
   cpp_lines <- readLines(cpp_con)
+  cpp_lines <- sprintf(cpp_lines, generateCpp(exprn, params))
   include_header <- paste("#include \"", hfile, "\"", sep = "")
   if(!(include_header %in% cpp_lines)) cpp_lines <- c(include_header, cpp_lines)
   write(cpp_lines, cppfile)
