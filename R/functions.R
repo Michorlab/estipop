@@ -232,6 +232,11 @@ branchTD = function(time, initial, transitionList, transitionParams, stopList, s
 
   if(!keep)
     file.remove(f)
+    for(trans in transitionList){
+      if(trans$type != NULL){
+        file.remove(trans$params[1])
+      }
+    }
 
   return(res)
 }
