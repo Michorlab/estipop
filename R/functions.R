@@ -53,8 +53,8 @@ RandomTransition = function(population, rate, oVec, oDist, oParams){
 #' TransitionList(Transition(prob = 0.5, fixed = c(1, 1, 0), random = c(FALSE, FALSE, TRUE)),
 #'                Transition(prob = 0.5, fixed = c(0, 0, 0), random = c(TRUE, FALSE, FALSE)))
 #' }
-TransitionList = function(nparams, ...){
-  ts = list(...,nparams = nparams)
+TransitionList = function(...){
+  ts = list(...)
   return(ts)
 }
 
@@ -207,8 +207,19 @@ branchTD = function(time, initial, transitionList, transitionParams, stopList, s
   } else {
     time_obs = seq(0, time)
   }
-
+  
   time_obs = as.matrix(time_obs)
+  for(trans in transitionList){
+    if(isConst(trans$rate)){
+      trans$rate = eval(trans$rate, list(params = transitionParams))
+    }
+    else{
+      fname =  paste("custom_rate_", digest::digest(deparse(trans$rate),"md5"), sep="")
+      create_timedep_template(trans$rate, transitionParams, paste(fname, ".cpp", sep=""))
+      compile_timedep(fname)
+      rate = list(type=3,params = c(paste(fname, ".so", sep=""), "rate"))
+    }
+  }
 
   f = R.utils::getAbsolutePath(tempfile(pattern = paste("system_", format(Sys.time(), "%d-%m-%Y-%H%M%S"), "_", sep = ""), fileext = ".csv", tmpdir = getwd()))
   if(is.null(seed)){
@@ -270,14 +281,11 @@ estimateBP = function(time, N, transitionList, data, initial, known = NULL, lowe
     rate_list = c(rate_list, transitionList[[i]]$rate)
     offspring[i,] = as.matrix(transitionList[[i]]$fixed)
   }
-  # custom rate will now have 3 parameters:
-  # 1. DLL path 2. Function name 3. Number of function parameters
   
   rate_func = function(t, params){
     sapply(rate_list, function(r)eval(r, list(t = t, params = params)))
   }
-  return(rate_func)
-  
+
   parent = parent + 1
   
   t = time

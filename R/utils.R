@@ -80,6 +80,54 @@ reload <- function( path ){
 #'   vec
 #' }
 
+#' Determines if expression depends on time or is constant
+#'  
+isConst <- function(exprn)
+{
+  if (is.atomic(exprn) || is.name(exprn))
+  {
+    first <- exprn
+  } else
+  {
+    first <- exprn[[1]]
+  }
+  
+  if (is.numeric(first) && !is.array(first))
+  {
+    return(T)
+  }
+  if (is.name(first) && deparse(first) == "t"){
+    return(F)
+  }
+  if (deparse(first) %in% c("+", "-", "/", "*", "^", "<", ">", "<=", ">="))
+  {
+    # allowed operations
+    if (length(exprn) > 2)
+    {
+      return(isConst(exprn[[2]]) && isConst(exprn[[3]]))
+    } else
+    {
+      return(isConst(exprn[[2]]))
+    }
+  }
+  if(deparse(first) %in% c("exp", "log", "sin", "cos", "("))
+  {    
+    if (length(exprn) > 2)
+    {
+      stop("log and exp take only one parameter")  
+    }
+    return(isConst(exprn[[2]]))
+  }
+  if (deparse(first) == "[")
+  {
+    if (!is.na(stringr::str_extract(deparse(exprn), "^params\\[[0-9]+\\]$")))
+    {
+      return(T)
+    }
+    stop(paste("Invalid expression:", deparse(exprn), sep = " "))
+  } 
+
+}
 
 #' Generate CPP code for computing a custom rate
 #' @export
@@ -93,11 +141,11 @@ generateCpp <- function(exprn, params)
     first <- exprn[[1]]
   }
   
-  if (is.atomic(first) && is.numeric(first) && !is.array(first))
+  if (is.numeric(first) && !is.array(first))
   {
     return(first)
   }
-  if (is.name(first) && deparse(first) == "t"){
+  if (is.name(first) && deparse(first) %in% c("t")){
     return("t")
   }
   if (deparse(first) %in% c("+", "-", "/", "*", "^", "<", ">", "<=", ">="))
