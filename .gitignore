@@ -45,6 +45,7 @@ system*.csv
 # R project files
 *.Rproj
 *.Rdata
-
+*.RData
 # Other
 .DS_Store
+custom_rates/*

@@ -250,7 +250,7 @@ double System::getNextTime2(double curTime, double totTime){
     //Rcpp::Rcout << "total rate: " << tot_rate << "\n";
 		//Rcpp::Rcout << "beta ratio: " << beta_ratio << "\n";
 
-		if(u_thin <= beta_ratio)
+		if(u_thin <= beta_ratio || curTime + rand_next_time >= totTime)
 		{
 		  break;
 		}
@@ -322,14 +322,31 @@ void System::simulate_timedep(std::vector<double> obsTimes, std::string file){
 			// print out current state vector
 			toFile(obsTimes[curObsIndex], file);
 
-			if(verbose &&  int(obsTimes[curObsIndex]) % obsMod == 0 && !silent)
-				std::cout << "Time " << obsTimes[curObsIndex] << " of " << totTime << std::endl;
-
+			if(verbose &&  int(obsTimes[curObsIndex]) % obsMod == 0 && !silent){
+				std::cout << "Time " << curTime << std::endl;
+			  double tot_rate = 0;
+			  for(size_t i = 0; i < rates2.size(); i++){
+			    tot_rate += (*rates2[i])(curTime);
+			  }
+			  std::cout << "Total Rate: " << tot_rate << std::endl;
+			  std::cout << "Theoretical Rate: " << exp(-.6*curTime)*.5 << std::endl;
+			  double tot_rate_homog = 0;
+			  for(size_t i = 0; i < rates2.size(); i++){
+			    rates2[i]->rate_homog = maximizeFunc(rates2[i]->funct, curTime, totTime, 1000);
+			    //Rcpp::Rcout << rates2[i]->rate_homog << "\n";
+			    tot_rate_homog += rates2[i]->rate_homog;
+			  }
+			  std::cout << "Homog Rate: " << tot_rate_homog << std::endl;
+			  std::cout << "Pop: " << state[from[0]] << std::endl;
+			  std::cout << "Next Time:" << curTime + timeToNext << std::endl;
+			  
+			}
 			curObsIndex++;
 
-			if((unsigned)curObsIndex >= obsTimes.size()-1)
+			if((unsigned)curObsIndex >= obsTimes.size()-1){
 				break;
-        }
+			}
+    }
 
         // Update our System
 		out("headed from sim2 to getEvent2");
