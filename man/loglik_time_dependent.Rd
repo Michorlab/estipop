@@ -4,7 +4,7 @@
 \alias{loglik_time_dependent}
 \title{loglik_time_dependent}
 \usage{
-loglik_time_dependent(dat, t, N, parent, rate_func, offspring)
+loglik_time_dependent(dat, t, N, parent, rate_func, rate_params, offspring)
 }
 \arguments{
 \item{dat}{Nxk matrix of observed data where each column is a count from a type and each row is an observation}
@@ -16,6 +16,8 @@ loglik_time_dependent(dat, t, N, parent, rate_func, offspring)
 \item{parent}{a d-length vector specifying which population type is associated with a specific offspring transition}
 
 \item{rate_func}{a function of time returning a d-length vector specifying the rate at which each offspring transition is occurring}
+
+\item{rate_params}{a vector of parameters for the rate functions. These are the parameters than will be estimated}
 
 \item{offspring}{a dxk matrix specifying the offspring transitions}
 }
