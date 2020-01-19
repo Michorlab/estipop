@@ -25,7 +25,6 @@
 #include <gsl/gsl_randist.h>
 
 extern gsl_rng* rng;
-extern gsl_integration_workspace *workspace;
 
 double constantRate(double x, void* p){
 	constant_params &params= *reinterpret_cast<constant_params *>(p);
@@ -100,22 +99,4 @@ double SwitchRate::operator()(double time){
 		return params.pre;
 	else
 		return params.post;
-}
-
-
-// Pulse
-
-double pulseRate(double x, void* p){
-	pulse_params &params= *reinterpret_cast<pulse_params *>(p);
-
-	double a = floor(x);
-	double diff = x - a;
-
-	double t = fmod((int)a, params.totPeriod);
-
-	if(t + diff < params.lowPeriod){
-		return params.low;
-	} else {
-		return params.high;
-	}
 }

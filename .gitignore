@@ -49,3 +49,5 @@ system*.csv
 # Other
 .DS_Store
 custom_rates/*
+.vscode
+estipop.code-workspace

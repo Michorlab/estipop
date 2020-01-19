@@ -4,8 +4,9 @@
 \alias{simBirthMutation}
 \title{simBirthMutation}
 \usage{
-simBirthMutation(birth1 = 1, mutation = 0, birth2 = 1, init = c(100, 0),
-  time = 1, approx = FALSE, dtime = NULL, observations = NULL)
+simBirthMutation(birth1 = 1, mutation = 0, birth2 = 1,
+  init = c(100, 0), time = 1, approx = FALSE, dtime = NULL,
+  observations = NULL)
 }
 \arguments{
 \item{birth1}{constant birth rate of population 1}

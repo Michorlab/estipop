@@ -4,9 +4,9 @@
 \alias{simBirthDeathMutation}
 \title{simBirthDeathMutation}
 \usage{
-simBirthDeathMutation(birth1 = 1, death1 = 0, mutation = 0, birth2 = 1,
-  death2 = 0.7, init = c(100, 0), time = 1, approx = FALSE,
-  dtime = NULL, observations = NULL)
+simBirthDeathMutation(birth1 = 1, death1 = 0, mutation = 0,
+  birth2 = 1, death2 = 0.7, init = c(100, 0), time = 1,
+  approx = FALSE, dtime = NULL, observations = NULL)
 }
 \arguments{
 \item{birth1}{constant birth rate of population 1}

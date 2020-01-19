@@ -22,8 +22,6 @@
 #include <ostream>
 #include <sstream>
 #include <vector>
-
-#include <gsl/gsl_integration.h>
 //#include <map>
 
 #include "Rate.h"
@@ -44,8 +42,6 @@ ConstantRate(double r);
 
 virtual double operator()(double time);
 
-virtual double operator()(double begin, double end);
-
 };
 
 struct linear_params{
@@ -63,8 +59,6 @@ LinearRate(double i, double s);
 ~LinearRate();
 
 virtual double operator()(double time);
-
-virtual double operator()(double begin, double end);
 
 };
 
@@ -85,8 +79,6 @@ SwitchRate(double pre, double post, double s);
 
 virtual double operator()(double time);
 
-virtual double operator()(double begin, double end);
-
 };
 
 struct pulse_params{
@@ -106,8 +98,6 @@ PulseRate(double totPeriod, double lowPeriod, double low, double high);
 ~PulseRate();
 
 virtual double operator()(double time);
-
-virtual double operator()(double begin, double end);
 
 };
 

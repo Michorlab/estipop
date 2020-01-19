@@ -22,8 +22,6 @@
 #include <ostream>
 #include <sstream>
 #include <vector>
-
-#include <gsl/gsl_integration.h>
 #include <gsl/gsl_min.h>
 #include <Rcpp.h>
 
@@ -45,9 +43,7 @@ public:
 	Rate(double (*f)(double, void*));
 	virtual ~Rate();
 
-	double integrateFunct(double a, double b);
 	double eval(double time);
 
 	virtual double operator()(double time);
-	virtual double operator()(double begin, double end);
 };

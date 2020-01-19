@@ -271,7 +271,7 @@ int System::getNextEvent2(double curTime, double timeToNext){
 
 
 	for(size_t i = 0; i < rates2.size(); i++){
-		cumulativeHazards.push_back((*rates2[i])(curTime, curTime + timeToNext) * state[from[i]]);
+		cumulativeHazards.push_back((*rates2[i])(curTime + timeToNext) * state[from[i]]);
 	}
 
 	out("returning from nextEvetn2");

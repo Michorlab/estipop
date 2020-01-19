@@ -6,17 +6,6 @@
 
 using namespace Rcpp;
 
-// sexp_type
-int sexp_type(SEXP x);
-RcppExport SEXP _estipop_sexp_type(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(sexp_type(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // gmbp3
 double gmbp3(Rcpp::NumericVector observations, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence, SEXP seed);
 RcppExport SEXP _estipop_gmbp3(SEXP observationsSEXP, SEXP fileSEXP, SEXP initialSEXP, SEXP transitionsSEXP, SEXP stopsSEXP, SEXP silenceSEXP, SEXP seedSEXP) {
@@ -31,41 +20,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type silence(silenceSEXP);
     Rcpp::traits::input_parameter< SEXP >::type seed(seedSEXP);
     rcpp_result_gen = Rcpp::wrap(gmbp3(observations, file, initial, transitions, stops, silence, seed));
-    return rcpp_result_gen;
-END_RCPP
-}
-// test
-double test(double a, SEXP dt, Rcpp::Nullable<Rcpp::NumericVector> initial);
-RcppExport SEXP _estipop_test(SEXP aSEXP, SEXP dtSEXP, SEXP initialSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type a(aSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type dt(dtSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericVector> >::type initial(initialSEXP);
-    rcpp_result_gen = Rcpp::wrap(test(a, dt, initial));
-    return rcpp_result_gen;
-END_RCPP
-}
-// zee
-double zee(double a);
-RcppExport SEXP _estipop_zee(SEXP aSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type a(aSEXP);
-    rcpp_result_gen = Rcpp::wrap(zee(a));
-    return rcpp_result_gen;
-END_RCPP
-}
-// t2
-std::vector<double> t2(SEXP custom_distribution_file);
-RcppExport SEXP _estipop_t2(SEXP custom_distribution_fileSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type custom_distribution_file(custom_distribution_fileSEXP);
-    rcpp_result_gen = Rcpp::wrap(t2(custom_distribution_file));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -88,11 +42,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_estipop_sexp_type", (DL_FUNC) &_estipop_sexp_type, 1},
     {"_estipop_gmbp3", (DL_FUNC) &_estipop_gmbp3, 7},
-    {"_estipop_test", (DL_FUNC) &_estipop_test, 3},
-    {"_estipop_zee", (DL_FUNC) &_estipop_zee, 1},
-    {"_estipop_t2", (DL_FUNC) &_estipop_t2, 1},
     {"_estipop_timeDepBranch", (DL_FUNC) &_estipop_timeDepBranch, 7},
     {NULL, NULL, 0}
 };

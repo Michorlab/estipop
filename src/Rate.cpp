@@ -25,9 +25,9 @@
 #include <gsl/gsl_randist.h>
 
 extern gsl_rng* rng;
-extern gsl_integration_workspace* workspace;
 extern bool silent;
 
+Rate::Rate(){};
 
 Rate::Rate(double (*f)(double, void*)) : Rate(){
 	funct.function = f;

@@ -52,7 +52,6 @@
 #include <limits>
 #include <gsl/gsl_randist.h>
 #include <cmath>
-#include <gsl/gsl_integration.h>
 
 // Rcpp headers
 #include <RcppGSL.h>
@@ -65,7 +64,6 @@ double seed = std::chrono::high_resolution_clock::now().time_since_epoch().count
 
 bool silent = false;
 
-gsl_integration_workspace *workspace;
 
 
 // Helper Methods to read in data from text files
@@ -210,16 +208,6 @@ std::vector<std::vector<std::string>> funct(std::string filename){
 	return items;
 }
 
-//' sexp_type
-//'
-//' sexp_type
-//'
-//' @export
-// [[Rcpp::export]]
-int sexp_type(SEXP x)
-{ return TYPEOF(x); }
-
-
 //' gmbp3
 //'
 //' gmbp3
@@ -330,122 +318,6 @@ double gmbp3(Rcpp::NumericVector observations, std::string file, Rcpp::NumericVe
 	return 0.0;
 }
 
-//' test
-//'
-//' test
-//'
-//' @export
-// [[Rcpp::export]]
-double test(double a, SEXP dt = R_NilValue, Rcpp::Nullable<Rcpp::NumericVector> initial = R_NilValue) {
-	std::cout << "Here's a: " << a << std::endl;
-
-	if(!Rf_isNull(dt)){
-		std::cout << "You gave me a dt: " << Rf_asReal(dt) << std::endl;
-	}
-
-	if(initial.isNotNull()){
-		Rcpp::NumericVector t = Rcpp::as<Rcpp::NumericVector>(initial);
-		std::cout << "You also gave me a vector of values.  Here they are!" << std::endl;
-
-		std::vector<double> init(t.begin(), t.end());
-		for(int i = 0; i < init.size(); i++){
-			std::cout << init[i] << std::endl;
-		}
-	}
-	//return sys.choosePop();
-	return 0;
-}
-
-//' zee
-//'
-//' zee
-//'
-//' @export
-// [[Rcpp::export]]
-double zee(double a) {
-	ConstantRate h(1.234234);
-	std::cout << h(1.344) << std::endl;
-
-	LinearRate l(10, 2);
-	std::cout << l(4) << std::endl;
-	std::cout << l(0, 4) << std::endl;
-	//return sys.choosePop();
-	return 0;
-}
-
-
-//' t2
-//'
-//' t2
-//'
-//' @export
-// [[Rcpp::export]]
-std::vector<double> t2(SEXP custom_distribution_file = R_NilValue){
-	/*for(int i = 0; i < 1e6; i++){
-	doqags();
-	dointeg();
-	}
-	*/
-
-	std::cout << "HI" << std::endl;
-
-	workspace = gsl_integration_workspace_alloc(1000);
-	double (*rate)(double, void*);
-
-#ifdef _WIN32
-	HINSTANCE lib_handle;
-#else
-	void *lib_handle;
-#endif
-
-	// Name for plugin library location
-	const char* plugin_location = CHAR(Rf_asChar(custom_distribution_file));
-
-	Rate r;
-
-	// Load plugin library
-#ifdef _WIN32
-	lib_handle = LoadLibrary(plugin_location);
-	if(!lib_handle)
-	{
-		Rcpp::stop("invalid file name for distribution file");
-	}
-	rate = (double (*)(double, void*))GetProcAddress(lib_handle, "birth0");
-
-	void* ptr;
-	std::cout << (*rate)(1.1, ptr) << std::endl;
-
-	r = Rate(rate);
-
-#else
-	lib_handle = dlopen(plugin_location, RTLD_NOW);
-	if(!lib_handle)
-	{
-		Rcpp::stop("invalid file name for distribution file");
-	}
-	rate = (double (*)(double, void*))dlsym(lib_handle, "birth0");
-	r = Rate(rate);
-#endif
-
-	//Rate r = Rate(&g);
-
-	std::vector<double> ret;
-	for(double i = 0.0; i <= 20; i+=0.1){
-
-		ret.push_back(r.eval(i));
-	}
-	std::cout << r.integrateFunct(0, 10) << std::endl;
-	std::cout << r.rate_homog << std::endl;
-
-
-#ifdef _WIN32
-	FreeLibrary(lib_handle);
-#else
-	dlclose(lib_handle);
-#endif
-
-	return ret;
-}
 
 //' timeDepBranch
 //'
@@ -464,7 +336,6 @@ double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::N
     gsl_rng_set(rng, seedcpp);
 	silent = silence;
 
-	workspace = gsl_integration_workspace_alloc(1000);
 
 	#ifdef _WIN32
 	HINSTANCE lib_handle;
@@ -611,8 +482,6 @@ double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::N
 	sys.simulate_timedep(obsTimes, file);
 	if(!silent) std::cout << "Ending process..." << std::endl;
 
-	// Free our integration workspace & custom function handles
-	gsl_integration_workspace_free(workspace);
 	#ifdef _WIN32
 		FreeLibrary(lib_handle);
 	#else

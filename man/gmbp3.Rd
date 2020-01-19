@@ -4,7 +4,8 @@
 \alias{gmbp3}
 \title{gmbp3}
 \usage{
-gmbp3(observations, file, initial, transitions, stops, silence, seed = NULL)
+gmbp3(observations, file, initial, transitions, stops, silence,
+  seed = NULL)
 }
 \description{
 gmbp3
