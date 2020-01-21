@@ -51,3 +51,5 @@ system*.csv
 custom_rates/*
 .vscode
 estipop.code-workspace
+config.log
+config.status
