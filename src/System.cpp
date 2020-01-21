@@ -118,7 +118,7 @@ double System::getNextTime(std::vector<double>& o_rates){
 }
 
 void System::simulate(std::vector<double> obsTimes, std::string file){
-	bool verbose = false;
+	bool verbose = true;
 
 	std::vector<double> o_rates;
 	for(size_t i = 0; i < rates.size(); i++){
@@ -323,23 +323,12 @@ void System::simulate_timedep(std::vector<double> obsTimes, std::string file){
 			toFile(obsTimes[curObsIndex], file);
 
 			if(verbose &&  int(obsTimes[curObsIndex]) % obsMod == 0 && !silent){
+				std::cout << "----------------------" << std::endl;
 				std::cout << "Time " << curTime << std::endl;
-			  double tot_rate = 0;
-			  for(size_t i = 0; i < rates2.size(); i++){
-			    tot_rate += (*rates2[i])(curTime);
-			  }
-			  std::cout << "Total Rate: " << tot_rate << std::endl;
-			  std::cout << "Theoretical Rate: " << exp(-.6*curTime)*.5 << std::endl;
-			  double tot_rate_homog = 0;
-			  for(size_t i = 0; i < rates2.size(); i++){
-			    rates2[i]->rate_homog = maximizeFunc(rates2[i]->funct, curTime, totTime, 1000);
-			    //Rcpp::Rcout << rates2[i]->rate_homog << "\n";
-			    tot_rate_homog += rates2[i]->rate_homog;
-			  }
-			  std::cout << "Homog Rate: " << tot_rate_homog << std::endl;
-			  std::cout << "Pop: " << state[from[0]] << std::endl;
-			  std::cout << "Next Time:" << curTime + timeToNext << std::endl;
-			  
+			  	std::cout << "Rate 1: " << (*rates2[0])(curTime) << std::endl;
+			  	std::cout << "Rate 2: " << (*rates2[1])(curTime) << std::endl;
+			  	std::cout << "Theoretical Rate 1: " << exp(-.3*curTime)*.3 << std::endl;
+			  	std::cout << "Theoretical Rate 2: " << exp(-.3*curTime)*.2 << std::endl;
 			}
 			curObsIndex++;
 

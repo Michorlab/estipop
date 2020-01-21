@@ -340,7 +340,7 @@ double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::N
 	#ifdef _WIN32
 	HINSTANCE lib_handle;
 	#else
-	void *lib_handle;
+	std::vector<void*> handles;
 	#endif
 
 
@@ -397,6 +397,8 @@ double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::N
 
 				// Name for plugin library location
 				const char* plugin_location = CHAR(Rf_asChar(params[0]));
+				std::cout << params[0] << std::endl;
+				std::cout << params[1] << std::endl;
 				//Rcpp::Rcout << params[1] << std::endl;
 				// Load plugin library
 				#ifdef _WIN32
@@ -407,12 +409,13 @@ double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::N
 					}
 				rate = (double (*)(double, void*))GetProcAddress(lib_handle, params[1]);
 				#else
-					lib_handle = dlopen(plugin_location, RTLD_NOW);
-					if(!lib_handle)
+					void* hand = dlopen(plugin_location, RTLD_NOW);
+					handles.push_back(hand);
+					if(!hand)
 					{
 						Rcpp::stop("invalid file name custom dll");
 					}
-					rate = (double (*)(double, void*))dlsym(lib_handle, params[1]);
+					rate = (double (*)(double, void*))dlsym(hand, params[1]);
 				#endif
 
 				r = new Rate(rate);
@@ -485,7 +488,10 @@ double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::N
 	#ifdef _WIN32
 		FreeLibrary(lib_handle);
 	#else
-		dlclose(lib_handle);
+		for(auto i = handles.begin(); i != handles.end(); i++){
+			dlclose(*i);
+			std::cout << "closing" << std::endl;
+		}
 	#endif
 
 	return 0.0;
