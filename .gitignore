@@ -46,6 +46,7 @@ system*.csv
 *.Rproj
 *.Rdata
 *.RData
+*.Rbuildignore
 # Other
 .DS_Store
 custom_rates/*
