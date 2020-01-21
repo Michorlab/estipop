@@ -2,10 +2,13 @@
 % Please edit documentation in R/functions.R
 \name{branchTD}
 \alias{branchTD}
-\title{branchTD}
+\title{branchTD
+TODO: Parse the R expression into CPP for fast sim
+Simulates a continuous-time markov branching process using the specified parameters.  Used for time-dependent rate simulation.}
 \usage{
-branchTD(time, initial, transitionList, stopList, silent = FALSE,
-  keep = FALSE, seed = NULL, dtime = NULL, observations = NULL)
+branchTD(time, initial, transitionList, transitionParams, stopList,
+  silent = FALSE, keep = FALSE, seed = NULL, dtime = NULL,
+  observations = NULL)
 }
 \arguments{
 \item{time}{number of time units to simulate}
@@ -27,6 +30,8 @@ branchTD(time, initial, transitionList, stopList, silent = FALSE,
 \item{observations}{numeric vector specifying custom observation times}
 }
 \description{
+branchTD
+TODO: Parse the R expression into CPP for fast sim
 Simulates a continuous-time markov branching process using the specified parameters.  Used for time-dependent rate simulation.
 }
 \examples{

@@ -6,9 +6,6 @@
 \usage{
 isConst(exprn)
 }
-\arguments{
-\item{exprn}{the R expression to be evaluated}
-}
 \description{
-Takes an expression and determines whether it depends on time
+determines whether an expression depends on time
 }

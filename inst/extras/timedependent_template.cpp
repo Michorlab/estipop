@@ -1,8 +1,8 @@
 // line above must point to header (.h) file with same filename as current file
-double rate(double time, void* p){
+double rate(double t, void* p){
 	
 	// perform some maniupations...
-	ret = %s;
+	double ret = %s;
 	
 	return ret;
 }

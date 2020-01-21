@@ -209,15 +209,15 @@ branchTD = function(time, initial, transitionList, transitionParams, stopList, s
   }
   
   time_obs = as.matrix(time_obs)
-  for(trans in transitionList){
-    if(isConst(trans$rate)){
-      trans$rate = eval(trans$rate, list(params = transitionParams))
+  for(i in 1:length(transitionList)){
+    if(isConst(transitionList[[i]]$rate)){
+      transitionList[[i]]$rate = eval(transitionList[[i]]$rate, list(params = transitionParams))
     }
     else{
-      fname =  paste("custom_rate_", digest::digest(deparse(trans$rate),"md5"), sep="")
-      create_timedep_template(trans$rate, transitionParams, paste(fname, ".cpp", sep=""))
-      compile_timedep(fname)
-      rate = list(type=3,params = c(paste(fname, ".so", sep=""), "rate"))
+      fname =  paste("custom_rate_", digest::digest(deparse(transitionList[[i]]$rate),"md5"), sep="")
+      create_timedep_template(transitionList[[i]]$rate, transitionParams, paste(fname, ".cpp", sep=""))
+      compile_timedep( paste(fname, ".cpp", sep=""))
+      transitionList[[i]]$rate = list(type=3,params = c(paste(fname, ".so", sep=""), "rate"))
     }
   }
 
@@ -233,8 +233,13 @@ branchTD = function(time, initial, transitionList, transitionParams, stopList, s
   if(!keep)
     file.remove(f)
     for(trans in transitionList){
-      if(trans$type != NULL){
-        file.remove(trans$params[1])
+      if("type" %in% names(trans$rate)){
+        fname = .pop(trans$rate$params[1],".so")
+        file.remove(trans$rate$params[1])
+        file.remove(paste(fname, ".cpp", sep=""))
+        file.remove(paste(fname, ".h", sep=""))
+        file.remove(paste(fname, ".o", sep=""))
+        file.remove(paste(fname, ".cpp.backup", sep=""))
       }
     }
 

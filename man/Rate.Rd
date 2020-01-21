@@ -4,22 +4,17 @@
 \alias{Rate}
 \title{Rate}
 \usage{
-Rate(type, params)
+Rate(expr)
 }
 \arguments{
-\item{type}{type of rate function, see README}
-
-\item{params}{list of parameters}
+\item{expr}{the expression representing the function of time}
 }
 \description{
-Designates a rate
-}
-\details{
-Specifies a rate.  User can specify using built-in types and accompanying parameters, or use a custom C++ function of time
+Specifies a rate.  User writes an R expression which can involve time (t) or params[1..n]
 }
 \examples{
 \dontrun{
-Rate(type = 0, params = c(0.01))
-Rate(type = 1, params = c(0.1, -0.01))
+Rate(params[0]*t + params[1])
 }
+
 }

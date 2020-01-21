@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-double rate(double time, void* p);
+double rate(double t, void* p);
 
 
 

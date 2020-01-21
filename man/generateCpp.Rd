@@ -2,15 +2,10 @@
 % Please edit documentation in R/utils.R
 \name{generateCpp}
 \alias{generateCpp}
-\title{generateCPP}
+\title{generateCpp}
 \usage{
 generateCpp(exprn, params)
 }
-\arguments{
-\item{exprn}{the R expression to be translated}
-
-\item{params}{the vectors of parameter to substitute into the expression}
-}
 \description{
-Takes an expression and generates CPP code to compute it
+generates custom C++ code for rate computation
 }

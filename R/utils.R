@@ -42,7 +42,7 @@ reload <- function( path ){
 #' @export
 .pop_off <- function(string, pattern = ">", ...){
   string <- unlist(strsplit(string, pattern, ...))
-  string <- string[1:lengthgth(string)-1]
+  string <- string[1:length(string)-1]
   paste(string, collapse = pattern)
 }
 
@@ -58,30 +58,17 @@ reload <- function( path ){
 #' @export
 .pop <- function(string, pattern = ">", ...){
   string <- unlist(strsplit(string, pattern, ...))
-  string[lengthgth(string)]
+  string[length(string)]
 }
 
 
-#'
-#' ##------------------------------------------------------------------------
-#' #' .replace
-#' #'
-#' #' replaces an element of a vector with a particular pattern with the
-#' #' replacement given
-#' #'
-#' #' @param vec - character vector
-#' #' @param pattern - character element to search for
-#' #' @param replacement - character to replace pattern with
-#' #'
-#' #' @return .replace - returns a vector with the replaced elements
-#' #' @export
-#' .replace <- function(vec, pattern, replacement) {
-#'   vec[vec == pattern] <- replacement
-#'   vec
-#' }
 
-#' Determines if expression depends on time or is constant
-#'  
+##------------------------------------------------------------------------
+#' isConst
+#' 
+#' determines whether an expression depends on time 
+#' 
+#' @export
 isConst <- function(exprn)
 {
   if (is.atomic(exprn) || is.name(exprn))
@@ -129,7 +116,11 @@ isConst <- function(exprn)
 
 }
 
-#' Generate CPP code for computing a custom rate
+##------------------------------------------------------------------------
+#' generateCpp
+#' 
+#' generates custom C++ code for rate computation
+#' 
 #' @export
 generateCpp <- function(exprn, params)
 {

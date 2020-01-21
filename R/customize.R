@@ -95,7 +95,7 @@ compile_timedep <- function(cppfile){
 
   # Update Header File if function names are different
   cppfiletext <- readLines(con = cppfile)
-  decl_lines <- cppfiletext[grepl("\\(double time, void\\* p\\)", cppfiletext)]
+  decl_lines <- cppfiletext[grepl("\\(double t, void\\* p\\)", cppfiletext)]
 
   decl_lines <- sapply(1:length(decl_lines), function(x) .pop(decl_lines[x], "\\{"))
   decl_lines <- paste(decl_lines, ";", sep = "")

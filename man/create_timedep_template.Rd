@@ -5,7 +5,8 @@
 \title{Customization code for time-dependent rates
  taken with minor adaptions from:}
 \usage{
-create_timedep_template(cppfile = "custom_rate_plugin.cpp")
+create_timedep_template(exprn, params,
+  cppfile = "custom_rate_plugin.cpp")
 }
 \arguments{
 \item{cppfile}{file name of .cpp file to create}

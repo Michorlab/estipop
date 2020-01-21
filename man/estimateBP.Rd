@@ -27,5 +27,5 @@ estimateBP(time, N, transitionList, data, initial, known = NULL,
 \item{trace}{level of output for optimizer - see optim function, control - trace for "L-BFGS-B" method}
 }
 \description{
-Estimates the rate parameters for a general multitype branching process
+Estimates the rate parameters for a general multitype branching process with time-dependent rates
 }
