@@ -50,14 +50,24 @@ System::System(){
 }
 
 System::System(std::vector<long int> s){
-	state = s;
-	tot_rate_homog = 0.0;
+	reset(s);
+	rep_num = 0;
 }
 
 System::~System(){
 	for(size_t i = 0; i < rates2.size(); i++){
 		delete rates2[i];
 	}
+}
+
+void System::nextRep(){
+	++rep_num;
+}
+
+void System::reset(std::vector<long int> s)
+{
+	state = s;
+	tot_rate_homog = 0.0;
 }
 
 void System::print(){
@@ -71,7 +81,7 @@ void System::toFile(double time, std::string file){
 	std::ofstream of;
 
     of.open(file, std::fstream::in | std::fstream::out | std::fstream::app);
-	of << time << "," << state[0];
+	of << rep_num << "," << time << "," << state[0];
 	for(size_t i = 1; i < state.size(); i++){
 		of << "," << state[i];
 	}

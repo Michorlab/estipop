@@ -196,7 +196,7 @@ branch = function(time, initial, transitionList, stopList, silent = FALSE, keep 
 #'        stopList = StopList(StopCriterion(indices = c(0), inequality = ">=", value = 1000),
 #'                   StopCriterion(indices = c(0, 1), inequality = ">=", value = 10000)))
 #' }
-branchTD = function(time, initial, transitionList, transitionParams, stopList, silent = FALSE, keep = FALSE, seed = NULL, dtime = NULL, observations = NULL){
+branchTD = function(time, initial, transitionList, transitionParams, stopList, reps, silent = FALSE, keep = FALSE, seed = NULL, dtime = NULL, observations = NULL){
 
   time_obs = c()
 
@@ -223,12 +223,12 @@ branchTD = function(time, initial, transitionList, transitionParams, stopList, s
 
   f = R.utils::getAbsolutePath(tempfile(pattern = paste("system_", format(Sys.time(), "%d-%m-%Y-%H%M%S"), "_", sep = ""), fileext = ".csv", tmpdir = getwd()))
   if(is.null(seed)){
-    timeDepBranch(time_obs, f, initial, transitionList, stopList, silent)
+    timeDepBranch(time_obs, reps, f, initial, transitionList, stopList, silent)
   } else {
-    timeDepBranch(time_obs, f, initial, transitionList, stopList, silent, seed)
+    timeDepBranch(time_obs, reps, f, initial, transitionList, stopList, silent, seed)
   }
   res = read.csv(f, header = F)
-  names(res)[1] = "time"
+  names(res)[1:2] = c("rep","time")
 
   if(!keep)
     file.remove(f)

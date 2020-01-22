@@ -325,7 +325,7 @@ double gmbp3(Rcpp::NumericVector observations, std::string file, Rcpp::NumericVe
 //'
 //' @export
 // [[Rcpp::export]]
-double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence, SEXP seed = R_NilValue){
+double timeDepBranch(Rcpp::NumericVector observations, int reps, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence, SEXP seed = R_NilValue){
 
 	double seedcpp;
 	if(Rf_isNull(seed)){
@@ -483,7 +483,11 @@ double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::N
 	// Simulate
 	if(!silent) std::cout << "Simulating..." << std::endl;
 	try{
-	  sys.simulate_timedep(obsTimes, file);
+	  for(int i =0; i < reps; ++i){
+	  	sys.simulate_timedep(obsTimes, file);
+		sys.reset(init);
+		sys.nextRep();
+	  }
 	}
 	catch (Rcpp::internal::InterruptedException& e)
 	{

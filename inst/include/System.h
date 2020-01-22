@@ -32,6 +32,7 @@ class System {
 public:
 	// Members
 	double tot_rate_homog;
+	int rep_num;
 
 	std::vector<long int> state;
 
@@ -48,6 +49,8 @@ public:
 	~System();
 
 	// Methods
+	void reset(std::vector<long int> s);
+	void nextRep();
 	void print();
 	void toFile(double time, std::string file);
 	void updateSystem(std::vector<int> update);
