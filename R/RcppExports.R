@@ -15,7 +15,7 @@ gmbp3 <- function(observations, file, initial, transitions, stops, silence, seed
 #' timeDepBranch
 #'
 #' @export
-timeDepBranch <- function(observations, file, initial, transitions, stops, silence, seed = NULL) {
-    .Call('_estipop_timeDepBranch', PACKAGE = 'estipop', observations, file, initial, transitions, stops, silence, seed)
+timeDepBranch <- function(observations, reps, file, initial, transitions, stops, silence, seed = NULL) {
+    .Call('_estipop_timeDepBranch', PACKAGE = 'estipop', observations, reps, file, initial, transitions, stops, silence, seed)
 }
 

@@ -51,7 +51,7 @@ System::System(){
 
 System::System(std::vector<long int> s){
 	reset(s);
-	rep_num = 0;
+	rep_num = 1;
 }
 
 System::~System(){
