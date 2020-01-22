@@ -482,7 +482,13 @@ double timeDepBranch(Rcpp::NumericVector observations, std::string file, Rcpp::N
 
 	// Simulate
 	if(!silent) std::cout << "Simulating..." << std::endl;
-	sys.simulate_timedep(obsTimes, file);
+	try{
+	  sys.simulate_timedep(obsTimes, file);
+	}
+	catch (Rcpp::internal::InterruptedException& e)
+	{
+	  std::cout << "interrupted!" << std::endl;
+	}
 	if(!silent) std::cout << "Ending process..." << std::endl;
 
 	#ifdef _WIN32
