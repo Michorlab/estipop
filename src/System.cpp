@@ -67,7 +67,6 @@ void System::nextRep(){
 void System::reset(std::vector<long int> s)
 {
 	state = s;
-	tot_rate_homog = 0.0;
 }
 
 void System::print(){
@@ -111,8 +110,6 @@ void System::addUpdate(Rate* r, int f, Update u){
 	rates2.push_back(r);
 	from.push_back(f);
 	updates.push_back(u);
-
-	tot_rate_homog += r->rate_homog;
 }
 
 void System::addStop(StopCriterion c){
@@ -227,14 +224,7 @@ double System::getNextTime2(double curTime, double totTime){
 	std::cout.precision(20);
 	double tot_rate;
 	double rand_next_time = 0.0;
-
-	tot_rate_homog = 0.0;
-
-	for(size_t i = 0; i < rates2.size(); i++){
-    rates2[i]->rate_homog = maximizeFunc(rates2[i]->funct, curTime, totTime, 1000);
-    //Rcpp::Rcout << rates2[i]->rate_homog << "\n";
-		tot_rate_homog += rates2[i]->rate_homog * state[from[i]];
-	}
+	int currbin;
   //Rcpp::Rcout << "tot_rate_homog " << tot_rate_homog << "\n";
 
 
@@ -242,9 +232,10 @@ double System::getNextTime2(double curTime, double totTime){
 		Rcpp::checkUserInterrupt();
 
 		tot_rate = 0;
+		currbin = floor((curTime + rand_next_time)/totTime*tot_rate_homog.size());
 
 		out("tot_rate_homog: " + to_string_wp(tot_rate_homog));
-		rand_next_time += gsl_ran_exponential(rng, 1 / tot_rate_homog);
+		rand_next_time += gsl_ran_exponential(rng, 1 / tot_rate_homog[currbin]);
 
 
 		out("starting loop");
@@ -254,9 +245,9 @@ double System::getNextTime2(double curTime, double totTime){
 		out("ending loop");
 
 		double u_thin = gsl_ran_flat(rng, 0, 1);
-		double beta_ratio = tot_rate / tot_rate_homog;
-    //Rcpp::Rcout << "homog rate: " << tot_rate_homog << "\n";
-    //Rcpp::Rcout << "total rate: " << tot_rate << "\n";
+		double beta_ratio = tot_rate / tot_rate_homog[currbin];
+    	//Rcpp::Rcout << "homog rate: " << tot_rate_homog << "\n";
+    	//Rcpp::Rcout << "total rate: " << tot_rate << "\n";
 		//Rcpp::Rcout << "beta ratio: " << beta_ratio << "\n";
 
 		if(u_thin <= beta_ratio || curTime + rand_next_time >= totTime)
@@ -310,6 +301,17 @@ void System::simulate_timedep(std::vector<double> obsTimes, std::string file){
 		std::cout << "Simulation Start Time: " << curTime << std::endl;
 		std::cout << "Simulation End Time: " << obsTimes[obsTimes.size()-1] << std::endl;
 		std::cout << "obsTimes.size(): " << obsTimes.size() << std::endl;
+	}
+
+
+	int nbins = 10000;
+	tot_rate_homog = std::vector<double>(0,nbins);
+ 	std::vector<double> tmp = std::vector<double>(0,nbins);
+	for(size_t i = 0; i < rates2.size(); i++){
+    	maximizePiecewise(rates2[i]->funct, 0, totTime, nbins, tmp);
+		for(int i = 0; i < nbins; ++i){
+			tot_rate_homog[i] += tmp[i];
+		}
 	}
 
     // Run until our currentTime is greater than our largest Observation time

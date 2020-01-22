@@ -31,7 +31,6 @@
 class System {
 public:
 	// Members
-	double tot_rate_homog;
 	int rep_num;
 
 	std::vector<long int> state;
@@ -40,6 +39,7 @@ public:
 	std::vector<Rate*> rates2;
 	std::vector<int> from;
 	std::vector<Update> updates;
+	std::vector<double> tot_rate_homog;
 
 	std::vector<StopCriterion> stops;
 
