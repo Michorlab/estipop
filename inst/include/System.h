@@ -32,6 +32,7 @@ class System {
 public:
 	// Members
 	int rep_num;
+	int nbins = 10000;
 
 	std::vector<long int> state;
 
@@ -39,7 +40,7 @@ public:
 	std::vector<Rate*> rates2;
 	std::vector<int> from;
 	std::vector<Update> updates;
-	std::vector<double> tot_rate_homog;
+	std::vector<std::vector<double>> homog_rates;
 
 	std::vector<StopCriterion> stops;
 

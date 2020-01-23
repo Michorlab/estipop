@@ -83,19 +83,17 @@ double maximizeFunc(gsl_function rate_function, double start_time, double end_ti
 }
 
 // Generate piecewise max function for simulation of inhomogenous processes
-void maximizePiecewise(gsl_function rate_function, double start_time, double end_time, int bins, std::vector<double>& mxaes)
+void maximizePiecewise(gsl_function rate_function, double start_time, double end_time, int bins, std::vector<double>& maxes, double buffer)
 {
   double max = GSL_FN_EVAL(&(rate_function), end_time);
   double test_max = 0;
   double delta_t = (end_time - start_time) / bins;
 
-  std::vector<double> maxes = std::vector<double>(bins);
-
   for(int step = bins-1; step >= 0; --step)
   {
     test_max = GSL_FN_EVAL(&(rate_function), start_time + delta_t * step);
     max = fmax(max, test_max);
-    maxes[step] = max; 
+    maxes[step] = max + buffer; 
   }
 }
 
