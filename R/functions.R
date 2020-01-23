@@ -255,6 +255,7 @@ branchTD = function(time, initial, transitionList, transitionParams, stopList, r
 #'
 #' @param time numeric or vector of time units for data observations
 #' @param N intial state vector
+#' @param initTime time of observation for initial state vector
 #' @param transitionList TransitionList object specifying transitions in system
 #' @param data n x k data matrix
 #' @param initial vector of initial estimates for MLE optimization
@@ -264,7 +265,7 @@ branchTD = function(time, initial, transitionList, transitionParams, stopList, r
 #' @param trace level of output for optimizer - see optim function, control - trace for "L-BFGS-B" method
 #'
 #' @export
-estimateBP = function(time, N, transitionList, data, initial, known = NULL, lower = NULL, upper = NULL, trace = 0){
+estimateBP = function(time, N, initTime, transitionList, data, initial, known = NULL, lower = NULL, upper = NULL, trace = 0){
   
   if(length(transitionList) < 1){
     stop("No model specified by transitionList.")
@@ -303,11 +304,7 @@ estimateBP = function(time, N, transitionList, data, initial, known = NULL, lowe
   # MLE
   loglik_ex2 <- function(params) -1 * estipop:::loglik_est_time(data, t, N, parent, rate_func, params, offspring)
   
-  # if (!is.na(...)){
-  #   control = list(...)
-  # } else {
-  #   control = NULL
-  # }
+
   control =  list(trace = trace, factr=10, pgtol=1e-20)
   
   if(is.null(lower)){

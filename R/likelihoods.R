@@ -1415,20 +1415,20 @@ loglik_full_time_temp <- function(dat, t, N, parent, rate, offspring)
 #' log-likelihood function for N replicates from various time observations and possibly different initial counts from a general time-inhomogenous k-type branching process with d transitions
 #'
 #' @param dat Nxk matrix of observed data where each column is a count from a type and each row is an observation
-#' @param t N-length vector of time from system initialization until each observation in dat were made
+#' @param tf times when observations in dat were made
+#' @param t0 times when initial states were observed
 #' @param N Nxk matrix of initial ancestor counts for each type for each observation
 #' @param parent a d-length vector specifying which population type is associated with a specific offspring transition
 #' @param rate_func a function of time returning a d-length vector specifying the rate at which each offspring transition is occurring
 #' @param rate_params a vector of parameters for the rate functions. These are the parameters than will be estimated 
 #' @param offspring a dxk matrix specifying the offspring transitions
-loglik_time_dependent <- function(dat, t, N, parent, rate_func, rate_params, offspring){
+loglik_time_dependent <- function(dat, tf, t0, N, parent, rate_func, rate_params, offspring){
   
-  tf = max(t)
   ntype = ncol(offspring)
   
   #state is a vector containing all first and second moments evolving over time 
   moment_de <- function(curr_t, state, params){
-    s = tf - curr_t
+    s = params[0] - curr_t
     rate_vec = rate_func(s, rate_params)
     
     #Expand rate vector to be a matrix where rate is in a colum corresponding to the parent
@@ -1471,12 +1471,13 @@ loglik_time_dependent <- function(dat, t, N, parent, rate_func, rate_params, off
   
   
   init_state <- c(c(init_mt),c(init_dt))
-  times <- sort(tf - unique(t))
+  ends = unique(tf)
+  out <- c()
+  for(i in 1:length(ends)){
+    starts = t0[tf == ends[i]]
+    out <- rbind(out, cbind(tf = ends[i], deSolve::ode(y = init_state, sort(ends[i] - starts), func = moment_de, parms = ends[i])))
+  }
   
-  out <- data.frame(deSolve::ode(y = init_state, times, func = moment_de, parms = 0))
-  
-  m_mat <- array(out[nrow(out),2:(ntype**2 + 1)],c(ntype,ntype))
-  dt_mat <- array(out[nrow(out),(ntype**2 + 2):(ntype**3 + ntype**2 + 1)],c(ntype,ntype*ntype)) #second moment array
   
   
   #Compute likelihood
@@ -1484,10 +1485,11 @@ loglik_time_dependent <- function(dat, t, N, parent, rate_func, rate_params, off
   for(obs in 1:nrow(dat)){
     init_pop <- N[obs,]
     pop <- dat[obs,]
-    timepoint <- t[obs]
+    endtime <- tf[obs]
+    starttime <- t0[obs]
     
     #get the state vector at the correct time
-    desol <- out[out$time == tf - timepoint, -1] # -1 = don't include time in state vector 
+    desol <- out[tf = endtime, out$time == endtime - starttime, -c(1,2)] # -1 = don't include time data in state vector 
     
     m_mat <- array(out[nrow(out),1:ntype**2],c(ntype,ntype))
     dt_mat <- array(out[nrow(out),(ntype**2 + 1):(ntype**3 + ntype**2)],c(ntype,ntype*ntype)) #second moment array
