@@ -271,12 +271,14 @@ estimateBP = function(time, N, initTime, transitionList, data, initial, known = 
     stop("No model specified by transitionList.")
   }
   
-  if(transitionList$nparams != length(initial)){
-    stop("Model specified by transitionList does not have the same number of rates as the initial estimates vector.")
+  if (is.vector(data))
+  {
+    warning("data is a vector, not a matrix. Converting to a one-column matrix")
+    data <- matrix(data, ncol = 1)
+    N <- matrix(N, ncol = 1)
   }
   
-  for(i in 1:(length(transitionList)-1)){
-    #print(transitionList[[i]]$fixed)
+  for(i in 1:length(transitionList)){
     if(length(transitionList[[i]]$fixed) != ncol(data)){
       stop("Model specified by transitionList has different number of types (columns) than the data matrix.")
     }
@@ -287,7 +289,7 @@ estimateBP = function(time, N, initTime, transitionList, data, initial, known = 
   rate_list = c() #list of all of the rates. Can include both numerics and rate objects
   offspring = matrix(nrow = length(transitionList), ncol = length(transitionList[[1]]$fixed))
   
-  for(i in 1:(length(transitionList)-1)){
+  for(i in 1:length(transitionList)){
     parent = c(parent, transitionList[[i]]$pop)
     rate_list = c(rate_list, transitionList[[i]]$rate)
     offspring[i,] = as.matrix(transitionList[[i]]$fixed)
@@ -302,9 +304,7 @@ estimateBP = function(time, N, initTime, transitionList, data, initial, known = 
   t = time
   
   # MLE
-  loglik_ex2 <- function(params) -1 * estipop:::loglik_est_time(data, t, N, parent, rate_func, params, offspring)
-  
-
+  loglik <- function(params){ -1 * loglik_time_dependent(data, t, initTime, N, parent, rate_func, params, offspring)}
   control =  list(trace = trace, factr=10, pgtol=1e-20)
   
   if(is.null(lower)){
@@ -317,7 +317,7 @@ estimateBP = function(time, N, initTime, transitionList, data, initial, known = 
   
   if(is.null(known)){
     rMLE <- optim(initial,
-                  loglik_ex2, method = "L-BFGS-B",
+                  loglik, method = "L-BFGS-B",
                   lower = lower, upper = upper,
                   control = control)
   } else {

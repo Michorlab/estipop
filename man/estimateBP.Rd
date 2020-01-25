@@ -4,13 +4,15 @@
 \alias{estimateBP}
 \title{estimateBP}
 \usage{
-estimateBP(time, N, transitionList, data, initial, known = NULL,
-  lower = NULL, upper = NULL, trace = 0)
+estimateBP(time, N, initTime, transitionList, data, initial,
+  known = NULL, lower = NULL, upper = NULL, trace = 0)
 }
 \arguments{
 \item{time}{numeric or vector of time units for data observations}
 
 \item{N}{intial state vector}
+
+\item{initTime}{time of observation for initial state vector}
 
 \item{transitionList}{TransitionList object specifying transitions in system}
 

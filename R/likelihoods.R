@@ -1423,18 +1423,17 @@ loglik_full_time_temp <- function(dat, t, N, parent, rate, offspring)
 #' @param rate_params a vector of parameters for the rate functions. These are the parameters than will be estimated 
 #' @param offspring a dxk matrix specifying the offspring transitions
 loglik_time_dependent <- function(dat, tf, t0, N, parent, rate_func, rate_params, offspring){
-  
+  print(rate_params)
   ntype = ncol(offspring)
   
   #state is a vector containing all first and second moments evolving over time 
   moment_de <- function(curr_t, state, params){
-    s = params[0] - curr_t
+    s = params[1] - curr_t
     rate_vec = rate_func(s, rate_params)
-    
+
     #Expand rate vector to be a matrix where rate is in a colum corresponding to the parent
-    rate_mat <- matrix(rep(0,nrow(offspring)*ntype), c(nrow(offspring),ntype))
+    rate_mat <- matrix(rep(0,nrow(offspring)*ntype), nrow = nrow(offspring), ncol = ntype)
     rate_mat[cbind(1:nrow(offspring), parent)] <- rate_vec
-    
     lamb <- colSums(rate_mat)
     b_mat <- t(t(offspring)%*%rate_mat)/lamb
     
@@ -1474,29 +1473,29 @@ loglik_time_dependent <- function(dat, tf, t0, N, parent, rate_func, rate_params
   ends = unique(tf)
   out <- c()
   for(i in 1:length(ends)){
-    starts = t0[tf == ends[i]]
-    out <- rbind(out, cbind(tf = ends[i], deSolve::ode(y = init_state, sort(ends[i] - starts), func = moment_de, parms = ends[i])))
+    starts = unique(t0[tf == ends[i]])
+    sol <- deSolve::ode(y = init_state, c(0,sort(ends[i] - starts)), func = moment_de, parms = ends[i])
+    out <- rbind(out, cbind(tf = ends[i], sol)[-1,])
   }
-  
-  
-  
+  out <- data.frame(out)
+
   #Compute likelihood
   ll = 0
   for(obs in 1:nrow(dat)){
-    init_pop <- N[obs,]
     pop <- dat[obs,]
     endtime <- tf[obs]
     starttime <- t0[obs]
+    init_pop <- N[obs,]
     
+
     #get the state vector at the correct time
-    desol <- out[tf = endtime, out$time == endtime - starttime, -c(1,2)] # -1 = don't include time data in state vector 
+    desol <- as.matrix(out[(out$tf == endtime & out$time == endtime - starttime), -c(1,2)]) # = don't include time data in state vector 
     
-    m_mat <- array(out[nrow(out),1:ntype**2],c(ntype,ntype))
-    dt_mat <- array(out[nrow(out),(ntype**2 + 1):(ntype**3 + ntype**2)],c(ntype,ntype*ntype)) #second moment array
-      
+    m_mat <- matrix(desol[1:ntype**2],nrow= ntype)
+    dt_mat <- matrix(desol[(ntype**2 + 1):(ntype**3 + ntype**2)],nrow = ntype) #second moment array
     mu_vec <- t(m_mat)%*%init_pop #final mean population vector
     sigma_mat <- matrix(init_pop%*%dt_mat,c(ntype,ntype*ntype)) #final population covariance matrix
-    
+
     for(i in 1:ntype){
       for(j in 1:ntype){
         sigma_mat[i,j] <-  sigma_mat[i,j] - init_pop%*%(m_mat[,i]*m_mat[,j])

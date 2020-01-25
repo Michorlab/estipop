@@ -6,7 +6,7 @@
 TODO: Parse the R expression into CPP for fast sim
 Simulates a continuous-time markov branching process using the specified parameters.  Used for time-dependent rate simulation.}
 \usage{
-branchTD(time, initial, transitionList, transitionParams, stopList,
+branchTD(time, initial, transitionList, transitionParams, stopList, reps,
   silent = FALSE, keep = FALSE, seed = NULL, dtime = NULL,
   observations = NULL)
 }

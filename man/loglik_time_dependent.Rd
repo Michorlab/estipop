@@ -4,12 +4,15 @@
 \alias{loglik_time_dependent}
 \title{loglik_time_dependent}
 \usage{
-loglik_time_dependent(dat, t, N, parent, rate_func, rate_params, offspring)
+loglik_time_dependent(dat, tf, t0, N, parent, rate_func, rate_params,
+  offspring)
 }
 \arguments{
 \item{dat}{Nxk matrix of observed data where each column is a count from a type and each row is an observation}
 
-\item{t}{N-length vector of time from system initialization until each observation in dat were made}
+\item{tf}{times when observations in dat were made}
+
+\item{t0}{times when initial states were observed}
 
 \item{N}{Nxk matrix of initial ancestor counts for each type for each observation}
 
