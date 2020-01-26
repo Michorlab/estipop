@@ -265,7 +265,7 @@ branchTD = function(time, initial, transitionList, transitionParams, stopList, r
 #' @param trace level of output for optimizer - see optim function, control - trace for "L-BFGS-B" method
 #'
 #' @export
-estimateBP = function(time, N, initTime, transitionList, data, initial, known = NULL, lower = NULL, upper = NULL, trace = 0){
+estimateBP = function(time, N, initTime, transitionList, data, initial, known = NULL, lower = NULL, upper = NULL, trace = 1){
   
   if(length(transitionList) < 1){
     stop("No model specified by transitionList.")
@@ -304,8 +304,8 @@ estimateBP = function(time, N, initTime, transitionList, data, initial, known = 
   t = time
   
   # MLE
-  loglik <- function(params){ -1 * loglik_time_dependent(data, t, initTime, N, parent, rate_func, params, offspring)}
-  control =  list(trace = trace, factr=10, pgtol=1e-20)
+  loglik <- function(params){ loglik_time_dependent(data, t, initTime, N, parent, rate_func, params, offspring)}
+  control =  list(trace = trace, fnscale = 1e7)
   
   if(is.null(lower)){
     lower = 1e-10*1:length(initial)
