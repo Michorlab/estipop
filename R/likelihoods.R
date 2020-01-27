@@ -1504,7 +1504,7 @@ loglik_time_dependent <- function(dat, tf, t0, N, parent, rate_func, rate_params
     
     #compute multivatiate normal likelihood
     ll <- ll - ntype/2*log(2*pi) - 1/2*log(det(sigma_mat))
-    ll <- ll - -1/2*(mu_vec - pop)%*%solve(sigma_mat)%*%(mu_vec - pop)
+    ll <- ll - 1/2*(mu_vec - pop)%*%solve(sigma_mat)%*%(mu_vec - pop)
   }  
   print(ll)
   ll

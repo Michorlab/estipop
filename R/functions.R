@@ -304,9 +304,8 @@ estimateBP = function(time, N, initTime, transitionList, data, initial, known = 
   t = time
   
   # MLE
-  loglik <- function(params){ loglik_time_dependent(data, t, initTime, N, parent, rate_func, params, offspring)}
+  loglik <- function(params){ -1*loglik_time_dependent(data, t, initTime, N, parent, rate_func, params, offspring)}
   control =  list(trace = trace, fnscale = 1e7)
-  
   if(is.null(lower)){
     lower = 1e-10*1:length(initial)
   }
