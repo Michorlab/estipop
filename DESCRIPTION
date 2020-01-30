@@ -23,6 +23,8 @@ NeedsCompilation: yes
 RoxygenNote: 6.1.1
 URL: https://github.com/ferlicjl/estipop
 BugReports: https://github.com/ferlicjl/estipop/issues
-Suggests: knitr,
-    rmarkdown
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 2.1.0)
 VignetteBuilder: knitr

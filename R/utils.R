@@ -91,7 +91,9 @@ isConst <- function(exprn)
     # allowed operations
     if (length(exprn) > 2)
     {
-      return(isConst(exprn[[2]]) && isConst(exprn[[3]]))
+      r1 = isConst(exprn[[2]])
+      r2 = isConst(exprn[[3]])
+      return(r1 && r2)
     } else
     {
       return(isConst(exprn[[2]]))
@@ -99,21 +101,28 @@ isConst <- function(exprn)
   }
   if(deparse(first) %in% c("exp", "log", "sin", "cos", "("))
   {    
-    if (length(exprn) > 2)
+    if (length(exprn) != 2)
     {
-      stop("log and exp take only one parameter")  
-    }
+      stop("unary function applied to wrong number of parameters")  
+    } 
     return(isConst(exprn[[2]]))
   }
   if (deparse(first) == "[")
   {
     if (!is.na(stringr::str_extract(deparse(exprn), "^params\\[[0-9]+\\]$")))
     {
+      s <- stringr::str_extract(deparse(exprn), "^params\\[[0-9]+\\]$")
+      num <- strtoi(substr(s, 8, nchar(s) - 1))
+      if (num <= 0)
+      {
+        stop(paste("parameter indices must be positive!", 
+                   sep = " "))
+      }
       return(T)
     }
     stop(paste("Invalid expression:", deparse(exprn), sep = " "))
   } 
-
+  stop(paste("Invalid expression:", deparse(exprn), sep = " "))
 }
 
 ##------------------------------------------------------------------------
@@ -153,10 +162,11 @@ generateCpp <- function(exprn, params)
   }
   if(deparse(first) %in% c("exp", "log", "sin", "cos"))
   {
-    if (length(exprn) > 2)
+    if (length(exprn) != 2)
     {
-      stop("log and exp take only one parameter")  
-    } else
+      stop("unary function applied to wrong number of parameters")  
+    } 
+    else
     {
       return(paste(deparse(first), "(", generateCpp(exprn[[2]], params), ")", sep = ""))
     }
@@ -175,8 +185,6 @@ generateCpp <- function(exprn, params)
       num <- strtoi(substr(s, 8, nchar(s) - 1))
       if (num > length(params) || num <= 0)
       {
-        print(num)
-        print(params)
         stop(paste("Parameter", s, "goes beyond the number of parameters specified.", 
                    sep = " "))
       }
