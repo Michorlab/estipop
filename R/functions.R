@@ -296,7 +296,7 @@ estimateBP = function(time, N, transitionList, data, initial, known = NULL, lowe
   t = time
   
   # MLE
-  loglik_ex2 <- function(rates) -1 * estipop:::loglik_est_time(data, t, N, parent, rates, offspring)
+  loglik_ex2 <- function(rates) -1 * bploglikelihood(data, t, N, parent, rates, offspring)
   
   # if (!is.na(...)){
   #   control = list(...)
@@ -387,7 +387,7 @@ estimateBP_timedep = function(time, N, initTime, transitionList, data, initial, 
   t = time
   
   # MLE
-  loglik <- function(params){ -1*loglik_time_dependent(data, t, initTime, N, parent, rate_func, params, offspring)}
+  loglik <- function(params){ -1*bploglikelihood_TD(data, t, initTime, N, parent, rate_func, params, offspring)}
   control =  list(trace = trace, fnscale = 1e7)
   if(is.null(lower)){
     lower = 1e-10*1:length(initial)

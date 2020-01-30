@@ -4,17 +4,21 @@
 \alias{bploglikelihood}
 \title{bploglikelihood}
 \usage{
-bploglikelihood(dat, t, N, transitionList)
+bploglikelihood(dat, t, N, parent, rate, offspring)
 }
 \arguments{
-\item{dat}{nxK matrix of observed data where each column is a count from a type and each row is an observation}
+\item{dat}{Nxk matrix of observed data where each column is a count from a type and each row is an observation}
 
-\item{t}{time from system initialization until observations in dat were made}
+\item{t}{N-length vecotr of time from system initialization until each observation in dat were made}
 
-\item{N}{initial ancestor counts for each type}
+\item{N}{k-length vector of the initial ancestor counts for each type}
 
-\item{transitionList}{A TransitionList object to specify the model form}
+\item{parent}{a d-length vector specifying which population type is associated with a specific offspring transition}
+
+\item{rate}{a d-length vector specifying the rate at which each offspring transition is occurring}
+
+\item{offspring}{a dxk matrix specifying the offspring transitions}
 }
 \description{
-log-likelihood function for N replicates from a general k-type branching process with d transitions
+log-likelihood function for N replicates various time observations from a general k-type branching process with d transitions
 }
