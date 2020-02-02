@@ -87,7 +87,7 @@ transition = function(rate, parent, offspring){
 #' 
 #' @return A new branching process model object
 new_process_model = function(transition_list){
-  pm <- list(transition_list = transition_list)
+  pm <- list(transition_list = transition_list, ntypes = length(transition_list[[1]]$offspring))
   class(pm) <- "estipop_process_model"
   return(pm)
 }
@@ -98,6 +98,7 @@ new_process_model = function(transition_list){
 #' @return The \code{process_model} object if it is valid, throws an error otherwise
 validate_process_model = function(proc_model){
   lapply(proc_model$transition_list, function(b){if(class(b) != "estipop_transition"){stop("invalid transition object!")}})
+  lapply(proc_model$transition_list, function(b){if(length(b$offpspring) != proc_model$ntypes){stop("transitions have inconsistent number of types!")}})
   if(class(proc_model) != "estipop_process_model"){
     stop("invalid process model!")
   }
