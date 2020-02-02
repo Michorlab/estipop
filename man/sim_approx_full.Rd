@@ -2,7 +2,7 @@
 % Please edit documentation in R/sim_approx.R
 \name{sim_approx_full}
 \alias{sim_approx_full}
-\title{sim_approx_full}
+\title{sim_approx_timeseries}
 \usage{
 sim_approx_full(numSamples, t, N, transitionList, observations = NULL,
   dt = NULL)

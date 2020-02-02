@@ -134,7 +134,6 @@ bploglikelihood <- function(dat, t, N, parent, rate, offspring)
 #' @param rate_params a vector of parameters for the rate functions. These are the parameters than will be estimated 
 #' @param offspring a dxk matrix specifying the offspring transitions
 bploglikelihood_TD <- function(dat, tf, t0, N, parent, rate_func, rate_params, offspring){
-  print(rate_params)
   ntype = ncol(offspring)
   
   #state is a vector containing all first and second moments evolving over time 
@@ -217,7 +216,6 @@ bploglikelihood_TD <- function(dat, tf, t0, N, parent, rate_func, rate_params, o
     ll <- ll - ntype/2*log(2*pi) - 1/2*log(det(sigma_mat))
     ll <- ll - 1/2*(mu_vec - pop)%*%solve(sigma_mat)%*%(mu_vec - pop)
   }  
-  print(ll)
   ll
 }
   

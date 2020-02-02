@@ -4,20 +4,16 @@
 \alias{sim_approx}
 \title{sim_approx}
 \usage{
-sim_approx(numSamples, t, N, parent, rate, offspring)
+sim_approx(numSamples, t, N, transitionList)
 }
 \arguments{
 \item{numSamples}{number of samples}
 
-\item{t}{N-length vecotr of time from system initialization until each observation in dat were made}
+\item{t}{N-length vector of time from system initialization until each observation in dat were made}
 
 \item{N}{k-length vector of the initial ancestor counts for each type}
 
-\item{parent}{a d-length vector specifying which population type is associated with a specific offspring transition}
-
-\item{rate}{a d-length vector specifying the rate at which each offspring transition is occurring}
-
-\item{offspring}{a dxk matrix specifying the offspring transitions}
+\item{transitionList}{transitionList object to specify the model}
 }
 \description{
 method to simulate from the asymptotic distriution of a general multitype branching process
