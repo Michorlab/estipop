@@ -1,4 +1,4 @@
-#' moments_td
+#' moments
 #' 
 #' compute the moment matrices for a time-inhomogenous branching process model with a certain set of parameters. Helps for computing likelihoods.
 #' 
@@ -8,14 +8,16 @@
 #' @param end_times the various end times of the moments to be computed
 #' 
 #' @return a dataframe with the moments vector for each unique start and end combination
-moments_td = function(model, params, start_times, end_times){
+moments = function(model, params, start_times, end_times){
   ntype = model$ntypes
   
   rate_func <- function(t, params){
     lapply(model$transition_list, function(trans)eval(trans$rate$exp, list(t = t, params = params)))
   }
   
-  #state is a vector containing all first and second moments evolving over time 
+  # state is a vector containing all first and second moments evolving over time 
+  # due to the nature of the mathematical derivation provided in the paper, we have to integrate the equation
+  # *backward* in time, from the end time to the start time.
   moment_de <- function(curr_t, state, params){
     s = params[1] - curr_t
     rate_vec = rate_func(s, rate_params)
@@ -69,11 +71,49 @@ moments_td = function(model, params, start_times, end_times){
   return(data.frame(out))
 }
 
-moments = function(model, params, times){
-  moments_td(model, params rep(0, length(times)), times)
+
+#' bp_loglik
+#' 
+#' compute the log-likelihood of observing a set of data generated under a time-homogenous branching process model with some setting of parameters
+#' 
+#' @param model the \code{process_model} object representing the process generating the data
+#' @param params the vector of parameters for which we are computing the likelihood
+#' @param init_pop a \code{nobs x ntype} matrix with initial population for each observation
+#' @param start_times the \code{nobs} length vector of times at which the initial populations were observed
+#' @param end_times the \code{nobs} length vector of times at which the final populations were observed
+#' @param final_pop the \code{nobs x mtype} matrix of final populations observed
+#' 
+#' @return a dataframe with the moments vector for each timepoint
+bp_loglik = function(model, params, init_pop, start_times, end_times, final_pop){
+  ntype = ncol(init_pop)
+  mom = moments(model, params, start_times, end_times) #compute moments
+  
+  #Compute likelihood
+  ll = 0
+  for(obs in 1:nrow(final_pop)){
+    pop <- final_pop[obs,]
+    endtime <- end_times[obs]
+    starttime <- start_times[obs]
+    init <- init_pop[obs,]
+    
+    
+    #get the state vector at the correct time
+    desol <- as.matrix(mom[(mom$tf == endtime & out$time == endtime - starttime), -c(1,2)]) # = don't include time data in state vector 
+    
+    m_mat <- matrix(desol[1:ntype**2],nrow= ntype)
+    dt_mat <- matrix(desol[(ntype**2 + 1):(ntype**3 + ntype**2)],nrow = ntype) #second moment array
+    mu_vec <- t(m_mat)%*%init #final mean population vector
+    sigma_mat <- matrix(init%*%dt_mat,c(ntype,ntype*ntype)) #final population covariance matrix
+    
+    for(i in 1:ntype){
+      for(j in 1:ntype){
+        sigma_mat[i,j] <-  sigma_mat[i,j] - init%*%(m_mat[,i]*m_mat[,j])
+      }
+    }
+    
+    #compute multivatiate normal likelihood
+    ll <- ll - ntype/2*log(2*pi) - 1/2*log(det(sigma_mat))
+    ll <- ll - 1/2*(mu_vec - pop)%*%solve(sigma_mat)%*%(mu_vec - pop)
+  }  
+  return(ll)
 }
-
-bp_loglik = function(model, params, init_pop, times, final_pop){}
-
-bp_loglik_td = function(model, params, init_pop, start_times, end_times, final_pop){}
-

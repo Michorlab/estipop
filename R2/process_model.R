@@ -4,7 +4,7 @@
 #' @param exprn an expression dictating the functional dependence of the rate on parameters and on time 
 #' 
 #' @return A new branching process rate object
-new_rate = function(exprn){
+new_rate <- function(exprn){
   r <- list("exp" = exprn)
   class(r) <- "estipop_rate"
   return(r)
@@ -15,7 +15,7 @@ new_rate = function(exprn){
 #' verifies the correctness of an object of class \code{rate}
 #' 
 #' @return The \code{rate} object if it is valid, throws an error otherwise
-validate_rate = function(rate_obj){
+validate_rate <- function(rate_obj){
   if(class(rate_obj) != "estipop_rate"){
     stop("not a valid estipop rate object!")
   }
@@ -32,7 +32,7 @@ validate_rate = function(rate_obj){
 #'
 #' @return The \code{rate} object if it is valid, throws an error otherwise
 #' @export
-rate = function(exprn){
+rate <- function(exprn){
   return(validate_rate(new_rate(substitute(exprn))))
 }
 
@@ -44,7 +44,7 @@ rate = function(exprn){
 #' @param offspring the update to the system after the transition
 #' 
 #' @return A new branching process rate object
-new_transition = function(rate, parent, offspring){
+new_transition <- function(rate, parent, offspring){
   trans <- list("rate"= rate, "parent" = parent, "offspring" = offspring)
   class(trans) <- "estipop_transition"
   return(trans)
@@ -54,7 +54,7 @@ new_transition = function(rate, parent, offspring){
 #' verifies the correctness of an object of class \code{transition}
 #' 
 #' @return The \code{transition} object if it is valid, throws an error otherwise
-validate_transition = function(trans_obj){
+validate_transition <- function(trans_obj){
   if(class(trans_obj) != "estipop_transition"){
     stop("not a valid estipop transition object!")
   }
@@ -76,7 +76,7 @@ validate_transition = function(trans_obj){
 #' 
 #' @return The \code{transition} object if it is valid, throws an error otherwise
 #' @export
-transition = function(rate, parent, offspring){
+transition <- function(rate, parent, offspring){
   return(validate_transition(new_transition(rate, parent, offspring)))
 }
 
@@ -86,7 +86,7 @@ transition = function(rate, parent, offspring){
 #' @param transition_list a list of estipop transition objects
 #' 
 #' @return A new branching process model object
-new_process_model = function(transition_list){
+new_process_model <- function(transition_list){
   pm <- list(transition_list = transition_list, ntypes = length(transition_list[[1]]$offspring))
   class(pm) <- "estipop_process_model"
   return(pm)
@@ -96,7 +96,10 @@ new_process_model = function(transition_list){
 #' verifies the correctness of an object of class \code{process_model}
 #' 
 #' @return The \code{process_model} object if it is valid, throws an error otherwise
-validate_process_model = function(proc_model){
+validate_process_model <- function(proc_model){
+  if(!is.list(proc_model$transition_list) || length(proc_model$transition_list) == 0){
+    stop("transition_list must be a list with a positive number of elements!")
+  }
   lapply(proc_model$transition_list, function(b){if(class(b) != "estipop_transition"){stop("invalid transition object!")}})
   lapply(proc_model$transition_list, function(b){if(length(b$offpspring) != proc_model$ntypes){stop("transitions have inconsistent number of types!")}})
   if(class(proc_model) != "estipop_process_model"){
@@ -113,6 +116,6 @@ validate_process_model = function(proc_model){
 #'
 #' @return The \code{process_model} object if it is valid, throws an error otherwise
 #' @export
-process_model = function(transitions){
+process_model <- function(transitions){
   return(validate_process_model(new_process_model(transitions)))
 }
