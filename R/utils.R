@@ -64,139 +64,118 @@ reload <- function( path ){
 
 
 ##------------------------------------------------------------------------
-#' isConst
-#' 
-#' determines whether an expression depends on time 
+#' walk_exprn
+#'  
+#' helper for walking ast in R
 #' 
 #' @export
-isConst <- function(exprn)
-{
-  if (is.atomic(exprn) || is.name(exprn))
-  {
-    first <- exprn
-  } else
-  {
-    first <- exprn[[1]]
+walk_ast <- function(ast, base_fn, combine_fn) {
+  if (is.atomic(ast) || is.name(ast)) {
+    return(base_fn(ast))
+  } else if (is.call(ast)) {
+    return(combine_fn(ast[[1]], lapply(ast[-1], walk_ast, base_fn, combine_fn), ast[-1]))
+  } else {
+    # User supplied incorrect input
+    stop("invalid expression!")
   }
-  
-  if (is.numeric(first) && !is.array(first))
-  {
-    return(T)
-  }
-  if (is.name(first) && deparse(first) == "t"){
-    return(F)
-  }
-  if (deparse(first) %in% c("+", "-", "/", "*", "^", "<", ">", "<=", ">="))
-  {
-    # allowed operations
-    if (length(exprn) > 2)
-    {
-      r1 = isConst(exprn[[2]])
-      r2 = isConst(exprn[[3]])
-      return(r1 && r2)
-    } else
-    {
-      return(isConst(exprn[[2]]))
-    }
-  }
-  if(deparse(first) %in% c("exp", "log", "sin", "cos", "("))
-  {    
-    if (length(exprn) != 2)
-    {
-      stop("unary function applied to wrong number of parameters")  
-    } 
-    return(isConst(exprn[[2]]))
-  }
-  if (deparse(first) == "[")
-  {
-    if (!is.na(stringr::str_extract(deparse(exprn), "^params\\[[0-9]+\\]$")))
-    {
-      s <- stringr::str_extract(deparse(exprn), "^params\\[[0-9]+\\]$")
-      num <- strtoi(substr(s, 8, nchar(s) - 1))
-      if (num <= 0)
-      {
-        stop(paste("parameter indices must be positive!", 
-                   sep = " "))
-      }
-      return(T)
-    }
-    stop(paste("Invalid expression:", deparse(exprn), sep = " "))
-  } 
-  stop(paste("Invalid expression:", deparse(exprn), sep = " "))
 }
 
 ##------------------------------------------------------------------------
-#' generateCpp
-#' 
-#' generates custom C++ code for rate computation
+#' check_valid
+#'  
+#' helper for determining whether an expression is valid
 #' 
 #' @export
-generateCpp <- function(exprn, params)
-{
-  if (is.atomic(exprn) || is.name(exprn))
-  {
-    first <- exprn
-  } else
-  {
-    first <- exprn[[1]]
+check_valid <- function(ast) {
+  base_fn <- function(x){
+    if ((is.numeric(x) && !is.array(x)) || (is.name(x) && deparse(x) == "t"))
+    {
+      return(T)
+    }
+    return(F)
   }
   
-  if (is.numeric(first) && !is.array(first))
-  {
-    return(first)
-  }
-  if (is.name(first) && deparse(first) %in% c("t")){
-    return("t")
-  }
-  if (deparse(first) %in% c("+", "-", "/", "*", "^", "<", ">", "<=", ">="))
-  {
-    # allowed operations
-    if (length(exprn) > 2)
+  # fname = name of function being applies, rec = resluts of recusively computing function on arguments, args = values of arguments
+  combine_fn <- function(fname, rec, args){
+    if (deparse(fname) %in% c("+", "-", "/", "*", "^", "<", ">", "<=", ">=") && length(rec) == 2)
     {
-      return(paste("(", generateCpp(exprn[[2]], params), 
-                   ")", deparse(first), "(", generateCpp(exprn[[3]], params), ")", sep = " "))
-    } else
-    {
-      return(paste(deparse(first), "(", generateCpp(exprn[[2]], params), ")", sep = ""))
+      return(rec[[1]] && rec[[2]])
     }
-  }
-  if(deparse(first) %in% c("exp", "log", "sin", "cos"))
-  {
-    if (length(exprn) != 2)
-    {
-      stop("unary function applied to wrong number of parameters")  
-    } 
-    else
-    {
-      return(paste(deparse(first), "(", generateCpp(exprn[[2]], params), ")", sep = ""))
+    if(deparse(fname) %in% c("+", "-", "exp", "log", "sin", "cos", "(") && length(rec) == 1)
+    {    
+      return(rec[[1]])
     }
-    
-  }
-  if (deparse(first) == "(")
-  {
-    return(generateCpp(exprn[[2]], params))
-  }
-  if (deparse(first) == "[")
-  {
-    if (!is.na(stringr::str_extract(deparse(exprn), "^params\\[[0-9]+\\]$")))
+    if (deparse(fname) == "[" && deparse(args[[1]]) == "params" && is.numeric(args[[2]]) > 0 && args[[2]] > 0)
     {
-      # function parameters
-      s <- stringr::str_extract(deparse(exprn), "^params\\[[0-9]+\\]$")
-      num <- strtoi(substr(s, 8, nchar(s) - 1))
-      if (num > length(params) || num <= 0)
-      {
-        stop(paste("Parameter", s, "goes beyond the number of parameters specified.", 
-                   sep = " "))
-      }
-      return(sprintf("%f", params[num]))
+        return(T)
     }
-    stop(paste("Invalid expression:", deparse(exprn), sep = " "))
-  } 
-  else
-  {
-    stop(paste("Invalid expression:", deparse(exprn), sep = " "))
+    return(F)
   }
+  walk_ast(ast, base_fn, combine_fn)
 }
+
+
+
+
+##------------------------------------------------------------------------
+#' is_const
+#'  
+#' helper for determining whether an expression depends on time
+#' 
+#' @export
+is_const <- function(ast) {
+  base_fn <- function(x){
+    if(deparse(x) == "t"){
+      return(F)
+    }
+    return(T)
+  }
+  
+  # fname = name of function being applies, rec = resluts of recusively computing function on arguments, args = values of arguments
+  combine_fn <- function(fname, rec, args){
+    res = T
+    for(i in 1:length(args)){res <- rec && args[[i]]}
+    return(res)
+  }
+  walk_ast(ast, base_fn, combine_fn)
+}
+
+
+##------------------------------------------------------------------------
+#' generate_cpp
+#'  
+#' generate_cpp C++ code from R expression
+#' 
+#' @export
+generate_cpp <- function(ast, params) {
+  base_fn <- function(x){
+    return(deparse(x))
+  }
+  
+  # fname = name of function being applies, rec = resluts of recusively computing function on arguments, args = values of arguments
+  combine_fn <- function(fname, rec, args){
+    if (deparse(fname) %in% c("+", "-", "/", "*", "^", "<", ">", "<=", ">=") && length(args) == 2)
+    {
+      return(paste("(", rec[[1]], ")", deparse(fname), "(",rec[[2]], ")", sep = " "))    
+    }
+    if(deparse(fname) %in% c("+", "-", "exp", "log", "sin", "cos", "(") && length(rec) == 1)
+    {    
+      return(paste(deparse(fname), "(", rec[[1]], ")", sep = ""))
+    }
+    if (deparse(fname) == "[")
+    {
+      idx = as.numeric(rec[[2]])
+      if(idx > length(params) || idx <= 0){
+        stop(sprintf("Parameter params[%d] goes beyond the number of parameters provided!", idx))
+      }
+      return(sprintf("%f", params[idx]))
+    }
+    stop("tried to generate from invalid expression")
+  }
+  walk_ast(ast, base_fn, combine_fn)
+}
+
+
 
 ##------------------------------------------------------------------------
 #' formatSimData
@@ -204,7 +183,7 @@ generateCpp <- function(exprn, params)
 #' coerces data from simulation fuction into correct format for estimation function
 #' 
 #' @export
-formatSimData = function(sim_data, ntypes){
+format_sim_data = function(sim_data, ntypes){
   for (i in 1:ntypes)
   {
     cellname <- sprintf("t%d_cells", i)
@@ -216,5 +195,5 @@ formatSimData = function(sim_data, ntypes){
   }
   sim_data <- dplyr::mutate(sim_data, prev_time = dplyr::lag(time))
   sim_data <- dplyr::filter(sim_data,  !is.na(t1_cells_prev))
-  sim_data
+  return(sim_data)
 }
