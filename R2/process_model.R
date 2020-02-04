@@ -116,6 +116,89 @@ validate_process_model <- function(proc_model){
 #'
 #' @return The \code{process_model} object if it is valid, throws an error otherwise
 #' @export
-process_model <- function(transitions){
-  return(validate_process_model(new_process_model(transitions)))
+process_model <- function(...){
+  return(validate_process_model(new_process_model(list(...))))
+}
+
+
+#' new_stop_critereon
+#' 
+#' constructor for class of type \code{stop_criteron}
+#' 
+#' @param indices the indices of population vector to sum in determining whether to stop
+#' @param inequality the type of comparison 
+#' @param value value to compare sum against to determine whether to stop simulation
+new_stop_critereon <- function(indices, inequality, value){
+  sc <- list("indices" = indices, "inequality" = inequality, "value" = value)
+  class(sc) <- "estipop_stop_critereon"
+  return(sc)
+}
+
+#' validate_stop_criterion
+#'
+#' verifies the correctness of a \code{stop_critereon} object
+#'
+#' @param the \code{stop_criteron} object to validate
+#' @return The \code{stop_criteron} object if it is valid, throws an error otherwise
+validate_stop_criteron <- function(sc_obj){
+  if(class(sc_obj) != "estipop_stop_criteron"){
+    stop("invalid stop_criteron object")
+  }
+  if(!(sc_obj$inequality %in% c("<",">","<=",">="))){
+    stop("invalid inequality!")
+  }
+  if(!is.numeric(sc_obj.indices)){
+    stop("indices must be a numeric vector!")
+  }
+  return(sc_obj)
+}
+
+#' stop_criteron
+#' constructs and validates an object of class \code{stop_critereon}
+#' 
+#' @param indices the indices of population vector to sum in determining whether to stop
+#' @param inequality the type of comparison 
+#' @param value value to compare sum against to determine whether to stop simulation
+#' 
+#' @return the \code{stop_criteron} object if it is valid, throws an error otherwise 
+stop_criterion <- function(indices, inequality, value){
+  return(validate(new_stop_critereon(indices, inequality, value)))
+}
+
+#' new_stoplist
+#' 
+#' constructor for class of type \code{stop_list}
+#' 
+#' @param stops the list of \code{stop_criteron} objects to add to the stoplist object
+#' 
+#' @return new \code{stop_list} object
+new_stoplist <- function(stops){
+  sl <- stops
+  class(sl) <- "estipop_stop_list"
+  return(sl)
+}
+
+#' validate_stop_criterion
+#'
+#' verifies the correctness of a \code{stop_list} object
+#'
+#' @param sl the \code{stop_list} object to validate
+#' @return The \code{stop_list} object if it is valid, throws an error otherwise
+validate_stoplist <- function(sl){
+  if(class(sl) != "estipop_stop_list"){
+    stop("invalid stoplist object!")
+  }
+  lapply(proc_model$transition_list, function(b){if(class(b) != "estipop_stop_criteron"){stop("invalid stop_criteron object!")}})
+  return(sl)
+}
+
+#' stoplist
+#' 
+#' constucts and validates an object of type \code{stop_list}
+#' 
+#' @param ... a series of \code{stop_criteron} objects to add to the stoplist object
+#' 
+#' @return new \code{stop_list} object if valid, throws an error otherwise
+stoplist <- function(...){
+  return(validate_stoplist(new_stoplist(list(...))))
 }
