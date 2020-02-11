@@ -8,8 +8,8 @@
 #' @param end_times the various end times of the moments to be computed
 #' 
 #' @return a dataframe with the moments vector for each unique start and end combination
-moments = function(model, params, start_times, end_times){
-  ntype = model$ntypes
+moments <- function(model, params, start_times, end_times){
+  ntype <- model$ntypes
   
   rate_func <- function(t, params){
     lapply(model$transition_list, function(trans)eval(trans$rate$exp, list(t = t, params = params)))
@@ -19,8 +19,8 @@ moments = function(model, params, start_times, end_times){
   # due to the nature of the mathematical derivation provided in the paper, we have to integrate the equation
   # *backward* in time, from the end time to the start time.
   moment_de <- function(curr_t, state, params){
-    s = params[1] - curr_t
-    rate_vec = rate_func(s, rate_params)
+    s <- params[1] - curr_t
+    rate_vec <- rate_func(s, rate_params)
     
     #Expand rate vector to be a matrix where rate is in a colum corresponding to the parent
     rate_mat <- matrix(rep(0,nrow(offspring)*ntype), nrow = nrow(offspring), ncol = ntype)
@@ -61,7 +61,7 @@ moments = function(model, params, start_times, end_times){
   
   
   init_state <- c(c(init_mt),c(init_dt))
-  ends = unique(end_times)
+  ends <- unique(end_times)
   out <- c()
   for(i in 1:length(ends)){
     starts = unique(start_times[end_times == ends[i]])
@@ -69,6 +69,34 @@ moments = function(model, params, start_times, end_times){
     out <- rbind(out, cbind(tf = ends[i], sol)[-1,])
   }
   return(data.frame(out))
+}
+
+
+#' compute_mu_sigma
+#' 
+#' user-facing utility to compute the mean and covariance of a branching process population
+#' 
+#' @param model the \code{process_model} object representing the process whose moments will be computed
+#' @param params the vector of parameters to plug into the process model during moment computation
+#' @param start_time the  start time of the moments to be computed
+#' @param end_time the end time of the moments to be computed
+#' 
+#' @return a list with the mean vector and covariance matrix
+#' @export
+compute_mu_sigma <- function(model, params, start_time, end_time, init_pop){
+  desol <- moments(model, params, start_time, end_time)
+  
+  m_mat <- matrix(desol[1:ntype**2],nrow= ntype)
+  dt_mat <- matrix(desol[(ntype**2 + 1):(ntype**3 + ntype**2)],nrow = ntype) #second moment array
+  mu_vec <- t(m_mat)%*%init_pop #final mean population vector
+  sigma_mat <- matrix(init_pop%*%dt_mat,c(ntype,ntype*ntype)) #final population covariance matrix
+  
+  for(i in 1:ntype){
+    for(j in 1:ntype){
+      sigma_mat[i,j] <-  sigma_mat[i,j] - init_pop%*%(m_mat[,i]*m_mat[,j])
+    }
+  }
+  return(list("mu" = mu_vec, "Sigma" = sigma_mat))
 }
 
 
@@ -84,12 +112,12 @@ moments = function(model, params, start_times, end_times){
 #' @param final_pop the \code{nobs x mtype} matrix of final populations observed
 #' 
 #' @return a dataframe with the moments vector for each timepoint
-bp_loglik = function(model, params, init_pop, start_times, end_times, final_pop){
-  ntype = ncol(init_pop)
-  mom = moments(model, params, start_times, end_times) #compute moments
+bp_loglik <- function(model, params, init_pop, start_times, end_times, final_pop){
+  ntype <- ncol(init_pop)
+  mom <- moments(model, params, start_times, end_times) #compute moments
   
   #Compute likelihood
-  ll = 0
+  ll <- 0
   for(obs in 1:nrow(final_pop)){
     pop <- final_pop[obs,]
     endtime <- end_times[obs]

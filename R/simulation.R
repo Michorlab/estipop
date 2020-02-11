@@ -102,7 +102,7 @@ branch_approx = function(model, params, init_pop, time_obs, stops, reps){
       m_mat <- matrix(desol[1:ntype**2],nrow= ntype)
       dt_mat <- matrix(desol[(ntype**2 + 1):(ntype**3 + ntype**2)],nrow = ntype) #second moment array
       mu_vec <- t(m_mat)%*%curr_pop #final mean population vector
-      sigma_mat <- matrix(init%*%dt_mat,c(ntype,ntype*ntype)) #final population covariance matrix
+      sigma_mat <- matrix(curr_pop%*%dt_mat,c(ntype,ntype*ntype)) #final population covariance matrix
       
       for(i in 1:ntype){
         for(j in 1:ntype){

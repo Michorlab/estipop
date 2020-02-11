@@ -2,6 +2,7 @@
 
 export(.pop)
 export(.pop_off)
+export(bploglikelihood)
 export(branch)
 export(branch_approx)
 export(check_valid)

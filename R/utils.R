@@ -68,12 +68,11 @@ reload <- function( path ){
 #'  
 #' helper for walking ast in R
 #' 
-#' @export
-walk_ast <- function(ast, base_fn, combine_fn) {
-  if (is.atomic(ast) || is.name(ast)) {
+walk_ast <- function(ast, base_fn, combine_fn, is_base_case) {
+  if (is.atomic(ast) || is.name(ast) || is_base_case(ast)) {
     return(base_fn(ast))
   } else if (is.call(ast)) {
-    return(combine_fn(ast[[1]], lapply(ast[-1], walk_ast, base_fn, combine_fn), ast[-1]))
+    return(combine_fn(ast[[1]], lapply(ast[-1], walk_ast, base_fn, combine_fn, is_base_case))) #recursively compute on arguments and return results
   } else {
     # User supplied incorrect input
     stop("invalid expression!")
@@ -92,26 +91,48 @@ check_valid <- function(ast) {
     {
       return(T)
     }
-    return(F)
+    else if (is.name(x)){
+      stop(sprintf("invalid name %s", deparse(x)))
+    }
+    if (is.call(x) && deparse(x[[1]]) == "[" && deparse(x[[2]]) == "params" && is.numeric(x[[3]]) && x[[2]] > 0)
+    {
+      return(T)
+    }
+    stop(sprintf("invalid expression %s", deparse(x)))
   }
   
   # fname = name of function being applies, rec = resluts of recusively computing function on arguments, args = values of arguments
-  combine_fn <- function(fname, rec, args){
-    if (deparse(fname) %in% c("+", "-", "/", "*", "^", "<", ">", "<=", ">=") && length(rec) == 2)
+  combine_fn <- function(fname, rec){
+    if (deparse(fname) %in% c("/", "*", "^", "<", ">", "<=", ">="))
     {
-      return(rec[[1]] && rec[[2]])
+      if(length(rec) == 2){
+        return(rec[[1]] && rec[[2]])
+      }
+      stop(sprintf("binary operator %s takes 2 argments!", deparse(fname)))
     }
-    if(deparse(fname) %in% c("+", "-", "exp", "log", "sin", "cos", "(") && length(rec) == 1)
+    if(deparse(fname) %in% c("exp", "log", "sin", "cos", "("))
     {    
-      return(rec[[1]])
+      if(length(rec) == 1){
+        return(rec[[1]])
+      }
+      stop(sprintf("unary operator %s takes 1 argment!", deparse(fname)))
     }
-    if (deparse(fname) == "[" && deparse(args[[1]]) == "params" && is.numeric(args[[2]]) > 0 && args[[2]] > 0)
-    {
-        return(T)
+    if(deparse(fname) %in% c("+","-")){
+      if(length(rec) == 1){
+        return(rec[[1]])
+      }
+      if(length(rec) == 2){
+        return(rec[[1]] && rec[[2]])
+      }
+      stop("operator %s takes 1 or 2 arguments!", deparse(fname))
     }
-    return(F)
+    stop(sprintf("invalid operator %s!", deparse(fname)))
   }
-  walk_ast(ast, base_fn, combine_fn)
+  
+  is_base_case <- function (ast){
+    return(is.call(ast) && ast[[1]] == "[")
+  }
+  walk_ast(ast, base_fn, combine_fn, is_base_case)
 }
 
 
@@ -124,6 +145,7 @@ check_valid <- function(ast) {
 #' 
 #' @export
 is_const <- function(ast) {
+  check_valid(ast)
   base_fn <- function(x){
     if(deparse(x) == "t"){
       return(F)
@@ -132,12 +154,16 @@ is_const <- function(ast) {
   }
   
   # fname = name of function being applies, rec = resluts of recusively computing function on arguments, args = values of arguments
-  combine_fn <- function(fname, rec, args){
+  combine_fn <- function(fname, rec){
     res = T
-    for(i in 1:length(args)){res <- rec && args[[i]]}
+    for(i in 1:length(rec)){res <- res && rec[[i]]}
     return(res)
   }
-  walk_ast(ast, base_fn, combine_fn)
+  
+  is_base_case <- function(ast){
+    return(is.call(ast) && ast[[1]] == "[")
+  }
+  walk_ast(ast, base_fn, combine_fn, is_base_case)
 }
 
 
@@ -148,31 +174,38 @@ is_const <- function(ast) {
 #' 
 #' @export
 generate_cpp <- function(ast, params) {
+  check_valid(ast)
   base_fn <- function(x){
-    return(deparse(x))
-  }
-  
-  # fname = name of function being applies, rec = resluts of recusively computing function on arguments, args = values of arguments
-  combine_fn <- function(fname, rec, args){
-    if (deparse(fname) %in% c("+", "-", "/", "*", "^", "<", ">", "<=", ">=") && length(args) == 2)
+    if (is.call(x) && deparse(x[[1]]) == "[")
     {
-      return(paste("(", rec[[1]], ")", deparse(fname), "(",rec[[2]], ")", sep = " "))    
-    }
-    if(deparse(fname) %in% c("+", "-", "exp", "log", "sin", "cos", "(") && length(rec) == 1)
-    {    
-      return(paste(deparse(fname), "(", rec[[1]], ")", sep = ""))
-    }
-    if (deparse(fname) == "[")
-    {
-      idx = as.numeric(rec[[2]])
+      idx = as.numeric(x[[3]])
       if(idx > length(params) || idx <= 0){
         stop(sprintf("Parameter params[%d] goes beyond the number of parameters provided!", idx))
       }
       return(sprintf("%f", params[idx]))
     }
-    stop("tried to generate from invalid expression")
+    return(deparse(x))
   }
-  walk_ast(ast, base_fn, combine_fn)
+  
+  # fname = name of function being applies, rec = resluts of recusively computing function on arguments, args = values of arguments
+  combine_fn <- function(fname, rec){
+    if (deparse(fname) %in% c("+", "-", "/", "*", "^", "<", ">", "<=", ">=") && length(rec) == 2)
+    {
+      return(paste(rec[[1]], deparse(fname), rec[[2]],  sep = " "))    
+    }
+    if(deparse(fname) %in% c("+", "-", "exp", "log", "sin", "cos", "(") && length(rec) == 1)
+    {    
+      if(deparse(fname) != "("){
+        return(paste(deparse(fname), "(", rec[[1]], ")", sep = ""))
+      }
+      return(paste("(", rec[[1]], ")", sep=""))
+    }
+  }
+  
+  is_base_case <- function(ast){
+    return(is.call(ast) && ast[[1]] == "[")
+  }
+  walk_ast(ast, base_fn, combine_fn, is_base_case)
 }
 
 
