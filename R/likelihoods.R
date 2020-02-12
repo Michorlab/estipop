@@ -8,23 +8,26 @@
 #' @param end_times the various end times of the moments to be computed
 #' 
 #' @return a dataframe with the moments vector for each unique start and end combination
-moments <- function(model, params, start_times, end_times){
+moments <- function(model, rate_params, start_times, end_times){
   ntype <- model$ntypes
-  
+  offspring = matrix(t(sapply(1:length(model$transition_list), function(i){model$transition_list[[i]]$offspring})), ncol = ntype)
+  parent = sapply(1:length(model$transition_list), function(i){model$transition_list[[i]]$parent})
+
   rate_func <- function(t, params){
-    lapply(model$transition_list, function(trans)eval(trans$rate$exp, list(t = t, params = params)))
+    sapply(1:length(model$transition_list), function(i){eval(model$transition_list[[i]]$rate$exp, list(t = t, params = params))})
   }
   
   # state is a vector containing all first and second moments evolving over time 
   # due to the nature of the mathematical derivation provided in the paper, we have to integrate the equation
   # *backward* in time, from the end time to the start time.
-  moment_de <- function(curr_t, state, params){
-    s <- params[1] - curr_t
+  moment_de <- function(curr_t, state, ode_params){
+    s <- ode_params[1] - curr_t
     rate_vec <- rate_func(s, rate_params)
     
     #Expand rate vector to be a matrix where rate is in a colum corresponding to the parent
     rate_mat <- matrix(rep(0,nrow(offspring)*ntype), nrow = nrow(offspring), ncol = ntype)
     rate_mat[cbind(1:nrow(offspring), parent)] <- rate_vec
+
     lamb <- colSums(rate_mat)
     b_mat <- t(t(offspring)%*%rate_mat)/lamb
     
@@ -84,7 +87,8 @@ moments <- function(model, params, start_times, end_times){
 #' @return a list with the mean vector and covariance matrix
 #' @export
 compute_mu_sigma <- function(model, params, start_time, end_time, init_pop){
-  desol <- moments(model, params, start_time, end_time)
+  ntype = model$ntypes
+  desol <- as.matrix(moments(model, params, start_time, end_time))[-c(1,2)]
   
   m_mat <- matrix(desol[1:ntype**2],nrow= ntype)
   dt_mat <- matrix(desol[(ntype**2 + 1):(ntype**3 + ntype**2)],nrow = ntype) #second moment array
