@@ -6,7 +6,7 @@
  
 helper for walking ast in R}
 \usage{
-walk_ast(ast, base_fn, combine_fn)
+walk_ast(ast, base_fn, combine_fn, is_base_case)
 }
 \description{
 walk_exprn

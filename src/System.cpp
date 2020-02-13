@@ -90,6 +90,8 @@ void System::toFile(double time, std::string file){
 
 void System::updateSystem(std::vector<int> update){
 	if(update.size() != state.size()){
+		std::cout << update.size() << std::endl;
+		std::cout << state.size() << std::endl;
 		throw std::invalid_argument("Systems do not have same dimension");
 	}
 
@@ -262,7 +264,6 @@ double System::getNextTime2(double curTime, double totTime){
 		  break;
 		}
 	}
-
 	out("Returning from nextTime2 with: " + to_string_wp(rand_next_time));
 	if(rand_next_time <= 0){
 		out("I'VE RETURNED A ZERO TIME TO NEXT EVENT!!!");
@@ -350,7 +351,6 @@ void System::simulate_timedep(std::vector<double> obsTimes, std::string file){
         // Update our System
 		out("headed from sim2 to getEvent2");
         int index = getNextEvent2(curTime, timeToNext);
-
 
 		std::vector<int> update = updates[index].get();
 		update[from[index]] = update[from[index]] - 1;

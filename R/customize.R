@@ -49,7 +49,7 @@ create_timedep_template <- function(exprn, params, cppfile = "custom_rate_plugin
   # Update cpp file's include statement
   cpp_con <- file(cppfile)
   cpp_lines <- readLines(cpp_con)
-  cpp_lines <- sprintf(cpp_lines, generateCpp(exprn, params))
+  cpp_lines <- sprintf(cpp_lines, generate_cpp(exprn, params))
   include_header <- paste("#include \"", hfile, "\"", sep = "")
   if(!(include_header %in% cpp_lines)) cpp_lines <- c(include_header, cpp_lines)
   write(cpp_lines, cppfile)

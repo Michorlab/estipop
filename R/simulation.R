@@ -11,11 +11,11 @@
 #' @param seed seed for the random number generator.  If NULL, will use computer clock to set a random seed
 #'
 #' @export
-branch <- function(model, params, init_pop, time_obs, stops, reps, silent = FALSE, keep = FALSE, seed = NULL){
+branch <- function(model, params, init_pop, time_obs, reps, stops = NULL, silent = FALSE, keep = FALSE, seed = NULL){
   if(class(model) != "estipop_process_model"){
     stop("model must be a process_model object!")
   }
-  if(ncol(init_pop) != model$ntypes){
+  if(length(init_pop) != model$ntypes){
     stop("init_pop and model must have same number of types ")
   }
   if(!is.numeric(params) || !is.numeric(init_pop) || !is.numeric(time_obs) || !is.numeric(reps)){
@@ -26,12 +26,12 @@ branch <- function(model, params, init_pop, time_obs, stops, reps, silent = FALS
   for(i in 1:length(model$transition_list)){
     if(is_const(model$transition_list[[i]]$rate$exp)){
       #evaluate constant rates
-      model$transition_list[[i]]$rate <- eval(transitionList[[i]]$rate, list(params = transitionParams))
+      model$transition_list[[i]]$rate <- eval(model$transition_list[[i]]$rate$exp, list(params = params))
       model$transition_list[[i]]$type <- 1
     }
     else{
-      fname <-  paste("custom_rate_", digest::digest(deparse(transitionList[[i]]$rate),"md5"), sep="")
-      create_timedep_template(transitionList[[i]]$rate, transitionParams, paste(fname, ".cpp", sep=""))
+      fname <-  paste("custom_rate_", digest::digest(deparse(model$transition_list[[i]]$rate),"md5"), sep="")
+      create_timedep_template(model$transition_list[[i]]$rate$exp, params, paste(fname, ".cpp", sep=""))
       compile_timedep( paste(fname, ".cpp", sep=""))
       model$transition_list[[i]]$rate <- c(paste(fname, ".so", sep=""), "rate")
       model$transition_list[[i]]$type <- 2
@@ -53,9 +53,9 @@ branch <- function(model, params, init_pop, time_obs, stops, reps, silent = FALS
   
   #remove the temporary dynamic libraries
   for(trans in model$transition_list){
-    if(trans$rate$type == 2){
-      fname = .pop(trans$rate,".so")
-      file.remove(trans$rate)
+    if(trans$type == 2){
+      fname = .pop(trans$rate[1],".so")
+      file.remove(trans$rate[1])
       file.remove(paste(fname, ".cpp", sep=""))
       file.remove(paste(fname, ".h", sep=""))
       file.remove(paste(fname, ".o", sep=""))

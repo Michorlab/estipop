@@ -255,33 +255,16 @@ double gmbp3(Rcpp::NumericVector observations, std::string file, Rcpp::NumericVe
 		Rcpp::List list_i = Rcpp::as<Rcpp::List>(transitions[i]);
 
 		// Get popuation, is_random, probability
-		int population = list_i[0];
-		bool is_random = list_i[1];
-		double rate = list_i[2];
+		int population = list_i["parent"];
+		population -= 1; //switch to 0-index
+		double rate = list_i["rate"];
 
-		// If there is a random component, get which indices of the vector will be generated randomly
-		if(is_random){
-			// Get the offspring distribution of the Transition
-			Rcpp::NumericVector oVec = Rcpp::as<Rcpp::NumericVector>(list_i[3]);
-			std::vector<double> offspringVec (oVec.begin(), oVec.end());
+		// Get the fixed portion of the Transition
+		Rcpp::NumericVector fix = Rcpp::as<Rcpp::NumericVector>(list_i[3]);
+		std::vector<int> fixed (fix.begin(), fix.end());
 
-			// Get the distribution
-			std::string dist = list_i[4];
-
-			// Get the offspring distribution of the Transition
-			Rcpp::NumericVector p = Rcpp::as<Rcpp::NumericVector>(list_i[5]);
-			std::vector<double> offspringParams (p.begin(), p.end());
-
-			// Add this transition
-			sys.addUpdate(rate, population, Update(is_random, offspringVec, dist, offspringParams));
-		} else{
-			// Get the fixed portion of the Transition
-			Rcpp::NumericVector fix = Rcpp::as<Rcpp::NumericVector>(list_i[3]);
-			std::vector<int> fixed (fix.begin(), fix.end());
-
-			// add update
-			sys.addUpdate(rate, population, Update(fixed));
-		}
+		// add update
+		sys.addUpdate(rate, population, Update(fixed));
 	}
 
 	// Add transitions
@@ -365,93 +348,59 @@ double timeDepBranch(Rcpp::NumericVector observations, int reps, std::string fil
 		Rcpp::List list_i = Rcpp::as<Rcpp::List>(transitions[i]);
 
 		// Get popuation, is_random, probability
-		int population = list_i[0];
-		bool is_random = list_i[1];
-		Rcpp::List rateList = Rcpp::as<Rcpp::List>(list_i[2]);
+		int population = list_i["parent"];
+		population -= 1; //shift to 0-indexing
+		Rcpp::List rateList = Rcpp::as<Rcpp::List>(list_i["rate"]);
 		Rate* r = nullptr;
-		if(rateList.containsElementNamed("type")){
-			if(Rcpp::as<int>(rateList["type"]) == 0)
-			{
+		if(Rcpp::as<int>(list_i["type"]) == 1)
+		{
+			if(!silent) std::cout << "Constant rate found!" << std::endl;
+			r = new ConstantRate(Rcpp::as<double>(list_i["rate"]));
 
-				if(!silent) std::cout << "Constant rate found!" << std::endl;
-				r = new ConstantRate(Rcpp::as<double>(rateList[1]));
+		} 
+		else if(Rcpp::as<int>(list_i["type"]) == 2)
+		{
+			if(!silent) std::cout << "Variable rate found!" << std::endl;
+			Rcpp::StringVector params = Rcpp::as<Rcpp::StringVector>(list_i["rate"]);
 
-			} else if (Rcpp::as<int>(rateList["type"]) == 1)
-			{
+			double (*rate)(double, void*);
 
-				Rcpp::NumericVector params = Rcpp::as<Rcpp::NumericVector>(rateList["params"]);
-				if(!silent) std::cout << "Linear rate found!" << std::endl;
-				r = new LinearRate(params[0], params[1]);
+			// Name for plugin library location
+			const char* plugin_location = CHAR(Rf_asChar(params[0]));
+			std::cout << params[0] << std::endl;
+			std::cout << params[1] << std::endl;
+			//Rcpp::Rcout << params[1] << std::endl;
+			// Load plugin library
+			#ifdef _WIN32
+				lib_handle = LoadLibrary(plugin_location);
+				if(!lib_handle)
+				{
+					Rcpp::stop("invalid file name for custom dll");
+				}
+			rate = (double (*)(double, void*))GetProcAddress(lib_handle, params[1]);
+			#else
+				void* hand = dlopen(plugin_location, RTLD_NOW);
+				handles.push_back(hand);
+				if(!hand)
+				{
+					Rcpp::stop("invalid file name custom dll");
+				}
+				rate = (double (*)(double, void*))dlsym(hand, params[1]);
+			#endif
 
-			} else if (Rcpp::as<int>(rateList["type"]) == 2){
+			r = new Rate(rate);
 
-				Rcpp::NumericVector params = Rcpp::as<Rcpp::NumericVector>(rateList["params"]);
-				if(!silent) std::cout << "Switch rate found!" << std::endl;
-				r = new SwitchRate(params[0], params[1], params[2]);
-
-			} else if (Rcpp::as<int>(rateList["type"]) == 3){
-
-				Rcpp::StringVector params = Rcpp::as<Rcpp::StringVector>(rateList["params"]);
-				if(!silent) std::cout << "Custom rate found!" << std::endl;
-				double (*rate)(double, void*);
-
-				// Name for plugin library location
-				const char* plugin_location = CHAR(Rf_asChar(params[0]));
-				std::cout << params[0] << std::endl;
-				std::cout << params[1] << std::endl;
-				//Rcpp::Rcout << params[1] << std::endl;
-				// Load plugin library
-				#ifdef _WIN32
-					lib_handle = LoadLibrary(plugin_location);
-					if(!lib_handle)
-					{
-						Rcpp::stop("invalid file name for custom dll");
-					}
-				rate = (double (*)(double, void*))GetProcAddress(lib_handle, params[1]);
-				#else
-					void* hand = dlopen(plugin_location, RTLD_NOW);
-					handles.push_back(hand);
-					if(!hand)
-					{
-						Rcpp::stop("invalid file name custom dll");
-					}
-					rate = (double (*)(double, void*))dlsym(hand, params[1]);
-				#endif
-
-				r = new Rate(rate);
-			}
-			else{
-				Rcpp::stop("invalid rate selection");
-			}
-		} else {
-			r = new ConstantRate(Rcpp::as<double>(rateList[0]));
-		}
-
-
-		Update u;
-		// If there is a random component, get which indices of the vector will be generated randomly
-		if(is_random){
-			// Get the offspring distribution of the Transition
-			Rcpp::NumericVector oVec = Rcpp::as<Rcpp::NumericVector>(list_i[3]);
-			std::vector<double> offspringVec (oVec.begin(), oVec.end());
-
-			// Get the distribution
-			std::string dist = list_i[4];
-
-			// Get the offspring distribution of the Transition
-			Rcpp::NumericVector p = Rcpp::as<Rcpp::NumericVector>(list_i[5]);
-			std::vector<double> offspringParams (p.begin(), p.end());
-
-			// Add this transition
-			u = Update(is_random, offspringVec, dist, offspringParams);
 		} else{
-			// Get the fixed portion of the Transition
-			Rcpp::NumericVector fix = Rcpp::as<Rcpp::NumericVector>(list_i[3]);
-			std::vector<int> fixed (fix.begin(), fix.end());
-
-			// add update
-			u = Update(fixed);
+				Rcpp::stop("invalid rate selection");
 		}
+
+
+		// Get the offspring vector of the transition
+		Rcpp::NumericVector fix = Rcpp::as<Rcpp::NumericVector>(list_i["offspring"]);
+		std::vector<int> fixed (fix.begin(), fix.end());
+
+		// add update
+		Update u = Update(fixed);
 
 		sys.addUpdate(r, population, u);
 	}
