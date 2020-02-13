@@ -1,4 +1,4 @@
-#Simulation tests. Not part of the unit test suite because they take a while, but run these to make sure estimtaion is accurate
+#Estimation tests. Not part of the unit test suite because they take a while, but run these to make sure estimtaion is accurate
 
 #test that estimation results are accurate -- one type inhomogenous case
 time = seq(0,20,.5)
