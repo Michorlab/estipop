@@ -23,6 +23,7 @@ branch <- function(model, params, init_pop, time_obs, reps, stops = NULL, silent
   }
   
   #modify the transition list with metadata about whether the rate is constant
+  timdep <- F
   for(i in 1:length(model$transition_list)){
     if(is_const(model$transition_list[[i]]$rate$exp)){
       #evaluate constant rates
@@ -30,6 +31,7 @@ branch <- function(model, params, init_pop, time_obs, reps, stops = NULL, silent
       model$transition_list[[i]]$type <- 1
     }
     else{
+      timedep <- T
       fname <-  paste("custom_rate_", digest::digest(deparse(model$transition_list[[i]]$rate),"md5"), sep="")
       create_timedep_template(model$transition_list[[i]]$rate$exp, params, paste(fname, ".cpp", sep=""))
       compile_timedep( paste(fname, ".cpp", sep=""))
@@ -39,10 +41,18 @@ branch <- function(model, params, init_pop, time_obs, reps, stops = NULL, silent
   }
   
   f <- R.utils::getAbsolutePath(tempfile(pattern = paste("system_", format(Sys.time(), "%d-%m-%Y-%H%M%S"), "_", sep = ""), fileext = ".csv", tmpdir = getwd()))
-  if(is.null(seed)){
-    timeDepBranch(time_obs, reps, f, initial, model$transition_list, stops, silent)
-  } else {
+  if(timdep){
+    if(is.null(seed)){
+      timeDepBranch(time_obs, reps, f, initial, model$transition_list, stops, silent)
+    } else {
     timeDepBranch(time_obs, reps, f, initial, model$transition_list, stops, silent, seed)
+    }
+  } else {
+    if(is.null(seed)){
+      gmbp3(time_obs, reps, f, initial, model$transition_list, stops, silent)
+    } else {
+      gmbp3(time_obs, reps, f, initial, model$transition_list, stops, silent, seed)
+    }
   }
   res <- read.csv(f, header = F)
   names(res)[1:2] <- c("rep","time")
@@ -62,7 +72,6 @@ branch <- function(model, params, init_pop, time_obs, reps, stops = NULL, silent
       file.remove(paste(fname, ".cpp.backup", sep=""))
     }
   }
-  
   return(res)
 }
 

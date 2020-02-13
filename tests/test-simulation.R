@@ -36,5 +36,24 @@ print(paste("True Variance: ", diag(mom$Sigma)))
 print(paste("True Covariance: ", mom$Sigma[1,2]))
 
 #test that simulation results match moments -- two type homogenous case
+
+time = 5
+initial = c(50, 300)
+
+model = process_model(transition(rate = rate(.3), parent = 1, offspring = c(2,0)),
+                      transition(rate = rate(.2), parent = 1, offspring = c(0,0)),
+                      transition(rate = rate(.25), parent = 2, offspring = c(0,1)),
+                      transition(rate = rate(.15), parent = 2, offspring = c(0,0)),
+                      transition(rate = rate(.05), parent = 1, offspring = c(1,1)))
+
+
+res = branch(model, params, initial, time, 1000)
+mom = compute_mu_sigma(model, params, 0, 5, initial)
+print(paste("Sample Mean: ", c(mean(res$V3), mean(res$V4))))
+print(paste("True Mean: ", mom$mu))
+print(paste("Sample Variance: ", c(var(res$V3), var(res$V4))))
+print(paste("Sample Covariance:", cov(res$V3, res$V4)))
+print(paste("True Variance: ", diag(mom$Sigma)))
+print(paste("True Covariance: ", mom$Sigma[1,2]))
   
 #test that simulation rejects invalid inputs

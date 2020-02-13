@@ -214,7 +214,7 @@ std::vector<std::vector<std::string>> funct(std::string filename){
 //'
 //' @export
 // [[Rcpp::export]]
-double gmbp3(Rcpp::NumericVector observations, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence, SEXP seed = R_NilValue){
+double gmbp3(Rcpp::NumericVector observations, int reps, std::string file, Rcpp::NumericVector initial, Rcpp::List transitions, Rcpp::List stops, bool silence, SEXP seed = R_NilValue){
 	double seedcpp;
 	if(Rf_isNull(seed)){
 		seedcpp = std::chrono::high_resolution_clock::now().time_since_epoch().count();
@@ -260,7 +260,7 @@ double gmbp3(Rcpp::NumericVector observations, std::string file, Rcpp::NumericVe
 		double rate = list_i["rate"];
 
 		// Get the fixed portion of the Transition
-		Rcpp::NumericVector fix = Rcpp::as<Rcpp::NumericVector>(list_i[3]);
+		Rcpp::NumericVector fix = Rcpp::as<Rcpp::NumericVector>(list_i["offspring"]);
 		std::vector<int> fixed (fix.begin(), fix.end());
 
 		// add update
@@ -295,8 +295,17 @@ double gmbp3(Rcpp::NumericVector observations, std::string file, Rcpp::NumericVe
 
 	// Simulate
 	if(!silent) std::cout << "Simulating..." << std::endl;
-	sys.simulate(obsTimes, file);
-	if(!silent) std::cout << "Ending process..." << std::endl;
+	try{
+	  for(int i =0; i < reps; ++i){
+	  	sys.simulate(obsTimes, file);
+		sys.reset(init);
+		sys.nextRep();
+	  }
+	}
+	catch (Rcpp::internal::InterruptedException& e)
+	{
+	  std::cout << "interrupted!" << std::endl;
+	}	if(!silent) std::cout << "Ending process..." << std::endl;
 
 	return 0.0;
 }
