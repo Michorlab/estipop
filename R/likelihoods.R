@@ -117,6 +117,7 @@ compute_mu_sigma <- function(model, params, start_time, end_time, init_pop){
 #' 
 #' @return a dataframe with the moments vector for each timepoint
 bp_loglik <- function(model, params, init_pop, start_times, end_times, final_pop){
+  print(params)
   ntype <- ncol(init_pop)
   mom <- moments(model, params, start_times, end_times) #compute moments
   
@@ -130,7 +131,7 @@ bp_loglik <- function(model, params, init_pop, start_times, end_times, final_pop
     
     
     #get the state vector at the correct time
-    desol <- as.matrix(mom[(mom$tf == endtime & out$time == endtime - starttime), -c(1,2)]) # = don't include time data in state vector 
+    desol <- as.matrix(mom[(mom$tf == endtime & mom$time == endtime - starttime), -c(1,2)]) # = don't include time data in state vector 
     
     m_mat <- matrix(desol[1:ntype**2],nrow= ntype)
     dt_mat <- matrix(desol[(ntype**2 + 1):(ntype**3 + ntype**2)],nrow = ntype) #second moment array

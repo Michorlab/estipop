@@ -219,14 +219,13 @@ generate_cpp <- function(ast, params) {
 format_sim_data = function(sim_data, ntypes){
   for (i in 1:ntypes)
   {
-    cellname <- sprintf("t%d_cells", i)
-    names(sim_data)[2 +  i] <- cellname
+    cellname <- sprintf("type%d", i)
     prevname <- paste(cellname, "prev", sep = "_")
     sim_data <- dplyr::group_by(sim_data, rep)
     sim_data <- dplyr::mutate(sim_data, prev = dplyr::lag(!!dplyr::sym(cellname)))
     names(sim_data)[2 + ntypes + i] <- prevname
   }
   sim_data <- dplyr::mutate(sim_data, prev_time = dplyr::lag(time))
-  sim_data <- dplyr::filter(sim_data,  !is.na(t1_cells_prev))
+  sim_data <- dplyr::filter(sim_data,  !is.na(type1_prev))
   return(sim_data)
 }

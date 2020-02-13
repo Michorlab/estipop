@@ -19,28 +19,28 @@ estimate_td = function(model, init_pop, start_times, end_times, final_pop, initi
   if(class(model) != "estipop_process_model"){
     stop("model must be a process_model object!")
   }
+  if (is.vector(final_pop) | is.vector(init_pop))
+  {
+    warning("final_pop or init_pop is a vector, not a matrix. Attempting conversion to one-column matrices")
+    final_pop <- matrix(final_pop, ncol = 1)
+    init_pop <- matrix(init_pop, ncol = 1)
+  }
   nobs = nrow(init_pop)
-  if(nrow(start_times) != nobs || nrow(end_times) != nobs || nrow(final_pop)){
+  if(length(start_times) != nobs || length(end_times) != nobs || nrow(final_pop) != nobs){
     stop("init_pop, start_times, end_times, and final_pop must all have the same number of rows!")
   }
-  if(ncol(init_pop) != model$ntypes || ncol(start_times) != model$ntypes){
-    stop("init_pop, start_times, and model must all have the same number of types!")
+  if(ncol(init_pop) != model$ntypes || ncol(final_pop) != model$ntypes){
+    stop("init_pop, final_pop, and model must all have the same number of types!")
   }
   if(!is.numeric(init_pop) || !is.numeric(start_times) || !is.numeric(end_times) || !is.numeric(final_pop) || !is.numeric(initial)){
     stop("all time and population inputs must be numeric!")
   }
 
-  
-  if (is.vector(final_pop) | is.vector(init_pop))
-  {
-    warning("final_pop or init_pop is a vector, not a matrix. Converting to a one-column matrix")
-    final_pop <- matrix(final_pop, ncol = 1)
-    init_pop <- matrix(init_pop, ncol = 1)
-  }
+
   
 
   # MLE
-  loglik <- function(params){ -1*bp_loglik(model, params, init_pop, start_times, end_time, final_pop)}
+  loglik <- function(params){ -1*bp_loglik(model, params, init_pop, start_times, end_times, final_pop)}
   control <-  list(trace = trace, fnscale = 1e7)
   if(is.null(lower)){
     lower <- 1e-10*1:length(initial)
@@ -65,7 +65,7 @@ estimate_td = function(model, init_pop, start_times, end_times, final_pop, initi
   return(mle)
 }
 
-#' estimate_td
+#' estimate
 #'
 #' Estimates the rate parameters for a general multitype branching process with constant rates
 #'
