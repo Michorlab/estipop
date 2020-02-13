@@ -1,7 +1,7 @@
 /*
 * =====================================================================================
 *
-*       Filename:  newController.cpp
+*       Filename:  Controller.cpp
 *
 *    Description:  Contains simulating and input file parsing functions
 *
