@@ -41,7 +41,7 @@ estimate_td = function(model, init_pop, start_times, end_times, final_pop, initi
 
   # MLE
   loglik <- function(params){ -1*bp_loglik(model, params, init_pop, start_times, end_times, final_pop)}
-  control <-  list(trace = trace, fnscale = 1e7)
+  control <-  list(trace = trace, factr=10, pgtol=1e-20, fnscale = 1e7)  
   if(is.null(lower)){
     lower <- 1e-10*1:length(initial)
   }
@@ -82,10 +82,10 @@ estimate_td = function(model, init_pop, start_times, end_times, final_pop, initi
 #'
 #' @export
 estimate = function(model, init_pop, times, final_pop, initial, known = NULL, lower = NULL, upper = NULL, trace = 1){
-  for(trans in 1:length(model$transition_list)){
+  for(trans in model$transition_list){
     if(!is_const(trans$rate$exp)){
       stop("for time-dependent models, use estimate_td")
     }
   }
-  return(estimate_td(model, init_pop, max(times) - times, max(times), final_pop, known, lower, upper, trace))
+  return(estimate_td(model, init_pop, max(times) - times, rep(max(times), length(times)), final_pop, initial, known, lower, upper, trace))
 }

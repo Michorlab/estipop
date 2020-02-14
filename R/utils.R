@@ -226,6 +226,10 @@ format_sim_data = function(sim_data, ntypes){
     names(sim_data)[2 + ntypes + i] <- prevname
   }
   sim_data <- dplyr::mutate(sim_data, prev_time = dplyr::lag(time))
+  sim_data <- dplyr::mutate(sim_data, dtime = time - prev_time)
+  if(all(is.na(sim_data$type1_prev))){
+    warning("There are no initial data points in this dataset! Make sure to record at least 2 timepoints per simulation")
+  }
   sim_data <- dplyr::filter(sim_data,  !is.na(type1_prev))
   return(sim_data)
 }
