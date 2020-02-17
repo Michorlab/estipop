@@ -48,9 +48,9 @@ branch <- function(model, params, init_pop, time_obs, reps, silent = FALSE, keep
     }
   } else {
     if(is.null(seed)){
-      gmbp3(time_obs, reps, f, initial, model$transition_list, stops, silent)
+      gmbp3(time_obs, reps, f, initial, model$transition_list, stops = NULL, silent)
     } else {
-      gmbp3(time_obs, reps, f, initial, model$transition_list, stops, silent, seed)
+      gmbp3(time_obs, reps, f, initial, model$transition_list, stops = NULL, silent, seed)
     }
   }
   res <- read.csv(f, header = F)
