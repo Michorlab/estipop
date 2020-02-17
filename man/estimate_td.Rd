@@ -4,8 +4,8 @@
 \alias{estimate_td}
 \title{estimate_td}
 \usage{
-estimate_td(model, init_pop, start_times, end_times, final_pop, initial,
-  known = NULL, lower = NULL, upper = NULL, trace = 1)
+estimate_td(model, init_pop, start_times, end_times, final_pop,
+  initial_params, lower = NULL, upper = NULL, trace = 1)
 }
 \arguments{
 \item{model}{the \code{process_model} object representing the process generating the data}
@@ -18,9 +18,7 @@ estimate_td(model, init_pop, start_times, end_times, final_pop, initial,
 
 \item{final_pop}{the \code{nobs x mtype} matrix of final populations observed}
 
-\item{initial}{vector of initial parameters estimates for MLE optimization}
-
-\item{known}{boolean vector of known parameter rates, if NULL, all rates will be estimated}
+\item{initial_params}{vector of initial parameters estimates for MLE optimization}
 
 \item{lower}{vector of lower bounds on rate parameters for optimization}
 

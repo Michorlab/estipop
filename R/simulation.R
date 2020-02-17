@@ -14,13 +14,21 @@ branch <- function(model, params, init_pop, time_obs, reps, silent = FALSE, keep
   if(class(model) != "estipop_process_model"){
     stop("model must be a process_model object!")
   }
+  if((!is.numeric(params) && !is.null(params)) || !is.numeric(init_pop) || !is.numeric(time_obs) || !is.numeric(reps)){
+    stop("all time, population, and parameter inputs must be numeric!")
+  }
   if(length(init_pop) != model$ntypes){
     stop("init_pop and model must have same number of types ")
   }
-  if(!is.numeric(params) || !is.numeric(init_pop) || !is.numeric(time_obs) || !is.numeric(reps)){
-    stop("all time, population, and parameter inputs must be numeric!")
+  if(any(init_pop < 0) || reps <= 0){
+    stop("population must be nonnegative and reps must be positive!")
   }
-  
+  if(any(time_obs < 0)){
+    stop("all observation times must be nonnegative.")
+  }
+  if(!is.logical(silent) || !is.logical(keep)){
+    stop("parameters slient and keep should be logical!")
+  }
   #modify the transition list with metadata about whether the rate is constant
   timedep <- F
   for(i in 1:length(model$transition_list)){
@@ -86,6 +94,21 @@ branch <- function(model, params, init_pop, time_obs, reps, silent = FALSE, keep
 #'
 #' @export
 branch_approx = function(model, params, init_pop, time_obs, reps){
+  if(class(model) != "estipop_process_model"){
+    stop("model must be a process_model object!")
+  }
+  if((!is.numeric(params) && !is.null(params)) || !is.numeric(init_pop) || !is.numeric(time_obs) || !is.numeric(reps)){
+    stop("all time, population, and parameter inputs must be numeric!")
+  }
+  if(length(init_pop) != model$ntypes){
+    stop("init_pop and model must have same number of types ")
+  }
+  if(any(init_pop < 0) || reps <= 0){
+    stop("population must be nonnegative and reps must be positive!")
+  }
+  if(any(time_obs < 0)){
+    stop("all observation times must be nonnegative.")
+  }
   if(class(model) != "estipop_process_model"){
     stop("model must be a process_model object!")
   }

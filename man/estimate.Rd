@@ -2,10 +2,10 @@
 % Please edit documentation in R/estimate.R
 \name{estimate}
 \alias{estimate}
-\title{estimate_td}
+\title{estimate}
 \usage{
-estimate(model, init_pop, times, final_pop, initial, known = NULL,
-  lower = NULL, upper = NULL, trace = 1)
+estimate(model, init_pop, times, final_pop, initial_params, lower = NULL,
+  upper = NULL, trace = 1)
 }
 \arguments{
 \item{model}{the \code{process_model} object representing the process generating the data}
@@ -14,9 +14,7 @@ estimate(model, init_pop, times, final_pop, initial, known = NULL,
 
 \item{final_pop}{the \code{nobs x mtype} matrix of final populations observed}
 
-\item{initial}{vector of initial parameters estimates for MLE optimization}
-
-\item{known}{boolean vector of known parameter rates, if NULL, all rates will be estimated}
+\item{initial_params}{vector of initial parameters estimates for MLE optimization}
 
 \item{lower}{vector of lower bounds on rate parameters for optimization}
 

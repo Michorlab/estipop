@@ -5,7 +5,7 @@
 \title{branch_approx
 Approximately simulated a time-inhomogenous Markov branching process by sampling from the asymptotic multivariate normal distribution.}
 \usage{
-branch_approx(model, params, init_pop, time_obs, stops, reps)
+branch_approx(model, params, init_pop, time_obs, reps)
 }
 \arguments{
 \item{model}{the \code{process_model} object representing the process being simulates}
@@ -13,8 +13,6 @@ branch_approx(model, params, init_pop, time_obs, stops, reps)
 \item{params}{the vector of parameters for which we are simulating the model}
 
 \item{time_obs}{the vector of times at which to record the process state}
-
-\item{stops}{\code{stop_list} object specifying stopping conditions for the system}
 
 \item{reps}{the number of replicates to simulate}
 }

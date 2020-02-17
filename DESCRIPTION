@@ -18,7 +18,6 @@ Imports:
     Rcpp,
     RcppGSL,
 	R.utils,
-	bossMaps
 LinkingTo: Rcpp, RcppGSL
 SystemRequirements: GNU GSL
 NeedsCompilation: yes

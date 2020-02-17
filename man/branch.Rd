@@ -5,7 +5,7 @@
 \title{branch
 Simulates a continuous-time time-inhomogenous markov branching process using the specified parameters. Uses C++ code for faster simulation.}
 \usage{
-branch(model, params, init_pop, time_obs, stops, reps, silent = FALSE,
+branch(model, params, init_pop, time_obs, reps, silent = FALSE,
   keep = FALSE, seed = NULL)
 }
 \arguments{
@@ -14,8 +14,6 @@ branch(model, params, init_pop, time_obs, stops, reps, silent = FALSE,
 \item{params}{the vector of parameters for which we are simulating the model}
 
 \item{time_obs}{the vector of times at which to record the process state}
-
-\item{stops}{\code{stop_list} object specifying stopping conditions for the system}
 
 \item{reps}{the number of replicates to simulate}
 
