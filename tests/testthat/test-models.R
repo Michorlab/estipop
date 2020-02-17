@@ -58,36 +58,3 @@ test_that("correct process_model objects are instantiated", {
   expect_equal(length(pm$transition_list), 3)
 })
 
-
-test_that("incorrect stop_criterion objects are not instantiated", {
-  expect_error(stop_criterion("a","b","c"), "indices must be a numeric vector!")
-  expect_error(stop_criterion(c(1,2,3),"b","c"), "invalid inequality!")
-  expect_error(stop_criterion(c(1,2,3),"<=","c"), "value must be a single numeric!") 
-  expect_error(stop_criterion(c(1,2,3),">",c(1,2)), "value must be a single numeric!") 
-  expect_error(stop_criterion(c(1,2,0),"<",1), "all indices must be positive!") 
-})
-
-test_that("correct stop_criterion objects are instantiated", {
-  sc <- stop_criterion(c(1,2,3),"<=",150)
-  expect_equal(sc$inequality, "<=")
-  expect_equal(sc$value, 150)
-  expect_equal(sc$indices, c(1,2,3))
-  expect_silent(stop_criterion(c(1,2,3),">",100.0))
-  expect_silent(stop_criterion(2,"<",15))
-  expect_silent(stop_criterion(2,">=",-15))
-})
-
-test_that("incorrect stoplist objects are not instantiated", {
-  expect_error(stoplist(), "stops must be a list with a positive number of elements!")
-  expect_error(stoplist(1,3,"a"), "invalid stop_criteron object!")
-  expect_error(stoplist(stop_criterion(c(1,2), ">", 16),3), "invalid stop_criteron object!")
-  expect_error(stoplist(stop_criterion(c(1,2), ">", 16),stop_criterion(c(1,-2), ">", 16)), "all indices must be positive!")
-})
-
-test_that("correct stoplists get instantiated", {
-  sl = stoplist(stop_criterion(c(1,2,3),">",100.0),
-                stop_criterion(2,"<",15),
-                stop_criterion(2,">=",-15))
-  expect_equal(length(sl$stops), 3)
-})
-

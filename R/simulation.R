@@ -4,14 +4,13 @@
 #' @param model the \code{process_model} object representing the process being simulates
 #' @param params the vector of parameters for which we are simulating the model
 #' @param time_obs the vector of times at which to record the process state
-#' @param stops \code{stop_list} object specifying stopping conditions for the system
 #' @param reps the number of replicates to simulate
 #' @param silent if true, verbose output will be shown.  Default: false
 #' @param keep if true, the temporary comma-separated file generated while simulating while be kept.  if false, it will be deleted.  Default: false
 #' @param seed seed for the random number generator.  If NULL, will use computer clock to set a random seed
 #'
 #' @export
-branch <- function(model, params, init_pop, time_obs, reps, stops = NULL, silent = FALSE, keep = FALSE, seed = NULL){
+branch <- function(model, params, init_pop, time_obs, reps, silent = FALSE, keep = FALSE, seed = NULL){
   if(class(model) != "estipop_process_model"){
     stop("model must be a process_model object!")
   }
@@ -43,9 +42,9 @@ branch <- function(model, params, init_pop, time_obs, reps, stops = NULL, silent
   f <- R.utils::getAbsolutePath(tempfile(pattern = paste("system_", format(Sys.time(), "%d-%m-%Y-%H%M%S"), "_", sep = ""), fileext = ".csv", tmpdir = getwd()))
   if(timedep){
     if(is.null(seed)){
-      timeDepBranch(time_obs, reps, f, initial, model$transition_list, stops, silent)
+      timeDepBranch(time_obs, reps, f, initial, model$transition_list, stops = NULL, silent)
     } else {
-      timeDepBranch(time_obs, reps, f, initial, model$transition_list, stops, silent, seed)
+      timeDepBranch(time_obs, reps, f, initial, model$transition_list, stops = NULL, silent, seed)
     }
   } else {
     if(is.null(seed)){

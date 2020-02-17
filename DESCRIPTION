@@ -11,6 +11,8 @@ Description: ESTIpop is a simulation software tool written in
     C++ to simulate and estimate rate parameters for general multitype branching processes
 License: GPL-3
 LazyData: TRUE
+Depends:
+    deSolve
 Imports:
     MASS,
     Rcpp,
