@@ -46,6 +46,7 @@ model = process_model(transition(rate = rate(.3), parent = 1, offspring = c(2,0)
                       transition(rate = rate(.15), parent = 2, offspring = c(0,0)),
                       transition(rate = rate(.05), parent = 1, offspring = c(1,1)))
 
+params = c()
 
 res = branch(model, params, initial, time, 1000)
 mom = compute_mu_sigma(model, params, 0, 5, initial)

@@ -9,11 +9,11 @@ model = process_model(transition(rate = rate(params[1] - params[2]*exp(-params[3
                       transition(rate = rate(params[4]), parent = 1, offspring = 0))
 res = branch(model, params, initial, time, 20)
 simdata = format_sim_data(res, model$ntypes)
-estimate_td(model, init_pop = simdata$type1_prev,  start_times = simdata$prev_time, final_pop =simdata$type1, end_times = simdata$time, initial = runif(4,0,.5), lower = rep(0,4), upper = rep(.5,4))
+estimate_td(model, init_pop = simdata$type1_prev, final_pop =simdata$type1,  start_times = simdata$prev_time, end_times = simdata$time, initial = runif(4,0,.5), lower = rep(0,4), upper = rep(.5,4))
 
 #test that estimation results are correct - two type homogenous
 
-time = seq(0,5,1) 
+time = seq(0,10,1) 
 initial = c(100, 0)
 
 params = c(.4,.1,.7,.1, .3)

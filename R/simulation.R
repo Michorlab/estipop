@@ -50,15 +50,15 @@ branch <- function(model, params, init_pop, time_obs, reps, silent = FALSE, keep
   f <- R.utils::getAbsolutePath(tempfile(pattern = paste("system_", format(Sys.time(), "%d-%m-%Y-%H%M%S"), "_", sep = ""), fileext = ".csv", tmpdir = getwd()))
   if(timedep){
     if(is.null(seed)){
-      timeDepBranch(time_obs, reps, f, initial, model$transition_list, stops = NULL, silent)
+      timeDepBranch(time_obs, reps, f, init_pop, model$transition_list, stops = NULL, silent)
     } else {
-      timeDepBranch(time_obs, reps, f, initial, model$transition_list, stops = NULL, silent, seed)
+      timeDepBranch(time_obs, reps, f, init_pop, model$transition_list, stops = NULL, silent, seed)
     }
   } else {
     if(is.null(seed)){
-      gmbp3(time_obs, reps, f, initial, model$transition_list, stops = NULL, silent)
+      gmbp3(time_obs, reps, f, init_pop, model$transition_list, stops = NULL, silent)
     } else {
-      gmbp3(time_obs, reps, f, initial, model$transition_list, stops = NULL, silent, seed)
+      gmbp3(time_obs, reps, f, init_pop, model$transition_list, stops = NULL, silent, seed)
     }
   }
   res <- read.csv(f, header = F)

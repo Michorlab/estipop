@@ -39,8 +39,8 @@ create_timedep_template <- function(exprn, params, cppfile = "custom_rate_plugin
   hfile <- paste(hfile, collapse = ".")
 
 
-  cpp_location <- "./inst/extras/timedependent_template.cpp"
-  h_location <- "./inst/extras/timedependent_template.h"
+  cpp_location <- paste(.libPaths()[1], "/estipop/extras/timedependent_template.cpp", sep = "")
+  h_location <- paste(.libPaths()[1], "/estipop/extras/timedependent_template.h", sep = "")
 
 
   file.copy(cpp_location, cppfile)
