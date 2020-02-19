@@ -8,12 +8,9 @@
 #' @param start_times the \code{nobs} length vector of times at which the initial populations were observed
 #' @param end_times the \code{nobs} length vector of times at which the final populations were observed
 #' @param initial_params vector of initial parameters estimates for MLE optimization
-#' @param lower vector of lower bounds on rate parameters for optimization
-#' @param upper vector of upper bounds on rate parameters for optimization
-#' @param trace level of output for optimizer - see optim function, control - trace for "L-BFGS-B" method
 #'
 #' @export
-estimate_td = function(model, init_pop, final_pop, start_times, end_times,initial_params, lower = NULL, upper = NULL, trace = 1){
+estimate_td = function(model, init_pop, final_pop, start_times, end_times,initial_params, control = list(), ...){
   if(class(model) != "estipop_process_model"){
     stop("model must be a process_model object!")
   }
@@ -44,19 +41,18 @@ estimate_td = function(model, init_pop, final_pop, start_times, end_times,initia
 
   # MLE
   loglik <- function(params){ -1*bp_loglik(model, params, init_pop, start_times, end_times, final_pop)}
-  control <-  list(trace = trace, factr=10, pgtol=1e-20, fnscale = 1e7)  
-  if(is.null(lower)){
-    lower <- 1e-10*1:length(initial_params)
-  }
   
-  if(is.null(upper)){
-    upper <- 1.75 + 1e-10*1:length(initial_params)
+  # Allowing the user to specify control variables and adding our own in
+  default_control <-  list(trace = 1, factr=10, pgtol=1e-20, fnscale = 1e7)
+  if(length(control) == 0) {
+    control <- default_control
+  } else {
+    control <- c(control, default_control[setdiff(names(default_control), names(control))])
   }
-  
+
   mle <- optim(initial_params,
-                loglik, method = "L-BFGS-B",
-                lower = lower, upper = upper,
-                control = control)
+                loglik,
+                control = control, ...)
   return(mle)
 }
 
@@ -70,12 +66,9 @@ estimate_td = function(model, init_pop, final_pop, start_times, end_times,initia
 #' @param final_pop the \code{nobs x mtype} matrix of final populations observed
 #' @param time the \code{nobs} length vector containing the time between the initial and final population observations
 #' @param initial_params vector of initial parameters estimates for MLE optimization
-#' @param lower vector of lower bounds on rate parameters for optimization
-#' @param upper vector of upper bounds on rate parameters for optimization
-#' @param trace level of output for optimizer - see optim function, control - trace for "L-BFGS-B" method
 #'
 #' @export
-estimate = function(model, init_pop,  final_pop, times, initial_params, lower = NULL, upper = NULL, trace = 1){
+estimate = function(model, init_pop,  final_pop, times, initial_params, control = list(), ...){
   if(class(model) != "estipop_process_model"){
     stop("model must be a process_model object!")
   }
@@ -84,5 +77,5 @@ estimate = function(model, init_pop,  final_pop, times, initial_params, lower = 
       stop("for time-dependent models, use estimate_td")
     }
   }
-  return(estimate_td(model, init_pop, final_pop, max(times) - times, rep(max(times), length(times)), initial_params, lower, upper, trace))
+  return(estimate_td(model, init_pop, final_pop, max(times) - times, rep(max(times), length(times)), initial_params, control = control, ...))
 }
