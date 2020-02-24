@@ -31,7 +31,8 @@
 class System {
 public:
 	// Members
-	double tot_rate_homog;
+	int rep_num;
+	int nbins = 10000;
 
 	std::vector<long int> state;
 
@@ -39,6 +40,7 @@ public:
 	std::vector<Rate*> rates2;
 	std::vector<int> from;
 	std::vector<Update> updates;
+	std::vector<std::vector<double>> homog_rates;
 
 	std::vector<StopCriterion> stops;
 
@@ -48,6 +50,8 @@ public:
 	~System();
 
 	// Methods
+	void reset(std::vector<long int> s);
+	void nextRep();
 	void print();
 	void toFile(double time, std::string file);
 	void updateSystem(std::vector<int> update);

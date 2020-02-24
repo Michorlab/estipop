@@ -23,7 +23,7 @@
 #' \dontrun{
 #' create_timedep_template(cppfile = "custom_rate_plugin.cpp")
 #' }
-create_timedep_template <- function(cppfile = "custom_rate_plugin.cpp"){
+create_timedep_template <- function(exprn, params, cppfile = "custom_rate_plugin.cpp"){
   cppfile <- unlist(strsplit(cppfile, ".", fixed = T))
   if(cppfile[length(cppfile)] != "cpp")
   {
@@ -42,12 +42,14 @@ create_timedep_template <- function(cppfile = "custom_rate_plugin.cpp"){
   cpp_location <- paste(.libPaths()[1], "/estipop/extras/timedependent_template.cpp", sep = "")
   h_location <- paste(.libPaths()[1], "/estipop/extras/timedependent_template.h", sep = "")
 
+
   file.copy(cpp_location, cppfile)
   file.copy(h_location, hfile)
 
   # Update cpp file's include statement
   cpp_con <- file(cppfile)
   cpp_lines <- readLines(cpp_con)
+  cpp_lines <- sprintf(cpp_lines, generate_cpp(exprn, params))
   include_header <- paste("#include \"", hfile, "\"", sep = "")
   if(!(include_header %in% cpp_lines)) cpp_lines <- c(include_header, cpp_lines)
   write(cpp_lines, cppfile)
@@ -93,7 +95,7 @@ compile_timedep <- function(cppfile){
 
   # Update Header File if function names are different
   cppfiletext <- readLines(con = cppfile)
-  decl_lines <- cppfiletext[grepl("\\(double time, void\\* p\\)", cppfiletext)]
+  decl_lines <- cppfiletext[grepl("\\(double t, void\\* p\\)", cppfiletext)]
 
   decl_lines <- sapply(1:length(decl_lines), function(x) .pop(decl_lines[x], "\\{"))
   decl_lines <- paste(decl_lines, ";", sep = "")

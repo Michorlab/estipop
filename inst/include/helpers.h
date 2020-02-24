@@ -31,5 +31,8 @@ int choose(std::vector<double> input);
 // Rate functions
 double maximizeFunc(gsl_function rate_function, double start_time, double end_time, int bins);
 
+void maximizePiecewise(gsl_function rate_function, double start_time, double end_time, int bins, std::vector<double>& vec, double buffer);
+
+
 
 

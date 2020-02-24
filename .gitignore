@@ -45,6 +45,12 @@ system*.csv
 # R project files
 *.Rproj
 *.Rdata
-
+*.RData
+*.Rbuildignore
 # Other
 .DS_Store
+custom_rates/*
+.vscode
+estipop.code-workspace
+config.log
+config.status

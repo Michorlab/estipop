@@ -50,14 +50,23 @@ System::System(){
 }
 
 System::System(std::vector<long int> s){
-	state = s;
-	tot_rate_homog = 0.0;
+	reset(s);
+	rep_num = 1;
 }
 
 System::~System(){
 	for(size_t i = 0; i < rates2.size(); i++){
 		delete rates2[i];
 	}
+}
+
+void System::nextRep(){
+	++rep_num;
+}
+
+void System::reset(std::vector<long int> s)
+{
+	state = s;
 }
 
 void System::print(){
@@ -71,7 +80,7 @@ void System::toFile(double time, std::string file){
 	std::ofstream of;
 
     of.open(file, std::fstream::in | std::fstream::out | std::fstream::app);
-	of << time << "," << state[0];
+	of << rep_num << "," << time << "," << state[0];
 	for(size_t i = 1; i < state.size(); i++){
 		of << "," << state[i];
 	}
@@ -81,6 +90,8 @@ void System::toFile(double time, std::string file){
 
 void System::updateSystem(std::vector<int> update){
 	if(update.size() != state.size()){
+		std::cout << update.size() << std::endl;
+		std::cout << state.size() << std::endl;
 		throw std::invalid_argument("Systems do not have same dimension");
 	}
 
@@ -101,8 +112,6 @@ void System::addUpdate(Rate* r, int f, Update u){
 	rates2.push_back(r);
 	from.push_back(f);
 	updates.push_back(u);
-
-	tot_rate_homog += r->rate_homog;
 }
 
 void System::addStop(StopCriterion c){
@@ -118,7 +127,7 @@ double System::getNextTime(std::vector<double>& o_rates){
 }
 
 void System::simulate(std::vector<double> obsTimes, std::string file){
-	bool verbose = false;
+	bool verbose = true;
 
 	std::vector<double> o_rates;
 	for(size_t i = 0; i < rates.size(); i++){
@@ -217,22 +226,22 @@ double System::getNextTime2(double curTime, double totTime){
 	std::cout.precision(20);
 	double tot_rate;
 	double rand_next_time = 0.0;
-
-	tot_rate_homog = 0.0;
-
-	for(size_t i = 0; i < rates2.size(); i++){
-    rates2[i]->rate_homog = maximizeFunc(rates2[i]->funct, curTime, totTime, 1000);
-    //Rcpp::Rcout << rates2[i]->rate_homog << "\n";
-		tot_rate_homog += rates2[i]->rate_homog * state[from[i]];
-	}
+	double tot_rate_homog;
+	int currbin;
   //Rcpp::Rcout << "tot_rate_homog " << tot_rate_homog << "\n";
 
-	out("In nextTime2");
+
 
 	while(true){
 		Rcpp::checkUserInterrupt();
 
 		tot_rate = 0;
+		tot_rate_homog = 0;
+		currbin = floor((curTime + rand_next_time)/totTime*nbins);
+
+		for(int i = 0; i < rates2.size(); ++i){
+			tot_rate_homog += homog_rates[i][currbin]*state[from[i]];
+		}
 
 		out("tot_rate_homog: " + to_string_wp(tot_rate_homog));
 		rand_next_time += gsl_ran_exponential(rng, 1 / tot_rate_homog);
@@ -246,16 +255,15 @@ double System::getNextTime2(double curTime, double totTime){
 
 		double u_thin = gsl_ran_flat(rng, 0, 1);
 		double beta_ratio = tot_rate / tot_rate_homog;
-    //Rcpp::Rcout << "homog rate: " << tot_rate_homog << "\n";
-    //Rcpp::Rcout << "total rate: " << tot_rate << "\n";
+    	//Rcpp::Rcout << "homog rate: " << tot_rate_homog << "\n";
+    	//Rcpp::Rcout << "total rate: " << tot_rate << "\n";
 		//Rcpp::Rcout << "beta ratio: " << beta_ratio << "\n";
 
-		if(u_thin <= beta_ratio)
+		if(u_thin <= beta_ratio || curTime + rand_next_time >= totTime)
 		{
 		  break;
 		}
 	}
-
 	out("Returning from nextTime2 with: " + to_string_wp(rand_next_time));
 	if(rand_next_time <= 0){
 		out("I'VE RETURNED A ZERO TIME TO NEXT EVENT!!!");
@@ -271,7 +279,7 @@ int System::getNextEvent2(double curTime, double timeToNext){
 
 
 	for(size_t i = 0; i < rates2.size(); i++){
-		cumulativeHazards.push_back((*rates2[i])(curTime, curTime + timeToNext) * state[from[i]]);
+		cumulativeHazards.push_back((*rates2[i])(curTime + timeToNext) * state[from[i]]);
 	}
 
 	out("returning from nextEvetn2");
@@ -303,6 +311,13 @@ void System::simulate_timedep(std::vector<double> obsTimes, std::string file){
 		std::cout << "obsTimes.size(): " << obsTimes.size() << std::endl;
 	}
 
+
+	homog_rates = std::vector<std::vector<double>>(rates2.size(), std::vector<double>(nbins, 0.0));
+ 	std::vector<double> tmp = std::vector<double>(nbins, 0.0);
+	for(size_t i = 0; i < rates2.size(); i++){
+    	maximizePiecewise(rates2[i]->funct, 0, totTime, nbins, homog_rates[i], .01);
+	}
+
     // Run until our currentTime is greater than our largest Observation time
     while(curTime <= obsTimes[obsTimes.size()-1])
     {
@@ -322,19 +337,20 @@ void System::simulate_timedep(std::vector<double> obsTimes, std::string file){
 			// print out current state vector
 			toFile(obsTimes[curObsIndex], file);
 
-			if(verbose &&  int(obsTimes[curObsIndex]) % obsMod == 0 && !silent)
-				std::cout << "Time " << obsTimes[curObsIndex] << " of " << totTime << std::endl;
-
+			if(verbose &&  int(obsTimes[curObsIndex]) % obsMod == 0 && !silent){
+				std::cout << "----------------------" << std::endl;
+				std::cout << "Time " << curTime << std::endl;
+			}
 			curObsIndex++;
 
-			if((unsigned)curObsIndex >= obsTimes.size()-1)
+			if((unsigned)curObsIndex >= obsTimes.size()-1){
 				break;
-        }
+			}
+    }
 
         // Update our System
 		out("headed from sim2 to getEvent2");
         int index = getNextEvent2(curTime, timeToNext);
-
 
 		std::vector<int> update = updates[index].get();
 		update[from[index]] = update[from[index]] - 1;
