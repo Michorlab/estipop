@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style type="text/css">
+@font-face {
+font-family: octicons-link;
+src: url(data:font/woff;charset=utf-8;base64,d09GRgABAAAAAAZwABAAAAAACFQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABEU0lHAAAGaAAAAAgAAAAIAAAAAUdTVUIAAAZcAAAACgAAAAoAAQAAT1MvMgAAAyQAAABJAAAAYFYEU3RjbWFwAAADcAAAAEUAAACAAJThvmN2dCAAAATkAAAABAAAAAQAAAAAZnBnbQAAA7gAAACyAAABCUM+8IhnYXNwAAAGTAAAABAAAAAQABoAI2dseWYAAAFsAAABPAAAAZwcEq9taGVhZAAAAsgAAAA0AAAANgh4a91oaGVhAAADCAAAABoAAAAkCA8DRGhtdHgAAAL8AAAADAAAAAwGAACfbG9jYQAAAsAAAAAIAAAACABiATBtYXhwAAACqAAAABgAAAAgAA8ASm5hbWUAAAToAAABQgAAAlXu73sOcG9zdAAABiwAAAAeAAAAME3QpOBwcmVwAAAEbAAAAHYAAAB/aFGpk3jaTY6xa8JAGMW/O62BDi0tJLYQincXEypYIiGJjSgHniQ6umTsUEyLm5BV6NDBP8Tpts6F0v+k/0an2i+itHDw3v2+9+DBKTzsJNnWJNTgHEy4BgG3EMI9DCEDOGEXzDADU5hBKMIgNPZqoD3SilVaXZCER3/I7AtxEJLtzzuZfI+VVkprxTlXShWKb3TBecG11rwoNlmmn1P2WYcJczl32etSpKnziC7lQyWe1smVPy/Lt7Kc+0vWY/gAgIIEqAN9we0pwKXreiMasxvabDQMM4riO+qxM2ogwDGOZTXxwxDiycQIcoYFBLj5K3EIaSctAq2kTYiw+ymhce7vwM9jSqO8JyVd5RH9gyTt2+J/yUmYlIR0s04n6+7Vm1ozezUeLEaUjhaDSuXHwVRgvLJn1tQ7xiuVv/ocTRF42mNgZGBgYGbwZOBiAAFGJBIMAAizAFoAAABiAGIAznjaY2BkYGAA4in8zwXi+W2+MjCzMIDApSwvXzC97Z4Ig8N/BxYGZgcgl52BCSQKAA3jCV8CAABfAAAAAAQAAEB42mNgZGBg4f3vACQZQABIMjKgAmYAKEgBXgAAeNpjYGY6wTiBgZWBg2kmUxoDA4MPhGZMYzBi1AHygVLYQUCaawqDA4PChxhmh/8ODDEsvAwHgMKMIDnGL0x7gJQCAwMAJd4MFwAAAHjaY2BgYGaA4DAGRgYQkAHyGMF8NgYrIM3JIAGVYYDT+AEjAwuDFpBmA9KMDEwMCh9i/v8H8sH0/4dQc1iAmAkALaUKLgAAAHjaTY9LDsIgEIbtgqHUPpDi3gPoBVyRTmTddOmqTXThEXqrob2gQ1FjwpDvfwCBdmdXC5AVKFu3e5MfNFJ29KTQT48Ob9/lqYwOGZxeUelN2U2R6+cArgtCJpauW7UQBqnFkUsjAY/kOU1cP+DAgvxwn1chZDwUbd6CFimGXwzwF6tPbFIcjEl+vvmM/byA48e6tWrKArm4ZJlCbdsrxksL1AwWn/yBSJKpYbq8AXaaTb8AAHja28jAwOC00ZrBeQNDQOWO//sdBBgYGRiYWYAEELEwMTE4uzo5Zzo5b2BxdnFOcALxNjA6b2ByTswC8jYwg0VlNuoCTWAMqNzMzsoK1rEhNqByEyerg5PMJlYuVueETKcd/89uBpnpvIEVomeHLoMsAAe1Id4AAAAAAAB42oWQT07CQBTGv0JBhagk7HQzKxca2sJCE1hDt4QF+9JOS0nbaaYDCQfwCJ7Au3AHj+LO13FMmm6cl7785vven0kBjHCBhfpYuNa5Ph1c0e2Xu3jEvWG7UdPDLZ4N92nOm+EBXuAbHmIMSRMs+4aUEd4Nd3CHD8NdvOLTsA2GL8M9PODbcL+hD7C1xoaHeLJSEao0FEW14ckxC+TU8TxvsY6X0eLPmRhry2WVioLpkrbp84LLQPGI7c6sOiUzpWIWS5GzlSgUzzLBSikOPFTOXqly7rqx0Z1Q5BAIoZBSFihQYQOOBEdkCOgXTOHA07HAGjGWiIjaPZNW13/+lm6S9FT7rLHFJ6fQbkATOG1j2OFMucKJJsxIVfQORl+9Jyda6Sl1dUYhSCm1dyClfoeDve4qMYdLEbfqHf3O/AdDumsjAAB42mNgYoAAZQYjBmyAGYQZmdhL8zLdDEydARfoAqIAAAABAAMABwAKABMAB///AA8AAQAAAAAAAAAAAAAAAAABAAAAAA==) format('woff');
+}
+body {
+-webkit-text-size-adjust: 100%;
+text-size-adjust: 100%;
+color: #333;
+font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+font-size: 16px;
+line-height: 1.6;
+word-wrap: break-word;
+}
+a {
+background-color: transparent;
+}
+a:active,
+a:hover {
+outline: 0;
+}
+strong {
+font-weight: bold;
+}
+h1 {
+font-size: 2em;
+margin: 0.67em 0;
+}
+img {
+border: 0;
+}
+hr {
+box-sizing: content-box;
+height: 0;
+}
+pre {
+overflow: auto;
+}
+code,
+kbd,
+pre {
+font-family: monospace, monospace;
+font-size: 1em;
+}
+input {
+color: inherit;
+font: inherit;
+margin: 0;
+}
+html input[disabled] {
+cursor: default;
+}
+input {
+line-height: normal;
+}
+input[type="checkbox"] {
+box-sizing: border-box;
+padding: 0;
+}
+table {
+border-collapse: collapse;
+border-spacing: 0;
+}
+td,
+th {
+padding: 0;
+}
+* {
+box-sizing: border-box;
+}
+input {
+font: 13px / 1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+a {
+color: #4078c0;
+text-decoration: none;
+}
+a:hover,
+a:active {
+text-decoration: underline;
+}
+hr {
+height: 0;
+margin: 15px 0;
+overflow: hidden;
+background: transparent;
+border: 0;
+border-bottom: 1px solid #ddd;
+}
+hr:before {
+display: table;
+content: "";
+}
+hr:after {
+display: table;
+clear: both;
+content: "";
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+margin-top: 15px;
+margin-bottom: 15px;
+line-height: 1.1;
+}
+h1 {
+font-size: 30px;
+}
+h2 {
+font-size: 21px;
+}
+h3 {
+font-size: 16px;
+}
+h4 {
+font-size: 14px;
+}
+h5 {
+font-size: 12px;
+}
+h6 {
+font-size: 11px;
+}
+blockquote {
+margin: 0;
+}
+ul,
+ol {
+padding: 0;
+margin-top: 0;
+margin-bottom: 0;
+}
+ol ol,
+ul ol {
+list-style-type: lower-roman;
+}
+ul ul ol,
+ul ol ol,
+ol ul ol,
+ol ol ol {
+list-style-type: lower-alpha;
+}
+dd {
+margin-left: 0;
+}
+code {
+font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+font-size: 12px;
+}
+pre {
+margin-top: 0;
+margin-bottom: 0;
+font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+.select::-ms-expand {
+opacity: 0;
+}
+.octicon {
+font: normal normal normal 16px/1 octicons-link;
+display: inline-block;
+text-decoration: none;
+text-rendering: auto;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+}
+.octicon-link:before {
+content: '\f05c';
+}
+.markdown-body:before {
+display: table;
+content: "";
+}
+.markdown-body:after {
+display: table;
+clear: both;
+content: "";
+}
+.markdown-body>*:first-child {
+margin-top: 0 !important;
+}
+.markdown-body>*:last-child {
+margin-bottom: 0 !important;
+}
+a:not([href]) {
+color: inherit;
+text-decoration: none;
+}
+.anchor {
+display: inline-block;
+padding-right: 2px;
+margin-left: -18px;
+}
+.anchor:focus {
+outline: none;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+margin-top: 1em;
+margin-bottom: 16px;
+font-weight: bold;
+line-height: 1.4;
+}
+h1 .octicon-link,
+h2 .octicon-link,
+h3 .octicon-link,
+h4 .octicon-link,
+h5 .octicon-link,
+h6 .octicon-link {
+color: #000;
+vertical-align: middle;
+visibility: hidden;
+}
+h1:hover .anchor,
+h2:hover .anchor,
+h3:hover .anchor,
+h4:hover .anchor,
+h5:hover .anchor,
+h6:hover .anchor {
+text-decoration: none;
+}
+h1:hover .anchor .octicon-link,
+h2:hover .anchor .octicon-link,
+h3:hover .anchor .octicon-link,
+h4:hover .anchor .octicon-link,
+h5:hover .anchor .octicon-link,
+h6:hover .anchor .octicon-link {
+visibility: visible;
+}
+h1 {
+padding-bottom: 0.3em;
+font-size: 2.25em;
+line-height: 1.2;
+border-bottom: 1px solid #eee;
+}
+h1 .anchor {
+line-height: 1;
+}
+h2 {
+padding-bottom: 0.3em;
+font-size: 1.75em;
+line-height: 1.225;
+border-bottom: 1px solid #eee;
+}
+h2 .anchor {
+line-height: 1;
+}
+h3 {
+font-size: 1.5em;
+line-height: 1.43;
+}
+h3 .anchor {
+line-height: 1.2;
+}
+h4 {
+font-size: 1.25em;
+}
+h4 .anchor {
+line-height: 1.2;
+}
+h5 {
+font-size: 1em;
+}
+h5 .anchor {
+line-height: 1.1;
+}
+h6 {
+font-size: 1em;
+color: #777;
+}
+h6 .anchor {
+line-height: 1.1;
+}
+p,
+blockquote,
+ul,
+ol,
+dl,
+table,
+pre {
+margin-top: 0;
+margin-bottom: 16px;
+}
+hr {
+height: 4px;
+padding: 0;
+margin: 16px 0;
+background-color: #e7e7e7;
+border: 0 none;
+}
+ul,
+ol {
+padding-left: 2em;
+}
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+margin-top: 0;
+margin-bottom: 0;
+}
+li>p {
+margin-top: 16px;
+}
+dl {
+padding: 0;
+}
+dl dt {
+padding: 0;
+margin-top: 16px;
+font-size: 1em;
+font-style: italic;
+font-weight: bold;
+}
+dl dd {
+padding: 0 16px;
+margin-bottom: 16px;
+}
+blockquote {
+padding: 0 15px;
+color: #777;
+border-left: 4px solid #ddd;
+}
+blockquote>:first-child {
+margin-top: 0;
+}
+blockquote>:last-child {
+margin-bottom: 0;
+}
+table {
+display: block;
+width: 100%;
+overflow: auto;
+word-break: normal;
+word-break: keep-all;
+}
+table th {
+font-weight: bold;
+}
+table th,
+table td {
+padding: 6px 13px;
+border: 1px solid #ddd;
+}
+table tr {
+background-color: #fff;
+border-top: 1px solid #ccc;
+}
+table tr:nth-child(2n) {
+background-color: #f8f8f8;
+}
+img {
+max-width: 100%;
+box-sizing: content-box;
+background-color: #fff;
+}
+code {
+padding: 0;
+padding-top: 0.2em;
+padding-bottom: 0.2em;
+margin: 0;
+font-size: 85%;
+background-color: rgba(0,0,0,0.04);
+border-radius: 3px;
+}
+code:before,
+code:after {
+letter-spacing: -0.2em;
+content: "\00a0";
+}
+pre>code {
+padding: 0;
+margin: 0;
+font-size: 100%;
+word-break: normal;
+white-space: pre;
+background: transparent;
+border: 0;
+}
+.highlight {
+margin-bottom: 16px;
+}
+.highlight pre,
+pre {
+padding: 16px;
+overflow: auto;
+font-size: 85%;
+line-height: 1.45;
+background-color: #f7f7f7;
+border-radius: 3px;
+}
+.highlight pre {
+margin-bottom: 0;
+word-break: normal;
+}
+pre {
+word-wrap: normal;
+}
+pre code {
+display: inline;
+max-width: initial;
+padding: 0;
+margin: 0;
+overflow: initial;
+line-height: inherit;
+word-wrap: normal;
+background-color: transparent;
+border: 0;
+}
+pre code:before,
+pre code:after {
+content: normal;
+}
+kbd {
+display: inline-block;
+padding: 3px 5px;
+font-size: 11px;
+line-height: 10px;
+color: #555;
+vertical-align: middle;
+background-color: #fcfcfc;
+border: solid 1px #ccc;
+border-bottom-color: #bbb;
+border-radius: 3px;
+box-shadow: inset 0 -1px 0 #bbb;
+}
+.pl-c {
+color: #969896;
+}
+.pl-c1,
+.pl-s .pl-v {
+color: #0086b3;
+}
+.pl-e,
+.pl-en {
+color: #795da3;
+}
+.pl-s .pl-s1,
+.pl-smi {
+color: #333;
+}
+.pl-ent {
+color: #63a35c;
+}
+.pl-k {
+color: #a71d5d;
+}
+.pl-pds,
+.pl-s,
+.pl-s .pl-pse .pl-s1,
+.pl-sr,
+.pl-sr .pl-cce,
+.pl-sr .pl-sra,
+.pl-sr .pl-sre {
+color: #183691;
+}
+.pl-v {
+color: #ed6a43;
+}
+.pl-id {
+color: #b52a1d;
+}
+.pl-ii {
+background-color: #b52a1d;
+color: #f8f8f8;
+}
+.pl-sr .pl-cce {
+color: #63a35c;
+font-weight: bold;
+}
+.pl-ml {
+color: #693a17;
+}
+.pl-mh,
+.pl-mh .pl-en,
+.pl-ms {
+color: #1d3e81;
+font-weight: bold;
+}
+.pl-mq {
+color: #008080;
+}
+.pl-mi {
+color: #333;
+font-style: italic;
+}
+.pl-mb {
+color: #333;
+font-weight: bold;
+}
+.pl-md {
+background-color: #ffecec;
+color: #bd2c00;
+}
+.pl-mi1 {
+background-color: #eaffea;
+color: #55a532;
+}
+.pl-mdr {
+color: #795da3;
+font-weight: bold;
+}
+.pl-mo {
+color: #1d3e81;
+}
+kbd {
+display: inline-block;
+padding: 3px 5px;
+font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+line-height: 10px;
+color: #555;
+vertical-align: middle;
+background-color: #fcfcfc;
+border: solid 1px #ccc;
+border-bottom-color: #bbb;
+border-radius: 3px;
+box-shadow: inset 0 -1px 0 #bbb;
+}
+.task-list-item {
+list-style-type: none;
+}
+.task-list-item+.task-list-item {
+margin-top: 3px;
+}
+.task-list-item input {
+margin: 0 0.35em 0.25em -1.6em;
+vertical-align: middle;
+}
+:checked+.radio-label {
+z-index: 1;
+position: relative;
+border-color: #4078c0;
+}
+.sourceLine {
+display: inline-block;
+}
+code .kw { color: #000000; }
+code .dt { color: #ed6a43; }
+code .dv { color: #009999; }
+code .bn { color: #009999; }
+code .fl { color: #009999; }
+code .ch { color: #009999; }
+code .st { color: #183691; }
+code .co { color: #969896; }
+code .ot { color: #0086b3; }
+code .al { color: #a61717; }
+code .fu { color: #63a35c; }
+code .er { color: #a61717; background-color: #e3d2d2; }
+code .wa { color: #000000; }
+code .cn { color: #008080; }
+code .sc { color: #008080; }
+code .vs { color: #183691; }
+code .ss { color: #183691; }
+code .im { color: #000000; }
+code .va {color: #008080; }
+code .cf { color: #000000; }
+code .op { color: #000000; }
+code .bu { color: #000000; }
+code .ex { color: #000000; }
+code .pp { color: #999999; }
+code .at { color: #008080; }
+code .do { color: #969896; }
+code .an { color: #008080; }
+code .cv { color: #008080; }
+code .in { color: #008080; }
+</style>
+<style>
+body {
+  box-sizing: border-box;
+  min-width: 200px;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 45px;
+  padding-top: 0px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1 id="estipop">ESTIpop</h1>
+<p>ESTIpop is an R-wrapped C++ package to simulate and estimate the parameters of continuous-time Markov branching processes with time-dependent rates.</p>
+<h2 id="installation-notes">Installation Notes</h2>
+<h3 id="dependencies">Dependencies</h3>
+<ul>
+<li><a href="https://www.gnu.org/software/gsl/">GNU Scientific Library</a>
+<ul>
+<li>(OSX) brew install gsl with Homebrew or from <a href="http://ftpmirror.gnu.org/gsl/">(http://ftpmirror.gnu.org/gsl/)</a>.</li>
+<li>(Windows) download and extract the file <a href="http://www.stats.ox.ac.uk/pub/Rtools/goodies/multilib/">local###.zip</a> and create an environmental variable LIB_GSL to add the directory (see notes about Windows installation below for more details).</li>
+<li>(Linux) install libgsl0-dev and gsl-bin.</li>
+</ul></li>
+<li><a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a> (Windows only)</li>
+<li><a href="https://github.com/hadley/devtools">devtools</a></li>
+</ul>
+<h3 id="important-notes-about-windows-installation">Important notes about Windows installation</h3>
+<p>Rtools contains the necessary resources to compile C++ files when installing packages in R. GSL is also required which can be downloaded from <a href="http://www.stats.ox.ac.uk/pub/Rtools/goodies/multilib/local323.zip">(http://www.stats.ox.ac.uk/pub/Rtools/goodies/multilib/local323.zip)</a>. After downloading, unzip to your R directory. Depending on if your computer is 32 or 64-bit, move the library files from local###/lib/i386 (32-bit) or local###/lib/x64 (64-bit) to local###/lib.</p>
+<p>To set the environmental variable LIB_GSL on a Windows 7/10 computer, go to “Advanced system settings” in Control Panel &gt; System and Security &gt; System and click Environmental Variables. Create a new system variable with</p>
+<ul>
+<li>Variable Name: LIB_GSL</li>
+<li>Variable Value: “C:/path/to/local323” (include quotes)</li>
+</ul>
+<h3 id="recommended-r-packages">Recommended R packages</h3>
+<ul>
+<li>ggplot2</li>
+<li>R.utils</li>
+</ul>
+<h3 id="installation">Installation</h3>
+<p>To install in R, type:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">devtools<span class="op">::</span><span class="kw">install_git</span>(<span class="st">&quot;https://github.com/Michorlab/estipop.git&quot;</span>)</a></code></pre></div>
+<h2 id="uses">Uses</h2>
+<h3 id="estimation">Estimation</h3>
+<p>ESTIpop is an R package that estimates the parameters of continuous-time Markov branching processes (CTMBPs) with constant or time-dependent rates. A CTMBP is a stochastic process in which individuals live for a random amount of time before generating some number of offspring, each of which continues the process. Individuals can belong to one of a finite number of types. Each type has its own continuous lifetime distribution, as well a distirbution that governs the number and types of offspring it produces. The process is Markov because an individual’s remaining lifetime is independent of the individual’s age. However, the rates at which individuals die and reproduce can still vary with time, analogous to the nature of arrivals in a time-inhomogenous Poisson process.</p>
+<h3 id="simulation">Simulation</h3>
+<p>ESTIpop also provides methods to simulate continuous-time Markov branching processes. Simulated processes can have arbitrary numbers of types and transitions, and may have rates which are constant or time-dependent.</p>
+<h2 id="objects-in-estipop">Objects in ESTIPop</h2>
+<p>ESTIpop uses a common representation of branching process models for simluation and estimation. A branching process model is represented by a <code>process_model</code> object containing one or more <code>transition</code> objects, and each <code>transition</code> object is associated with a <code>rate</code> object.</p>
+<h3 id="rate-objects">rate Objects</h3>
+<p>A <code>rate</code> object represents the rate at which some event occurs, and may be a function of time and multiple other parameters. The constructor <code>rate(exp)</code> takes an R expression which describes how the rate depends on time and other parameters. For example:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">r1 =<span class="st"> </span><span class="kw">rate</span>(<span class="fl">3.5</span>) <span class="co"># a constant, known rate</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">r2 =<span class="st"> </span><span class="kw">rate</span>(<span class="dv">2</span><span class="op">*</span>t) <span class="co"># a rate which increases linearly with time</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">r3 =<span class="st"> </span><span class="kw">rate</span>(<span class="fl">1.5</span><span class="op">*</span>params[<span class="dv">1</span>]) <span class="co">#a rate which depends on one unknown parameter</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">r4 =<span class="st"> </span><span class="kw">rate</span>(params[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>params[<span class="dv">2</span>]<span class="op">*</span><span class="kw">exp</span>(<span class="op">-</span>.<span class="dv">5</span><span class="op">*</span>t)) <span class="co"># a rate which depends on 2 unknown </span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">                                            <span class="co"># parameters and time</span></a></code></pre></div>
+<p>It is important to note that the variable <code>t</code> and the <code>params</code> vector are not variables which we have defined previously in the program. The <code>rate</code> constructor acts on an <em>expression</em> which encodes how the rate evolves with time and various other parameters. We will be able to evaluate this expression later when we plug in parameter values at a specific time.</p>
+<p>The <code>rate</code> constructor expects expressions which conform to the following subset of the R grammar, and will throw an error at other inputs.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Allowed Symbols</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Unary Operators</td>
+<td>+ - ()</td>
+</tr>
+<tr class="even">
+<td>Binary Operators</td>
+<td>+ - / * &gt; &gt;= &lt; &lt;=</td>
+</tr>
+<tr class="odd">
+<td>Functions</td>
+<td>sin(), cos(), log(), exp()</td>
+</tr>
+<tr class="even">
+<td>names</td>
+<td>params[i], t</td>
+</tr>
+<tr class="odd">
+<td>numerics</td>
+<td>any scalar numeric value</td>
+</tr>
+</tbody>
+</table>
+<h3 id="transition-objects">transition Objects</h3>
+<p>A <code>transition</code> object represents a type of birth or death event which can occur in the branching process model. A <code>transition</code> object has 3 attibutes:</p>
+<ol>
+<li><code>parent</code>: The type of the parent which dies and is removed from the population when the transition occurs</li>
+<li><code>offspring</code>: The number of each type of offspring which are produced in the transition. This should be an <code>d</code>-length vector where <code>d</code> is the number of types in the population.</li>
+<li><code>rate</code>: A <code>rate</code> object (described above) governing how quickly this transition occurs</li>
+</ol>
+<p>A <code>transition</code> object can be constructed as follows:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">r =<span class="st"> </span><span class="kw">rate</span>(.<span class="dv">5</span><span class="op">*</span>params[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>params[<span class="dv">2</span>]<span class="op">*</span><span class="kw">exp</span>(<span class="op">-</span>t))</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">#a type 2 parent dies and produces 2 offspring of different types</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">trans =<span class="st"> </span><span class="kw">transition</span>(<span class="dt">rate =</span> r, <span class="dt">parent =</span> <span class="dv">1</span>, <span class="dt">offspring =</span> (<span class="dv">2</span>,<span class="dv">0</span>)) </a></code></pre></div>
+<p>This transition is illustrated in the following figure:</p>
+<h2 id="process_model-objects">process_model Objects</h2>
+<p>A <code>process_model</code> object is a collection of <code>transition</code> objects which together make up a branching process system. A <code>process_model</code> object is constructed from a sequence of <code>transition</code> objects which can occur in the system. All of the <code>transition</code> objects must assume the same number of types, and the <code>process_model</code> constructor will throw an error if this is not the case.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co">#simple one-type birth death model with rates that decay exponentially over time</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">birth =<span class="st"> </span><span class="kw">rate</span>(params[<span class="dv">1</span>]<span class="op">*</span><span class="kw">exp</span>(<span class="op">-</span>params[<span class="dv">3</span>]<span class="op">*</span>t))</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">death =<span class="st"> </span><span class="kw">rate</span>(params[<span class="dv">2</span>]<span class="op">*</span><span class="kw">exp</span>(<span class="op">-</span>params[<span class="dv">3</span>]<span class="op">*</span>t))</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">model =<span class="st"> </span><span class="kw">process_model</span>(<span class="kw">transition</span>(<span class="dt">rate =</span> birth, <span class="dt">parent =</span> <span class="dv">1</span>, <span class="dt">offspring =</span> <span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">                      <span class="kw">transition</span>(<span class="dt">rate =</span> death, <span class="dt">parent =</span> <span class="dv">1</span>, <span class="dt">offspring =</span> <span class="dv">0</span>))</a></code></pre></div>
+<p>Note that <code>model</code> still retains all of the time- and parameter-dependence of its constituent transitions. Also notice that, since <code>params[3]</code> was used in both the birth and death rate, this model has the constraint that birth and death rates decay at equal speed.</p>
+<h2 id="simulation-1">Simulation</h2>
+<p>Armed with a <code>process_model</code> object, ESTIpop allows for the simulation of this system under various parameters values. ESTIpop uses C++ for high-performance simulation. In the case of time-dependent rates, ESTIpop parses the expressions and translates them into dynamically loaded C++ code.</p>
+<p>The <code>branch</code> function is used to simulate the system specified by a <code>process_model</code> object. It’s parameters are as follows:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Type</th>
+<th>Description</th>
+<th>Optional?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>model</code></td>
+<td><code>process_model</code> object</td>
+<td>The system to simulate</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td><code>params</code></td>
+<td>numeric vector</td>
+<td>The parameters to plug into the system during simulation</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td><code>init_pop</code></td>
+<td>numeric vector</td>
+<td>The population at the start of the simulation (time 0)</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td><code>time_obs</code></td>
+<td>numeric vector</td>
+<td>The timepoints at which to record the state of the population</td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td><code>reps</code></td>
+<td>numeric scalar</td>
+<td>The number of times to run the simulation</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td><code>silent</code></td>
+<td>logical</td>
+<td>Whether to silence intermediate printouts form the C++ simulator</td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td><code>keep</code></td>
+<td>logical</td>
+<td>Whether to keep logs files from the C++ simulation</td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td><code>seed</code></td>
+<td>logical</td>
+<td>A seed for the random number generator</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p>The following examples demonstrate ESTIPop’s simulation features:</p>
+<h3 id="one-type-birth-death-process">One-Type Birth-Death Process</h3>
+<p>We’ll start by simulation the one-type birth-death model shown in Figure . In this model, a population of a single type experiences birth events, in which an individual from the population is chosen to replicate, and death events, in which an individual from the population is chosen for removal. To test our estimation procedure, we begin by simulating data using functions available in ESTIpop. We initiate the population with size 100 and allow it expand for 5 units of time with birth parameter 1 and death parameter 0.7. Using the following code, we generate 1,000 samples from this process.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">library</span>(estipop)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">#Create a one-type birth-death model where the birth rate increases over time</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">model =<span class="st"> </span><span class="kw">process_model</span>(<span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">1</span>] <span class="op">-</span><span class="st"> </span>params[<span class="dv">2</span>]<span class="op">*</span><span class="kw">exp</span>(<span class="op">-</span>params[<span class="dv">3</span>]<span class="op">*</span>t)), </a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">                                 <span class="dt">parent =</span> <span class="dv">1</span>, <span class="dt">offspring =</span> <span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">                      <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">4</span>]), <span class="dt">parent =</span> <span class="dv">1</span>, <span class="dt">offspring =</span> <span class="dv">0</span>))</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co">#Specify the time points at which we will record the state of the simulation</span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">time =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">20</span>,.<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="co">#The initial size of the simulated population</span></a>
+<a class="sourceLine" id="cb5-12" data-line-number="12">init_pop =<span class="st"> </span><span class="kw">c</span>(<span class="dv">500</span>)</a>
+<a class="sourceLine" id="cb5-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb5-14" data-line-number="14"><span class="co">#Parameters to plug into the model for this simulation run</span></a>
+<a class="sourceLine" id="cb5-15" data-line-number="15">params =<span class="st"> </span><span class="kw">c</span>(.<span class="dv">3</span>,.<span class="dv">25</span>,.<span class="dv">1</span>, <span class="fl">.2</span>)  </a>
+<a class="sourceLine" id="cb5-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="co">#Numer of times to run the simulation</span></a>
+<a class="sourceLine" id="cb5-18" data-line-number="18">reps &lt;-<span class="st"> </span><span class="dv">1000</span></a>
+<a class="sourceLine" id="cb5-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb5-20" data-line-number="20">res =<span class="st"> </span><span class="kw">branch</span>(<span class="dt">model =</span> model, <span class="dt">params =</span> params, <span class="dt">init_pop =</span> init_pop, </a>
+<a class="sourceLine" id="cb5-21" data-line-number="21">             <span class="dt">time_obs =</span> time, <span class="dt">reps =</span> reps)</a>
+<a class="sourceLine" id="cb5-22" data-line-number="22"></a>
+<a class="sourceLine" id="cb5-23" data-line-number="23"><span class="co">#Plot a single replication of the simulation</span></a>
+<a class="sourceLine" id="cb5-24" data-line-number="24">single &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(res, rep <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb5-25" data-line-number="25"><span class="kw">plot</span>(single<span class="op">$</span>time, single<span class="op">$</span>type1, <span class="dt">xlab =</span> <span class="st">&quot;time&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;population size&quot;</span>)</a></code></pre></div>
+<p><img src="data:image/png;base64,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AAEEEEAAAQSOVoAA9GjlEvh1+/fvd+M+wzUxX7587pJ8uOfYhgACCCCAAAIIZESAADQjSkm2T/PmzW3GjBmpl9wDmz9s2DBr0aJF4CbuI4AAAggggAACmRLIm6m92TkpBFq1amXHH3+8G/u5Z88eK1CggJt4dNlll9nSpUvt66+/TgoHGokAAggggAACOSNAD2jOuHr6XXPlymXTpk2zdu3aWcGCBd3M93Llytnff/9t27ZtcwGppxtI5RFAAAEEEEAgpgL0gMaUP34PriD0448/dgHn6tWrrUKFClamTBnLkydP/FaamiGAAAIIIICAJwQIQD1xmmJXyRIlSphuFAQQQAABBBBAILsEuASfXZK8DwIIIIAAAggggECGBOgBzRATOyGAAAIIIICAVwWWLVtmWmSlUKFCduaZZ1rZsmW92pSEqTc9oAlzKmkIAggggAACCAQKaOnorl272vnnn29z5syxiRMnmibVsqBKoFJs7meqB3T37t22atUqq1atmh1zzDGmpOQUBBBAAAEEEEAgHgXOOOMM++abb+zgwYMutaDquGDBAjv11FPt008/tTZt2sRjtZOiThnqAV27dq1dcsklVrhwYWvQoIGtWLHCBg8ebFqWUXkiKQgggAACCCCAQDwJrFmzxubNm+dW78ud+3/hTpMmTWzSpEk2YsSIeKpu0tXlf2cknaYfOHDALrjgAlu5cqWNHj3a5YXUrvpW8cILL7g1w9N5KZsRQAABBBBAAIGYCKizrEOHDu6KbXAFtOCKnqfETiDiJXh1Ua9bt84FoMWKFbN7773X1fbiiy+2okWLWq9evdySjcobSUEAAQQQQAABBOJBQCkEN23aFLYqGzduJMVgWJnobYzYA/rLL79Y3bp1TcFncNEYig0bNpgSlVMQQAABBBBAAIF4EWjYsKGLUV566aWQKjVu3Ng6duwYsp0N0ROI2AN6wgkn2Ny5c23z5s1uJZzAqr322muWN29eq1SpUuBm7iOAAAIIIIAAAjEVyJ8/v1vRT51oCxcutD59+rglpR977DGrXbu2DR8+PKb1S/aDR+wBbd26tVWuXNmNo5gyZYoppYF6RYcMGeJu3bt3t2OPPTZmjikpKS441jrlFAQQQAABBBBAwC9Qp04d++OPP0zzWRSAPvDAA3b66aeb8oIydNCvFJufEXtANfP9nXfesd69e5uCTZWePXu6n507d7bHH3/c3Y/mPxqT+sQTT9jrr7/uxqceOnTIHV5jUqtWrWpt27a1oUOHuln70awXx0IAAQQQQACB+BI47rjj7Pnnn4+vSlEbixiAyqh+/foub5a6sNX7qR5PdWmrCzvaRWkVWrZs6b65KLmscpKWLFnSPVYv6O+//25vvfWWTZ061SWaPfHEE6NdRY6HAAIIIIAAAgggcASBiAGouq41BvSyyy5ziVs18chflJT+7rvvNo0FjVYZOXKk6+XU7Pz0EuFrXEf79u3digfqCaUggAACCCCAAAIIxI9AxDGgy5cvd5feFYDu27cvTc3V46jL4NEsS5YssSuvvDLd4FN10SpNGjIwc+bMaFaNYyGAAAIIIIAAAghkQCBiAKr3qFChgn355ZemxK3p5dTKwLGyZZcWLVq4HtlIbzZ79mxm50dC4nkEEEAAAQQQQCAGAhEvwatOGmM5Y8YMNxO+WbNmNn36dNPMslgUTYRSEKoksj169DCN8SxVqpRb41U9sspJOnnyZFdfXaanIIAAAggggAACCMSXQIYCUM0yP/74413P40UXXeQCwDfffNMFftFujhLLKn1C//793SpMSgsVXDQL/uOPP7azzjor+CkeI4AAAggggAACCMRYIEMBqL+OWg1J4yqvueYa1xt62223+Z+K6s/q1au7Ge7K66VJUur1PHjwoFWsWNHlLFWPKCU2Ar/99pu9++679tdff7nJYho7rB50CgIIIIAAAggg4BfIVACqF2mCz4QJE0wrJMV6hrnSQekSvALjPHnyEOj4z2qMfn799dd24YUX2qWXXuqCT6XCuuGGG1yuVn05oCCAAAIIIIAAAhKIGIA2aNDAHn744RCt++67z+XgfPvtt0Oey+kNJKLPaeHMv7+GRWhs7ldffeVWmdA73H777fbggw+axg0vXbqULwiZZ+UVCCCAAAIIJKRALt9SlileallGE9GrWbNmzXI9pDnRviJFipjWk+3bt29OvL3n3vPGG290K0+F+7KiccMXXHCBS43luYZRYQQQQAABBDwmoM7DiRMnmn7GawnbA/rtt9+a0hgpuNq+fbtpwtGRyh133HGkp7P1uZxORP/KK6/Y9ddfH7HOu3btcqsuRdwxSXbQWNx+/fqFba1+AfQ8BQEEEEAAAQQQkEC6AegjjzxiXbp0cRN8dP9IJZoBqBLR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" /><!-- --></p>
+<p><code>res</code> now contains a dataframe with the result of the simulation. We can now analyze the results of the simulation.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">res &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(res, time <span class="op">==</span><span class="st"> </span><span class="dv">20</span>) <span class="co">#just take the last timepoint</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="co">#compute the theoretical moments of the population distribution</span></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">mom &lt;-<span class="st"> </span><span class="kw">compute_mu_sigma</span>(model, params, <span class="dv">0</span>, <span class="dv">20</span>, init_pop)</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="kw">print</span>(<span class="kw">paste</span>(<span class="st">&quot;Sample Mean: &quot;</span>, <span class="kw">mean</span>(res<span class="op">$</span>type1)))</a></code></pre></div>
+<pre><code>## [1] &quot;Sample Mean:  426.535&quot;
+</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">print</span>(<span class="kw">paste</span>(<span class="st">&quot;True Mean: &quot;</span>, mom<span class="op">$</span>mu))</a></code></pre></div>
+<pre><code>## [1] &quot;True Mean:  425.364259883693&quot;
+</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">print</span>(<span class="kw">paste</span>(<span class="st">&quot;Sample Variance: &quot;</span>, <span class="kw">var</span>(res<span class="op">$</span>type1)))</a></code></pre></div>
+<pre><code>## [1] &quot;Sample Variance:  4502.39116616617&quot;
+</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">print</span>(<span class="kw">paste</span>(<span class="st">&quot;True Variance: &quot;</span>, mom<span class="op">$</span>Sigma))</a></code></pre></div>
+<pre><code>## [1] &quot;True Variance:  4386.38004944714&quot;
+</code></pre>
+<h3 id="two-type-birth-death-mutation-process">Two-Type Birth-Death-Mutation Process</h3>
+<p>We now consider the two-type process shown in Figure . Here, each of the two population types has separate birth and death rates, as well a mutation rate from the type 1 population to the type 2 population. We’ll again simulate 1000 examples and compare the results with the theoretical moments.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">library</span>(estipop)</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb14-3" data-line-number="3">time =<span class="st"> </span><span class="dv">5</span></a>
+<a class="sourceLine" id="cb14-4" data-line-number="4">init_pop=<span class="st"> </span><span class="kw">c</span>(<span class="dv">100</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb14-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb14-6" data-line-number="6">params =<span class="st"> </span><span class="kw">c</span>(.<span class="dv">4</span>,.<span class="dv">1</span>,.<span class="dv">7</span>,.<span class="dv">1</span>, <span class="fl">.3</span>)</a>
+<a class="sourceLine" id="cb14-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb14-8" data-line-number="8"><span class="co">#time-homogenous two-type model</span></a>
+<a class="sourceLine" id="cb14-9" data-line-number="9">model =<span class="st"> </span><span class="kw">process_model</span>(<span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">1</span>]), <span class="dt">parent =</span> <span class="dv">1</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">0</span>)),</a>
+<a class="sourceLine" id="cb14-10" data-line-number="10">                      <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">2</span>]), <span class="dt">parent =</span> <span class="dv">1</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)),</a>
+<a class="sourceLine" id="cb14-11" data-line-number="11">                      <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">3</span>]), <span class="dt">parent =</span> <span class="dv">2</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">2</span>)),</a>
+<a class="sourceLine" id="cb14-12" data-line-number="12">                      <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">4</span>]), <span class="dt">parent =</span> <span class="dv">2</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)),</a>
+<a class="sourceLine" id="cb14-13" data-line-number="13">                      <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">5</span>]), <span class="dt">parent =</span> <span class="dv">1</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>)))</a>
+<a class="sourceLine" id="cb14-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb14-15" data-line-number="15">res =<span class="st"> </span><span class="kw">branch</span>(model, params, init_pop, time, <span class="dv">1000</span>)</a></code></pre></div>
+<p>Now we analyze the simulation results and compare them with theory</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">mom =<span class="st"> </span><span class="kw">compute_mu_sigma</span>(model, params, <span class="dv">0</span>, <span class="dv">5</span>, init_pop)</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="kw">print</span>(<span class="kw">paste</span>(<span class="st">&quot;Sample Mean: &quot;</span>, <span class="kw">toString</span>(<span class="kw">c</span>(<span class="kw">mean</span>(res<span class="op">$</span>type1), <span class="kw">mean</span>(res<span class="op">$</span>type2)))))</a></code></pre></div>
+<pre><code>## [1] &quot;Sample Mean:  448.151, 1571.425&quot;
+</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw">print</span>(<span class="kw">paste</span>(<span class="st">&quot;True Mean: &quot;</span>, <span class="kw">toString</span>(mom<span class="op">$</span>mu)))</a></code></pre></div>
+<pre><code>## [1] &quot;True Mean:  448.168943658686, 1560.38542784701&quot;
+</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw">print</span>(<span class="kw">paste</span>(<span class="st">&quot;Sample Variance: &quot;</span>, <span class="kw">toString</span>(<span class="kw">c</span>(<span class="kw">var</span>(res<span class="op">$</span>type1), <span class="kw">var</span>(res<span class="op">$</span>type2)))))</a></code></pre></div>
+<pre><code>## [1] &quot;Sample Variance:  2756.96316216216, 41241.8542292292&quot;
+</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">print</span>(<span class="kw">paste</span>(<span class="st">&quot;Sample Covariance:&quot;</span>, <span class="kw">cov</span>(res<span class="op">$</span>type1, res<span class="op">$</span>type2)))</a></code></pre></div>
+<pre><code>## [1] &quot;Sample Covariance: 4801.0769019019&quot;
+</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="kw">print</span>(<span class="kw">paste</span>(<span class="st">&quot;True Variance: &quot;</span>, <span class="kw">toString</span>(<span class="kw">diag</span>(mom<span class="op">$</span>Sigma))))</a></code></pre></div>
+<pre><code>## [1] &quot;True Variance:  2600.64200784677, 39457.2214316809&quot;
+</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">print</span>(<span class="kw">paste</span>(<span class="st">&quot;True Covariance: &quot;</span>, <span class="kw">toString</span>(mom<span class="op">$</span>Sigma[<span class="dv">1</span>,<span class="dv">2</span>])))</a></code></pre></div>
+<pre><code>## [1] &quot;True Covariance:  4527.31533883025&quot;
+</code></pre>
+<h2 id="estimation-1">Estimation</h2>
+<p>Given <code>process_model</code> object and a set of datapoints generated from that model, ESTIpop can estimate the model’s unknown parameter values.</p>
+<p>The <code>estimate</code> and <code>estimate_td</code> functions are used to estimate the parameters of <code>process_model</code> object. The arguments these function as as follows:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>model</code></td>
+<td><code>process_model</code> object</td>
+<td>The system whose parameters are being estimated</td>
+</tr>
+<tr class="even">
+<td><code>init_pop</code></td>
+<td><code>N</code> x <code>d</code> matrix</td>
+<td>The initial population in each of the observations in the dataset</td>
+</tr>
+<tr class="odd">
+<td><code>final_pop</code></td>
+<td><code>N</code> x <code>d</code> matrix</td>
+<td>The final observed population in each observation</td>
+</tr>
+<tr class="even">
+<td><code>start_times</code></td>
+<td><code>N</code> x 1 vector</td>
+<td>The time at which each entry in <code>init_pop</code> was observed</td>
+</tr>
+<tr class="odd">
+<td><code>end_times</code></td>
+<td><code>N</code> x 1 vector</td>
+<td>The time at which each entry in <code>final_pop</code> was observed</td>
+</tr>
+<tr class="even">
+<td><code>initial_ params</code></td>
+<td><code>m</code> x 1 vector</td>
+<td>The parameter values at which to initialize the estimation procedure</td>
+</tr>
+<tr class="odd">
+<td><code>lower</code></td>
+<td><code>m</code> x 1 vector</td>
+<td>Lower bounds on each parameter to be estimated</td>
+</tr>
+<tr class="even">
+<td><code>upper</code></td>
+<td><code>m</code> x 1 vector</td>
+<td>Uppose bounds on each parameter to be estimated</td>
+</tr>
+<tr class="odd">
+<td><code>trace</code></td>
+<td>logical</td>
+<td>Whether to enable output during optimization</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>estimate</code> function is a wrapper for the <code>estimate_td</code> function. <code>estimate</code> only requires the elapsed time between the initial and final obervations of each entry in the dataset, rather then the exact times of each observation. <code>estimate</code> can be used when the rates of a model do not depend on time.</p>
+<p>The following examples demonstrate ESTIPop’s estimation features:</p>
+<h3 id="time-dependent-one-type-model">Time-dependent one-type model</h3>
+<p>We now return to the one-type time-dependent model explored in the simulation section. In this model the birth rate declines as an unknown exponential function while the death rate remains constant. This could represent the dynamics of a population recovering from a drug for which we want to estimate a pharmacokinetic model. First we will simulate the model, this time with far fewer replications:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="kw">library</span>(estipop)</a>
+<a class="sourceLine" id="cb27-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb27-3" data-line-number="3"><span class="co">#Create a one-type birth-death model where the birth rate increases over time</span></a>
+<a class="sourceLine" id="cb27-4" data-line-number="4">model =<span class="st"> </span><span class="kw">process_model</span>(<span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">1</span>] <span class="op">-</span><span class="st"> </span>params[<span class="dv">2</span>]<span class="op">*</span><span class="kw">exp</span>(<span class="op">-</span>params[<span class="dv">3</span>]<span class="op">*</span>t)), </a>
+<a class="sourceLine" id="cb27-5" data-line-number="5">                                 <span class="dt">parent =</span> <span class="dv">1</span>, <span class="dt">offspring =</span> <span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb27-6" data-line-number="6">                      <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">4</span>]), <span class="dt">parent =</span> <span class="dv">1</span>, <span class="dt">offspring =</span> <span class="dv">0</span>))</a>
+<a class="sourceLine" id="cb27-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb27-8" data-line-number="8"><span class="co">#Specify the time points at which we will record the state of the simulation</span></a>
+<a class="sourceLine" id="cb27-9" data-line-number="9">time =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">20</span>,<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb27-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb27-11" data-line-number="11"><span class="co">#The initial size of the simulated population</span></a>
+<a class="sourceLine" id="cb27-12" data-line-number="12">init_pop =<span class="st"> </span><span class="kw">c</span>(<span class="dv">500</span>)</a>
+<a class="sourceLine" id="cb27-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb27-14" data-line-number="14"><span class="co">#Parameters to plug into the model for this simulation run</span></a>
+<a class="sourceLine" id="cb27-15" data-line-number="15">params =<span class="st"> </span><span class="kw">c</span>(.<span class="dv">3</span>,.<span class="dv">25</span>,.<span class="dv">1</span>, <span class="fl">.2</span>)  </a>
+<a class="sourceLine" id="cb27-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb27-17" data-line-number="17"><span class="co">#Numer of times to run the simulation</span></a>
+<a class="sourceLine" id="cb27-18" data-line-number="18">reps &lt;-<span class="st"> </span><span class="dv">20</span></a>
+<a class="sourceLine" id="cb27-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb27-20" data-line-number="20">res =<span class="st"> </span><span class="kw">branch</span>(<span class="dt">model =</span> model, <span class="dt">params =</span> params, <span class="dt">init_pop =</span> init_pop, </a>
+<a class="sourceLine" id="cb27-21" data-line-number="21">             <span class="dt">time_obs =</span> time, <span class="dt">reps =</span> reps)</a>
+<a class="sourceLine" id="cb27-22" data-line-number="22">simdat &lt;-<span class="st"> </span><span class="kw">format_sim_data</span>(res, <span class="dt">ntypes =</span> <span class="dv">1</span>)</a></code></pre></div>
+<p>The last line converts the dataset into the format expected by our estimation functions. Note that, because the process is Markov, we can compute the likelihood of the entire dataset by computing the likelihood of each observation conditioned on the previous observation. We now estimate the parameters of the model:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">est =<span class="st"> </span><span class="kw">estimate_td</span>(model, <span class="dt">init_pop =</span> simdat<span class="op">$</span>type1_prev, </a>
+<a class="sourceLine" id="cb28-2" data-line-number="2">                  <span class="dt">final_pop =</span>simdat<span class="op">$</span>type1,</a>
+<a class="sourceLine" id="cb28-3" data-line-number="3">                  <span class="dt">start_times =</span> simdat<span class="op">$</span>prev_time, </a>
+<a class="sourceLine" id="cb28-4" data-line-number="4">                  <span class="dt">end_times =</span> simdat<span class="op">$</span>time,</a>
+<a class="sourceLine" id="cb28-5" data-line-number="5">                  <span class="dt">initial =</span> <span class="kw">runif</span>(<span class="dv">4</span>,<span class="dv">0</span>,.<span class="dv">5</span>), </a>
+<a class="sourceLine" id="cb28-6" data-line-number="6">                  <span class="dt">lower =</span> <span class="kw">rep</span>(<span class="dv">0</span>,<span class="dv">4</span>),</a>
+<a class="sourceLine" id="cb28-7" data-line-number="7">                  <span class="dt">upper =</span> <span class="kw">rep</span>(.<span class="dv">5</span>,<span class="dv">4</span>),</a>
+<a class="sourceLine" id="cb28-8" data-line-number="8">                  <span class="dt">method =</span> <span class="st">&quot;L-BFGS-B&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">print</span>(est<span class="op">$</span>par)</a></code></pre></div>
+<pre><code>## [1] 0.2632411 0.2414000 0.1098404 0.1774179
+</code></pre>
+<p>After estimation we recover parameter values very close to ground truth.</p>
+<h3 id="time-homogenous-birth-death-mutation-model">Time-homogenous birth-death-mutation model</h3>
+<p>We’ll now estimate the parameters of the two-type birth-death-mutation model we simulated earlier.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1">time =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">10</span>,<span class="dv">1</span>) </a>
+<a class="sourceLine" id="cb31-2" data-line-number="2">initial =<span class="st"> </span><span class="kw">c</span>(<span class="dv">100</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb31-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb31-4" data-line-number="4">params =<span class="st"> </span><span class="kw">c</span>(.<span class="dv">4</span>,.<span class="dv">1</span>,.<span class="dv">7</span>,.<span class="dv">1</span>, <span class="fl">.3</span>)</a>
+<a class="sourceLine" id="cb31-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb31-6" data-line-number="6">model =<span class="st"> </span><span class="kw">process_model</span>(<span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">1</span>]), <span class="dt">parent =</span> <span class="dv">1</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">0</span>)),</a>
+<a class="sourceLine" id="cb31-7" data-line-number="7">                      <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">2</span>]), <span class="dt">parent =</span> <span class="dv">1</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)),</a>
+<a class="sourceLine" id="cb31-8" data-line-number="8">                      <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">3</span>]), <span class="dt">parent =</span> <span class="dv">2</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">2</span>)),</a>
+<a class="sourceLine" id="cb31-9" data-line-number="9">                      <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">4</span>]), <span class="dt">parent =</span> <span class="dv">2</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)),</a>
+<a class="sourceLine" id="cb31-10" data-line-number="10">                      <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">5</span>]), <span class="dt">parent =</span> <span class="dv">1</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>)))</a>
+<a class="sourceLine" id="cb31-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb31-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb31-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb31-14" data-line-number="14">res =<span class="st"> </span><span class="kw">branch</span>(model, params, initial, time, <span class="dv">30</span>)</a>
+<a class="sourceLine" id="cb31-15" data-line-number="15">simdata =<span class="st"> </span><span class="kw">format_sim_data</span>(res, model<span class="op">$</span>ntypes)</a>
+<a class="sourceLine" id="cb31-16" data-line-number="16">est =<span class="st"> </span><span class="kw">estimate</span>(model, <span class="dt">init_pop =</span> <span class="kw">cbind</span>(simdata<span class="op">$</span>type1_prev, simdata<span class="op">$</span>type2_prev), </a>
+<a class="sourceLine" id="cb31-17" data-line-number="17">               <span class="dt">final_pop =</span> <span class="kw">cbind</span>(simdata<span class="op">$</span>type1, simdata<span class="op">$</span>type2),</a>
+<a class="sourceLine" id="cb31-18" data-line-number="18">               <span class="dt">times =</span> simdata<span class="op">$</span>dtime,</a>
+<a class="sourceLine" id="cb31-19" data-line-number="19">               <span class="dt">initial =</span> <span class="kw">runif</span>(<span class="dv">5</span>,<span class="dv">0</span>,.<span class="dv">5</span>),</a>
+<a class="sourceLine" id="cb31-20" data-line-number="20">               <span class="dt">lower =</span> <span class="kw">rep</span>(<span class="fl">1e-5</span>,<span class="dv">5</span>),</a>
+<a class="sourceLine" id="cb31-21" data-line-number="21">               <span class="dt">upper =</span> <span class="kw">rep</span>(<span class="dv">1</span>,<span class="dv">5</span>),</a>
+<a class="sourceLine" id="cb31-22" data-line-number="22">               <span class="dt">method =</span> <span class="st">&quot;L-BFGS-B&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="kw">print</span>(est<span class="op">$</span>par)</a></code></pre></div>
+<pre><code>## [1] 0.4084356 0.1097101 0.6591385 0.0601875 0.3050673
+</code></pre>
+<p>Once again we estimate values close to ground truth.</p>
+<h3 id="two-type-drug-resistance-model-(four-types)">Two-Type Drug Resistance Model (Four Types)</h3>
+<p>The two-type drug resistance model is a four-type process in which two types of mutation are possible. The type 0 population harbors no mutations, the type 1 population harbors mutation 1, the type 2 population harbors mutation 2, and the type 12 population harbors both mutations 1 and 2. Each type undergoes birth and death events, as well as the possibility for further mutation as illustrated in Figure .</p>
+<p>We now simulate and estimate this model. To reduce the number of parameters, we assume that all types share the same death rate.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1">time =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">10</span>,<span class="dv">1</span>) </a>
+<a class="sourceLine" id="cb34-2" data-line-number="2">initial =<span class="st"> </span><span class="kw">c</span>(<span class="dv">100</span>, <span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb34-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb34-4" data-line-number="4">params =<span class="st"> </span><span class="kw">c</span>(.<span class="dv">4</span>,.<span class="dv">7</span>,.<span class="dv">5</span>,.<span class="dv">2</span>,.<span class="dv">3</span>,.<span class="dv">1</span>,.<span class="dv">4</span>,.<span class="dv">3</span>, <span class="fl">.3</span>)</a>
+<a class="sourceLine" id="cb34-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb34-6" data-line-number="6">model =<span class="st"> </span><span class="kw">process_model</span>(</a>
+<a class="sourceLine" id="cb34-7" data-line-number="7">  <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">1</span>]), <span class="dt">parent =</span> <span class="dv">1</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)),</a>
+<a class="sourceLine" id="cb34-8" data-line-number="8">  <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">2</span>]), <span class="dt">parent =</span> <span class="dv">2</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">0</span>)),</a>
+<a class="sourceLine" id="cb34-9" data-line-number="9">  <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">3</span>]), <span class="dt">parent =</span> <span class="dv">3</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">0</span>)),</a>
+<a class="sourceLine" id="cb34-10" data-line-number="10">  <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">4</span>]), <span class="dt">parent =</span> <span class="dv">4</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">2</span>)),</a>
+<a class="sourceLine" id="cb34-11" data-line-number="11">  <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">5</span>]), <span class="dt">parent =</span> <span class="dv">1</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>)),</a>
+<a class="sourceLine" id="cb34-12" data-line-number="12">  <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">6</span>]), <span class="dt">parent =</span> <span class="dv">1</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>)),</a>
+<a class="sourceLine" id="cb34-13" data-line-number="13">  <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">7</span>]), <span class="dt">parent =</span> <span class="dv">2</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>)),</a>
+<a class="sourceLine" id="cb34-14" data-line-number="14">  <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">8</span>]), <span class="dt">parent =</span> <span class="dv">3</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>)),</a>
+<a class="sourceLine" id="cb34-15" data-line-number="15">  <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">9</span>]), <span class="dt">parent =</span> <span class="dv">1</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)),</a>
+<a class="sourceLine" id="cb34-16" data-line-number="16">  <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">9</span>]), <span class="dt">parent =</span> <span class="dv">2</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)),</a>
+<a class="sourceLine" id="cb34-17" data-line-number="17">  <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">9</span>]), <span class="dt">parent =</span> <span class="dv">3</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)),</a>
+<a class="sourceLine" id="cb34-18" data-line-number="18">  <span class="kw">transition</span>(<span class="dt">rate =</span> <span class="kw">rate</span>(params[<span class="dv">9</span>]), <span class="dt">parent =</span> <span class="dv">4</span>, <span class="dt">offspring =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)))</a>
+<a class="sourceLine" id="cb34-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb34-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb34-21" data-line-number="21">res =<span class="st"> </span><span class="kw">branch</span>(model, params, initial, time, <span class="dv">30</span>)</a>
+<a class="sourceLine" id="cb34-22" data-line-number="22">simdata =<span class="st"> </span><span class="kw">format_sim_data</span>(res, model<span class="op">$</span>ntypes)</a>
+<a class="sourceLine" id="cb34-23" data-line-number="23">init_pop =<span class="st"> </span><span class="kw">cbind</span>(simdata<span class="op">$</span>type1_prev, simdata<span class="op">$</span>type2_prev,</a>
+<a class="sourceLine" id="cb34-24" data-line-number="24">                 simdata<span class="op">$</span>type3_prev, simdata<span class="op">$</span>type4_prev)</a>
+<a class="sourceLine" id="cb34-25" data-line-number="25">final_pop =<span class="st"> </span><span class="kw">cbind</span>(simdata<span class="op">$</span>type1, simdata<span class="op">$</span>type2,</a>
+<a class="sourceLine" id="cb34-26" data-line-number="26">                  simdata<span class="op">$</span>type3, simdata<span class="op">$</span>type4)</a>
+<a class="sourceLine" id="cb34-27" data-line-number="27"></a>
+<a class="sourceLine" id="cb34-28" data-line-number="28">est =<span class="st"> </span><span class="kw">estimate</span>(model, <span class="dt">init_pop =</span> init_pop,</a>
+<a class="sourceLine" id="cb34-29" data-line-number="29">               <span class="dt">final_pop =</span> final_pop, </a>
+<a class="sourceLine" id="cb34-30" data-line-number="30">               <span class="dt">times =</span> simdata<span class="op">$</span>dtime,</a>
+<a class="sourceLine" id="cb34-31" data-line-number="31">               <span class="dt">initial =</span> <span class="kw">rbeta</span>(<span class="dv">9</span>,<span class="dv">2</span>,<span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb34-32" data-line-number="32">               <span class="dt">lower =</span> <span class="kw">rep</span>(<span class="fl">1e-5</span>,<span class="dv">9</span>),</a>
+<a class="sourceLine" id="cb34-33" data-line-number="33">               <span class="dt">upper =</span> <span class="kw">rep</span>(<span class="dv">1</span>,<span class="dv">9</span>),</a>
+<a class="sourceLine" id="cb34-34" data-line-number="34">               <span class="dt">method =</span> <span class="st">&quot;L-BFGS-B&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1"><span class="kw">print</span>(est<span class="op">$</span>par)</a></code></pre></div>
+<pre><code>## [1] 0.3882471 0.6848637 0.4824548 0.1992096 0.2986555 0.1032464 0.3927194 0.3187989 0.2878569
+</code></pre>
+<p>Once again, our estimates agree closely with ground truth.</p>
+
+</body>
+</html>

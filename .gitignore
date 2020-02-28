@@ -34,7 +34,6 @@
 .Rhistory
 diffpop.Rproj
 **/tree_files/*
-README.Rmd
 **/graph_files/*
 **/output/*
 **/example/*
