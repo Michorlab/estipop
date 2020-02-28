@@ -97,7 +97,7 @@ on time and other parameters. For example:
 r1 = rate(3.5) # a constant, known rate
 r2 = rate(2*t) # a rate which increases linearly with time
 r3 = rate(1.5*params[1]) #a rate which depends on one unknown parameter
-r4 = rate(params[1] + params[2]*exp(-.5*t)) # a rate which depends on 2 unknown
+r4 = rate(params[1] + params[2]*exp(-.5*t)) # a rate which depends on 2 unknown 
                                             # parameters and time
 ```
 
@@ -139,10 +139,12 @@ A `transition` object can be constructed as follows:
 ``` r
 r = rate(.5*params[1] + params[2]*exp(-t))
 #a type 2 parent dies and produces 2 offspring of different types
-trans = transition(rate = r, parent = 1, offspring = (2,0))
+trans = transition(rate = r, parent = 1, offspring = (2,0)) 
 ```
 
 This transition is illustrated in the following figure:
+
+![transition](./README_files/images/transition_new.PNG)
 
 ## process\_model Objects
 
@@ -194,21 +196,23 @@ The following examples demonstrate ESTIPop’s simulation features:
 
 ### One-Type Birth-Death Process
 
-We’ll start by simulation the one-type birth-death model shown in Figure
-. In this model, a population of a single type experiences birth events,
-in which an individual from the population is chosen to replicate, and
-death events, in which an individual from the population is chosen for
-removal. To test our estimation procedure, we begin by simulating data
-using functions available in ESTIpop. We initiate the population with
-size 100 and allow it expand for 5 units of time with birth parameter 1
-and death parameter 0.7. Using the following code, we generate 1,000
-samples from this process.
+We’ll start by simulation the one-type birth-death model shown in the
+following figure. In this model, a population of a single type
+experiences birth events, in which an individual from the population is
+chosen to replicate, and death events, in which an individual from the
+population is chosen for removal. To test our estimation procedure, we
+begin by simulating data using functions available in ESTIpop. We
+initiate the population with size 100 and allow it expand for 5 units of
+time with birth parameter 1 and death parameter 0.7. Using the following
+code, we generate 1,000 samples from this process.
+
+![birthdeath](./README_files/images/birthdeath.PNG)
 
 ``` r
 library(estipop)
 
 #Create a one-type birth-death model where the birth rate increases over time
-model = process_model(transition(rate = rate(params[1] - params[2]*exp(-params[3]*t)),
+model = process_model(transition(rate = rate(params[1] - params[2]*exp(-params[3]*t)), 
                                  parent = 1, offspring = 2),
                       transition(rate = rate(params[4]), parent = 1, offspring = 0))
 
@@ -224,7 +228,7 @@ params = c(.3,.25,.1, .2)
 #Numer of times to run the simulation
 reps <- 1000
 
-res = branch(model = model, params = params, init_pop = init_pop,
+res = branch(model = model, params = params, init_pop = init_pop, 
              time_obs = time, reps = reps)
 
 #Plot a single replication of the simulation
@@ -232,7 +236,7 @@ single <- dplyr::filter(res, rep == 1)
 plot(single$time, single$type1, xlab = "time", ylab = "population size")
 ```
 
-![](./README_files/figure-gfm/sup1-1.png)<!-- -->
+![](/Users/mcdonald/Dropbox%20\(Partners%20HealthCare\)/michor/projects/estipop-jeremy/estipop/README_files/figure-gfm/sup1-1.png)<!-- -->
 
 `res` now contains a dataframe with the result of the simulation. We can
 now analyze the results of the simulation.
@@ -267,11 +271,13 @@ print(paste("True Variance: ", mom$Sigma))
 
 ### Two-Type Birth-Death-Mutation Process
 
-We now consider the two-type process shown in Figure . Here, each of the
-two population types has separate birth and death rates, as well a
-mutation rate from the type 1 population to the type 2 population. We’ll
-again simulate 1000 examples and compare the results with the
-theoretical moments.
+We now consider the two-type process shown in the following figure.
+Here, each of the two population types has separate birth and death
+rates, as well a mutation rate from the type 1 population to the type 2
+population. We’ll again simulate 1000 examples and compare the results
+with the theoretical moments.
+
+![bdm](./README_files/images/birthdeathmutation.PNG)
 
 ``` r
 library(estipop)
@@ -372,7 +378,7 @@ model, this time with far fewer replications:
 library(estipop)
 
 #Create a one-type birth-death model where the birth rate increases over time
-model = process_model(transition(rate = rate(params[1] - params[2]*exp(-params[3]*t)),
+model = process_model(transition(rate = rate(params[1] - params[2]*exp(-params[3]*t)), 
                                  parent = 1, offspring = 2),
                       transition(rate = rate(params[4]), parent = 1, offspring = 0))
 
@@ -388,7 +394,7 @@ params = c(.3,.25,.1, .2)
 #Numer of times to run the simulation
 reps <- 20
 
-res = branch(model = model, params = params, init_pop = init_pop,
+res = branch(model = model, params = params, init_pop = init_pop, 
              time_obs = time, reps = reps)
 simdat <- format_sim_data(res, ntypes = 1)
 ```
@@ -400,11 +406,11 @@ of each observation conditioned on the previous observation. We now
 estimate the parameters of the model:
 
 ``` r
-est = estimate_td(model, init_pop = simdat$type1_prev,
+est = estimate_td(model, init_pop = simdat$type1_prev, 
                   final_pop =simdat$type1,
-                  start_times = simdat$prev_time,
+                  start_times = simdat$prev_time, 
                   end_times = simdat$time,
-                  initial = runif(4,0,.5),
+                  initial = runif(4,0,.5), 
                   lower = rep(0,4),
                   upper = rep(.5,4),
                   method = "L-BFGS-B")
@@ -424,7 +430,7 @@ We’ll now estimate the parameters of the two-type birth-death-mutation
 model we simulated earlier.
 
 ``` r
-time = seq(0,10,1)
+time = seq(0,10,1) 
 initial = c(100, 0)
 
 params = c(.4,.1,.7,.1, .3)
@@ -439,7 +445,7 @@ model = process_model(transition(rate = rate(params[1]), parent = 1, offspring =
 
 res = branch(model, params, initial, time, 30)
 simdata = format_sim_data(res, model$ntypes)
-est = estimate(model, init_pop = cbind(simdata$type1_prev, simdata$type2_prev),
+est = estimate(model, init_pop = cbind(simdata$type1_prev, simdata$type2_prev), 
                final_pop = cbind(simdata$type1, simdata$type2),
                times = simdata$dtime,
                initial = runif(5,0,.5),
@@ -463,13 +469,16 @@ types of mutation are possible. The type 0 population harbors no
 mutations, the type 1 population harbors mutation 1, the type 2
 population harbors mutation 2, and the type 12 population harbors both
 mutations 1 and 2. Each type undergoes birth and death events, as well
-as the possibility for further mutation as illustrated in Figure .
+as the possibility for further mutation as illustrated in the following
+figure.
+
+![twotype](./README_files/images/2typereistance.PNG)
 
 We now simulate and estimate this model. To reduce the number of
 parameters, we assume that all types share the same death rate.
 
 ``` r
-time = seq(0,10,1)
+time = seq(0,10,1) 
 initial = c(100, 0,0,0)
 
 params = c(.4,.7,.5,.2,.3,.1,.4,.3, .3)
@@ -497,7 +506,7 @@ final_pop = cbind(simdata$type1, simdata$type2,
                   simdata$type3, simdata$type4)
 
 est = estimate(model, init_pop = init_pop,
-               final_pop = final_pop,
+               final_pop = final_pop, 
                times = simdata$dtime,
                initial = rbeta(9,2,1),
                lower = rep(1e-5,9),

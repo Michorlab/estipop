@@ -100,13 +100,8 @@ trans = transition(rate = r, parent = 1, offspring = (2,0))
 ```
 
 This transition is illustrated in the following figure:
-\begin{figure}
-\begin{center}
-\includegraphics{images/transition_new}\\
-\end{center}
-\caption{Example of a \texttt{transition} with \texttt{parent = 1} and \texttt{offspring = c(2,0)}. The blue circles represent individuals of type 1 and the green circles represent individuals of type 2.}
-\label{fig:transition}
-\end{figure}
+
+![transition](./README_files/images/transition_new.PNG)
 
 
 ## process_model Objects
@@ -149,15 +144,10 @@ The following examples demonstrate ESTIPop's simulation features:
 
 ### One-Type Birth-Death Process
 
-We'll start by simulation the one-type birth-death model shown in Figure \ref{fig:birthdeath}.  In this model, a population of a single type experiences birth events, in which an individual from the population is chosen to replicate, and death events, in which an individual from the population is chosen for removal.  To test our estimation procedure, we begin by simulating data using functions available in ESTIpop.  We initiate the population with size 100 and allow it expand for 5 units of time with birth parameter 1 and death parameter 0.7.  Using the following code, we generate 1,000 samples from this process. 
+We'll start by simulation the one-type birth-death model shown in the following figure.  In this model, a population of a single type experiences birth events, in which an individual from the population is chosen to replicate, and death events, in which an individual from the population is chosen for removal.  To test our estimation procedure, we begin by simulating data using functions available in ESTIpop.  We initiate the population with size 100 and allow it expand for 5 units of time with birth parameter 1 and death parameter 0.7.  Using the following code, we generate 1,000 samples from this process. 
 
-\begin{figure}
-\begin{center}
-\includegraphics{images/birthdeath.PNG}\\
-\end{center}
-\caption{One-type birth-death model. Individuals give birth at rate $b(t)$, increasing the population by 1. Individuals die at rate $d(t)$, which decreases the population by 1.}
-\label{fig:birthdeath}
-\end{figure}
+![birthdeath](./README_files/images/birthdeath.PNG)
+
 	
 ```{r sup1, echo = T, cache = TRUE, results = FALSE, warning=FALSE}
 library(estipop)
@@ -204,15 +194,9 @@ print(paste("True Variance: ", mom$Sigma))
 
 ### Two-Type Birth-Death-Mutation Process
 
-We now consider the two-type process shown in Figure \ref{fig:bdm}.  Here, each of the two population types has separate birth and death rates, as well a mutation rate from the type 1 population to the type 2 population. We'll again simulate 1000 examples and compare the results with the theoretical moments.
-\begin{figure}
-\begin{center}
-\includegraphics{images/birthdeathmutation.PNG}\\
-\end{center}
-\caption{Two-type birth-death-mutation model.  Each type has its own birth and death rate parameters in addition to a mutation event from type 1 to type 2.}
-\label{fig:bdm}
-\end{figure}
-\vspace{0.1in}
+We now consider the two-type process shown in the following figure.  Here, each of the two population types has separate birth and death rates, as well a mutation rate from the type 1 population to the type 2 population. We'll again simulate 1000 examples and compare the results with the theoretical moments.
+
+![bdm](./README_files/images/birthdeathmutation.PNG)
 
 ```{r sup4, echo = TRUE, cache = TRUE, results = FALSE, eval = T}
 library(estipop)
@@ -362,15 +346,9 @@ Once again we estimate values close to ground truth.
 
 ### Two-Type Drug Resistance Model (Four Types) 
 
-The two-type drug resistance model is a four-type process in which two types of mutation are possible. The type 0 population harbors no mutations, the type 1 population harbors mutation 1, the type 2 population harbors mutation 2, and the type 12 population harbors both mutations 1 and 2. Each type undergoes birth and death events, as well as the possibility for further mutation as illustrated in Figure \ref{fig:twotype}. 
+The two-type drug resistance model is a four-type process in which two types of mutation are possible. The type 0 population harbors no mutations, the type 1 population harbors mutation 1, the type 2 population harbors mutation 2, and the type 12 population harbors both mutations 1 and 2. Each type undergoes birth and death events, as well as the possibility for further mutation as illustrated in the following figure. 
 
-\begin{figure}
-\begin{center}
-\includegraphics[width=250pt, height=250pt]{images/2typereistance.PNG}\\
-\caption{The two-type drug resistance model.}
-\label{fig:twotype}
-\end{center}
-\end{figure}
+![twotype](./README_files/images/2typereistance.PNG)
 
 We now simulate and estimate this model. To reduce the number of parameters, we assume that all types share the same death rate.
 
