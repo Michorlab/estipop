@@ -112,13 +112,13 @@ The `rate` constructor expects expressions which conform to the
 following subset of the R grammar, and will throw an error at other
 inputs.
 
-| Type             | Allowed Symbols            |  |
-| ---------------- | -------------------------- |  |
-| Unary Operators  | \+ - ()                    |  |
-| Binary Operators | \+ - / \* \> \>= \< \<=    |  |
-| Functions        | sin(), cos(), log(), exp() |  |
-| names            | params\[i\], t             |  |
-| numerics         | any scalar numeric value   |  |
+| Type             | Allowed Symbols            |
+| ---------------- | -------------------------- |
+| Unary Operators  | \+ - ()                    |
+| Binary Operators | \+ - / \* \> \>= \< \<=    |
+| Functions        | sin(), cos(), log(), exp() |
+| names            | params\[i\], t             |
+| numerics         | any scalar numeric value   |
 
 ### transition Objects
 
@@ -179,16 +179,16 @@ The `branch` function is used to simulate the system specified by a
 `process_model` object. It’s parameters are as
 follows:
 
-| Argument   | Type                   | Description                                                      |
-| ---------- | ---------------------- | ---------------------------------------------------------------- |
-| `model`    | `process_model` object | The system to simulate                                           |
-| `params`   | numeric vector         | The parameters to plug into the system during simulation         |
-| `init_pop` | numeric vector         | The population at the start of the simulation (time 0)           |
-| `time_obs` | numeric vector         | The timepoints at which to record the state of the population    |
-| `reps`     | numeric scalar         | The number of times to run the simulation                        |
-| `silent`   | logical                | Whether to silence intermediate printouts form the C++ simulator |
-| `keep`     | logical                | Whether to keep logs files from the C++ simulation               |
-| `seed`     | logical                | A seed for the random number generator                           |
+| Argument   | Type                   | Description                                                      | Optional? |
+| ---------- | ---------------------- | ---------------------------------------------------------------- | --------- |
+| `model`    | `process_model` object | The system to simulate                                           | No        |
+| `params`   | numeric vector         | The parameters to plug into the system during simulation         | No        |
+| `init_pop` | numeric vector         | The population at the start of the simulation (time 0)           | No        |
+| `time_obs` | numeric vector         | The timepoints at which to record the state of the population    | No        |
+| `reps`     | numeric scalar         | The number of times to run the simulation                        | No        |
+| `silent`   | logical                | Whether to silence intermediate printouts form the C++ simulator | Yes       |
+| `keep`     | logical                | Whether to keep logs files from the C++ simulation               | Yes       |
+| `seed`     | logical                | A seed for the random number generator                           | Yes       |
 
 The following examples demonstrate ESTIPop’s simulation features:
 

@@ -646,7 +646,36 @@ body {
 <a class="sourceLine" id="cb2-5" data-line-number="5">                                            <span class="co"># parameters and time</span></a></code></pre></div>
 <p>It is important to note that the variable <code>t</code> and the <code>params</code> vector are not variables which we have defined previously in the program. The <code>rate</code> constructor acts on an <em>expression</em> which encodes how the rate evolves with time and various other parameters. We will be able to evaluate this expression later when we plug in parameter values at a specific time.</p>
 <p>The <code>rate</code> constructor expects expressions which conform to the following subset of the R grammar, and will throw an error at other inputs.</p>
-<p>| Type | Allowed Symbols | | | ---------------- | -------------------------- | | | Unary Operators | + - () | | | Binary Operators | + - / * &gt; &gt;= &lt; &lt;= | | | Functions | sin(), cos(), log(), exp() | | | names | params[i], t | | | numerics | any scalar numeric value | |</p>
+<table>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Allowed Symbols</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Unary Operators</td>
+<td>+ - ()</td>
+</tr>
+<tr class="even">
+<td>Binary Operators</td>
+<td>+ - / * &gt; &gt;= &lt; &lt;=</td>
+</tr>
+<tr class="odd">
+<td>Functions</td>
+<td>sin(), cos(), log(), exp()</td>
+</tr>
+<tr class="even">
+<td>names</td>
+<td>params[i], t</td>
+</tr>
+<tr class="odd">
+<td>numerics</td>
+<td>any scalar numeric value</td>
+</tr>
+</tbody>
+</table>
 <h3 id="transition-objects">transition Objects</h3>
 <p>A <code>transition</code> object represents a type of birth or death event which can occur in the branching process model. A <code>transition</code> object has 3 attibutes:</p>
 <ol>
@@ -676,6 +705,7 @@ body {
 <th>Argument</th>
 <th>Type</th>
 <th>Description</th>
+<th>Optional?</th>
 </tr>
 </thead>
 <tbody>
@@ -683,41 +713,49 @@ body {
 <td><code>model</code></td>
 <td><code>process_model</code> object</td>
 <td>The system to simulate</td>
+<td>No</td>
 </tr>
 <tr class="even">
 <td><code>params</code></td>
 <td>numeric vector</td>
 <td>The parameters to plug into the system during simulation</td>
+<td>No</td>
 </tr>
 <tr class="odd">
 <td><code>init_pop</code></td>
 <td>numeric vector</td>
 <td>The population at the start of the simulation (time 0)</td>
+<td>No</td>
 </tr>
 <tr class="even">
 <td><code>time_obs</code></td>
 <td>numeric vector</td>
 <td>The timepoints at which to record the state of the population</td>
+<td>No</td>
 </tr>
 <tr class="odd">
 <td><code>reps</code></td>
 <td>numeric scalar</td>
 <td>The number of times to run the simulation</td>
+<td>No</td>
 </tr>
 <tr class="even">
 <td><code>silent</code></td>
 <td>logical</td>
 <td>Whether to silence intermediate printouts form the C++ simulator</td>
+<td>Yes</td>
 </tr>
 <tr class="odd">
 <td><code>keep</code></td>
 <td>logical</td>
 <td>Whether to keep logs files from the C++ simulation</td>
+<td>Yes</td>
 </tr>
 <tr class="even">
 <td><code>seed</code></td>
 <td>logical</td>
 <td>A seed for the random number generator</td>
+<td>Yes</td>
 </tr>
 </tbody>
 </table>
