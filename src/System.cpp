@@ -141,7 +141,7 @@ void System::simulate(std::vector<double> obsTimes, std::string file){
     double curTime = 0;
     int curObsIndex = 0;
 
-	int obsMod = pow(10, round(log10(totTime)-1));
+    int obsMod = std::max(1, (int)pow(10, round(log10(totTime)-1)));
 
     // Display some stuff  if verbose
 	if(!silent){
