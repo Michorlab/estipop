@@ -110,7 +110,7 @@ check_valid <- function(ast) {
       }
       stop(sprintf("binary operator %s takes 2 argments!", deparse(fname)))
     }
-    if(deparse(fname) %in% c("exp", "log", "sin", "cos", "("))
+    if(deparse(fname) %in% c("exp", "log", "log10", "sin", "cos", "tan", "asin", "acos", "atan", "tanh", "cosh", "sinh", "atanh", "acosh", "asinh", "("))
     {    
       if(length(rec) == 1){
         return(rec[[1]])
