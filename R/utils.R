@@ -193,7 +193,7 @@ generate_cpp <- function(ast, params) {
     {
       return(paste(rec[[1]], deparse(fname), rec[[2]],  sep = " "))    
     }
-    if(deparse(fname) %in% c("+", "-", "exp", "log", "sin", "cos", "(") && length(rec) == 1)
+    if(deparse(fname) %in% c("+", "-", "exp", "log", "log10", "sin", "cos", "tan", "asin", "acos", "atan", "tanh", "cosh", "sinh", "atanh", "acosh", "asinh", "(") && length(rec) == 1)
     {    
       if(deparse(fname) != "("){
         return(paste(deparse(fname), "(", rec[[1]], ")", sep = ""))
