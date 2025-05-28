@@ -94,7 +94,7 @@ check_valid <- function(ast) {
     else if (is.name(x)){
       stop(sprintf("invalid name %s", deparse(x)))
     }
-    if (is.call(x) && deparse(x[[1]]) == "[" && deparse(x[[2]]) == "params" && is.numeric(x[[3]]) && x[[2]] > 0)
+    if (is.call(x) && deparse(x[[1]]) == "[" && deparse(x[[2]]) == "params" && is.numeric(x[[3]]) && x[[3]] > 0)
     {
       return(T)
     }
